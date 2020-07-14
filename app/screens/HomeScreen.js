@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -74,9 +74,6 @@ export default class HomeScreen extends React.Component {
               ))}
                  
           </ScrollView>
-          <KeyboardAvoidingView><TextInput></TextInput></KeyboardAvoidingView>
-       
-        
         </View>
       </View>
     );

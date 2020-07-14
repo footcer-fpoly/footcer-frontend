@@ -28,9 +28,7 @@ export default class HeaderHome extends Component {
     status="Đã có sân"
     time="20:30" 
     date="26/06/2020"
-    size="7"
-    nameUser2="Dương Quốc Hải"
-    status2="" />
+    size="7" />
   </View>
     )
   }
