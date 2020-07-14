@@ -3,9 +3,9 @@ import { Text, TouchableOpacity, StyleSheet } from 'react-native';
 
 export default class Buton extends Component {
     render() {
-        const {text} = this.props;
+        const {text,onPressBtn} = this.props;
         return (
-            <TouchableOpacity style={styles.btn}>
+            <TouchableOpacity style={styles.btn} onPress={onPressBtn}>
                 <Text style={styles.textBtn}>{text}</Text>
             </TouchableOpacity>
         );
