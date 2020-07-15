@@ -10,6 +10,7 @@ import FillInfoScreen from './app/screens/FillInfoScreen'
 import App from './app/App'
 import { name as appName } from './app.json';
 
+<<<<<<< HEAD
 class Main extends Component {
     constructor(props) {
         super(props);
@@ -24,6 +25,11 @@ class Main extends Component {
         return mainScreen
     }
 }
+=======
+import {AppRegistry} from 'react-native';
+import App from './app/screens/HomeScreen';
+import {name as appName} from './app.json';
+>>>>>>> giaodienHome
 
 
 AppRegistry.registerComponent(appName, () => Main);
