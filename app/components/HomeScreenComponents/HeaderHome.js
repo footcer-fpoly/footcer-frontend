@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-import Match from './Match';
+import Match from '../Match';
 
 export default class HeaderHome extends Component {
   render() {

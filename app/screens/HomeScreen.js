@@ -1,18 +1,13 @@
 import React from 'react';
 import {
   View,
-  Text,
-  StatusBar,
-  TextInput,
-  Image,
-  FlatList,
   ScrollView,
   StyleSheet,
   KeyboardAvoidingView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import HeaderHome from '../components/HeaderHome';
-import Stadium from '../components/Stadium';
+import HeaderHome from '../components/HomeScreenComponents/HeaderHome';
+import Stadium from '../components/HomeScreenComponents/Stadium';
 import ItemMore from '../components/ItemMore';
 
 export default class HomeScreen extends React.Component {

@@ -9,7 +9,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import ItemMatch from './ItemMatch';
+import ItemMatch from './HomeScreenComponents/ItemMatch';
 
 export default class Match extends Component {
   render() {

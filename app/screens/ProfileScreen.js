@@ -1,7 +1,14 @@
 import React, {Component} from 'react';
-import {Text, StyleSheet, View, Image, ScrollView} from 'react-native';
+import {
+  Text,
+  StyleSheet,
+  View,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import ItemProfile from '../components/ItemProfile';
+import ItemProfile from '../components/ProfileScreenComponents/ItemProfile';
 
 export default class ProfileSreen extends React.Component {
   render() {
@@ -25,14 +32,20 @@ export default class ProfileSreen extends React.Component {
                   flexDirection: 'row',
                   alignItems: 'center',
                 }}>
-                <Text style={{color: '#fff', fontSize: 14}}>
-                  Chỉnh sửa tài khoản
-                </Text>
-                <Icon
-                  style={{marginLeft: 5, color: '#fff'}}
-                  name="chevron-right"
-                  size={10}
-                />
+                <TouchableOpacity
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <Text style={{color: '#fff', fontSize: 14}}>
+                    Chỉnh sửa tài khoản
+                  </Text>
+                  <Icon
+                    style={{marginLeft: 5, color: '#fff'}}
+                    name="chevron-right"
+                    size={10}
+                  />
+                </TouchableOpacity>
               </View>
             </View>
           </View>
