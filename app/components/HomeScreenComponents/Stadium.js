@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
   },
   infoStadiumContainer: {
     paddingHorizontal: 10,
-    paddingVertical: 5,
+    paddingTop: 5,
   },
   nameStadium: {
     fontSize: 14,
