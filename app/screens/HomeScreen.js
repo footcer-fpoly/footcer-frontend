@@ -23,7 +23,7 @@ export default class HomeScreen extends React.Component {
           <HeaderHome style={styles.header} />
         </View>
         <View style={styles.body}>
-          <ItemMore title="Sân bóng quanh đây" onPress={() => this.props.navigation.navigate("MainDetails")} />
+          <ItemMore title="Sân bóng quanh đây"/>
           <ScrollView
             horizontal={true}
             showsHorizontalScrollIndicator={false}
