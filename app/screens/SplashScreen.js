@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, ImageBackground, Image } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground, Image, Button } from 'react-native';
 
 export default class splashscreen extends Component {
     render() {
@@ -8,6 +8,7 @@ export default class splashscreen extends Component {
                 <View style={styles.warpperLogo} >
                     <Image source={require('../assets/images/logo.png')} style={styles.logo}></Image>
                     <Text style={styles.sologan}> Be healthier everyday </Text>
+                    <Button title="Next" onPress={() => this.props.navigation.navigate('Login')} />
                 </View>
             </ImageBackground>
         );

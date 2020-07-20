@@ -1,35 +1,9 @@
 /**
  * @format
  */
-import React, { Component } from 'react';
 import { AppRegistry } from 'react-native';
-import SplashScreen from './app/screens/SplashScreen'
-import LoginScreen from './app/screens/LoginScreen'
-import OTPScreen from './app/screens/OTPScreen'
-import FillInfoScreen from './app/screens/FillInfoScreen'
 import App from './app/App'
 import { name as appName } from './app.json';
+import 'react-native-gesture-handler';
 
-<<<<<<< HEAD
-class Main extends Component {
-    constructor(props) {
-        super(props);
-        this.state = { currentScreen: 'SplashScreen' }
-        setTimeout(() => {
-            this.setState({currentScreen:'App'})
-        }, 3000)
-    }
-    render() {
-        const { currentScreen } = this.state
-        let mainScreen = currentScreen === 'SplashScreen' ? <SplashScreen /> : <App />
-        return mainScreen
-    }
-}
-=======
-import {AppRegistry} from 'react-native';
-import App from './app/screens/HomeScreen';
-import {name as appName} from './app.json';
->>>>>>> giaodienHome
-
-
-AppRegistry.registerComponent(appName, () => Main);
+AppRegistry.registerComponent(appName, () => App);

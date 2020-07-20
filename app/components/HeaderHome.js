@@ -45,11 +45,12 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    height:40,
     borderRadius: 10,
     borderWidth: 2,
     borderColor: '#fff',
     // height: '30%',
-    marginTop: 30,
+    marginTop: 60,
     marginBottom: 15,
     marginHorizontal: 10,
   },

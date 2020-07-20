@@ -19,12 +19,11 @@ export default class HomeScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-
         <View>
           <HeaderHome style={styles.header} />
         </View>
         <View style={styles.body}>
-          <ItemMore title="Sân bóng quanh đây" />
+          <ItemMore title="Sân bóng quanh đây" onPress={() => this.props.navigation.navigate("MainDetails")} />
           <ScrollView
             horizontal={true}
             showsHorizontalScrollIndicator={false}
@@ -96,7 +95,7 @@ const styles = StyleSheet.create({
   body: {
     zIndex: -1,
     position: 'absolute',
-    top: 295,
+    top: 320,
     paddingHorizontal: 15,
   },
 });
