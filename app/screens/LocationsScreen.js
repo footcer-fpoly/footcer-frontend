@@ -5,7 +5,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 export default class LocationsScreen extends Component {
   render() {
     return (
-      <SafeAreaView style={{flex: 1,backgroundColor:'white'}}>
+      <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
         <View
           style={{
             flexDirection: 'row',
@@ -13,8 +13,8 @@ export default class LocationsScreen extends Component {
             width: 414,
             height: 100,
             alignItems: 'center',
-            borderBottomWidth:0.2,
-            borderColor: 'black'
+            borderBottomWidth: 0.25,
+            borderColor: '#707070',
           }}>
           <View style={{marginHorizontal: 5}}>
             <Image

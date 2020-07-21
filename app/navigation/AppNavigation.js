@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import Feather from 'react-native-vector-icons/Feather';
 import LoginScreen from '../screens/LoginScreen';
 import HomeScreen from '../screens/HomeScreen';
 import DetailsScreen from '../screens/DetailsScreen';
@@ -13,6 +13,8 @@ import OTPScreen from '../screens/OTPScreen';
 import FillInfoScreen from '../screens/FillInfoScreen';
 import CompetitorScreen from '../screens/CompetitorScreen';
 import CompetitorDetails from '../screens/CompetitorDetails';
+import InforScreen from '../screens/InforScreen';
+import CreateTeamScreen from '../screens/CreateTeamScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -62,6 +64,21 @@ class CompetitorStack extends Component {
   }
 }
 
+class UserStack extends Component {
+  render() {
+    return (
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Infor"
+          component={InforScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen name="CreateTeam" component={CreateTeamScreen} />
+      </Stack.Navigator>
+    );
+  }
+}
+
 class BottomNavigation extends Component {
   render() {
     return (
@@ -74,12 +91,16 @@ class BottomNavigation extends Component {
             if (route.name === 'Home') {
               iconName = 'home';
             } else if (route.name === 'Locations') {
-              iconName = 'map-marker-alt';
+              iconName = 'navigation';
             } else if (route.name === 'Competitors') {
-              iconName = 'user-friends';
+              iconName = 'users';
+            } else if (route.name === 'Information') {
+              iconName = 'user';
             }
 
-            return <FontAwesome5 name={iconName} size={size} color={color} />;
+            return (
+              <Feather name={iconName} size={size} color={color} />
+            );
           },
         })}
         tabBarOptions={{
@@ -89,6 +110,7 @@ class BottomNavigation extends Component {
         <Tab.Screen name="Home" component={HomeStack} />
         <Tab.Screen name="Locations" component={LocationStack} />
         <Tab.Screen name="Competitors" component={CompetitorStack} />
+        <Tab.Screen name="Information" component={UserStack} />
       </Tab.Navigator>
     );
   }
