@@ -1,15 +1,8 @@
 import React, {Component} from 'react';
-import {
-  Text,
-  StyleSheet,
-  View,
-  Image,
-  ScrollView,
-  TouchableOpacity,
-} from 'react-native';
+import {Text, StyleSheet, View, Image, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import ItemHeader from '../components/ItemHeader';
-import TabView from '../navigation/TabView';
+import ViewPager from '../navigation/ProfileViewPager';
 
 export default class ProfileDetailScreen extends React.Component {
   render() {
@@ -54,7 +47,7 @@ export default class ProfileDetailScreen extends React.Component {
           </View>
         </View>
         <View style={styles.body}>
-          <TabView />
+          <ViewPager />
         </View>
       </View>
     );

@@ -42,6 +42,7 @@ export default class TabTeams extends React.Component {
             backgroundColor: 'white',
             borderBottomLeftRadius: 5,
             borderBottomRightRadius: 5,
+            // flex: 1,
           }}>
           {[
             {
