@@ -10,8 +10,9 @@ import {
 import {Rating, AirbnbRating} from 'react-native-ratings';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import ItemHeader from '../components/ItemHeader';
+import StarRating from 'react-native-star-rating';
 
-export default class ReviewScreen extends React.Component {
+export default class ReviewScreen extends Component {
   ratingCompleted(rating) {
     console.log('Rating is: ' + rating);
   }
@@ -43,9 +44,7 @@ export default class ReviewScreen extends React.Component {
           </View>
           <View
             style={{flexDirection: 'row', alignItems: 'center', marginTop: 10}}>
-            <Rating
-              startingValue={5}
-            />
+            <AirbnbRating reviews={[]} />
           </View>
           <TextInput
             placeholder="Đánh giá của bạn"

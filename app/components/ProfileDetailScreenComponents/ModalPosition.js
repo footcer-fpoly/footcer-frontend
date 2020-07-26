@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import {Text, View} from 'react-native';
+import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 export default class ModalPosition extends Component {
   render() {
@@ -46,3 +47,11 @@ export default class ModalPosition extends Component {
     );
   }
 }
+const styles = StyleSheet.create({
+  txtPosition: {
+    fontSize: 15,
+    borderTopWidth: 0.5,
+    borderTopColor: '#707070',
+    padding: 15,
+  },
+});

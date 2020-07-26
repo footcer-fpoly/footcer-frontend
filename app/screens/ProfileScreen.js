@@ -10,7 +10,7 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import ItemProfile from '../components/ProfileScreenComponents/ItemProfile';
 
-export default class ProfileSreen extends React.Component {
+export default class ProfileSreen extends Component {
   render() {
     const {nameUser} = this.props;
     const urlImgAvatar =

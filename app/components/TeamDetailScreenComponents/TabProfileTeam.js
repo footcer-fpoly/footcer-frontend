@@ -11,7 +11,7 @@ import Member from './Member';
 import ModalLevel from './ModalLevel';
 import ModalAddMember from './ModalAddMember';
 
-export default class TabProfile extends React.Component {
+export default class TabProfile extends Component {
   constructor(props) {
     super(props);
     this.state = {

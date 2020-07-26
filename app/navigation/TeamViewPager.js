@@ -1,16 +1,16 @@
 import React from 'react';
-import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
-import TabProfile from '../components/TeamDetailScreenComponents/TabProfile';
-import TabTeams from '../components/ProfileDetailScreenComponents/TabProfile';
-export default function App() {
+import {TabView, SceneMap, TabBar, StyleSheet} from 'react-native-tab-view';
+import TabProfileTeam from '../components/TeamDetailScreenComponents/TabProfileTeam';
+import TabTeams from '../components/TeamDetailScreenComponents/TabProfileTeam'; //Chưa có nên lấy bên kia cho vào
+export default function TeamViewPager() {
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
-    {key: 'profile', title: 'Thông tin'},
+    {key: 'profileTeam', title: 'Thông tin'},
     {key: 'history', title: 'Lịch sử'},
   ]);
 
   const renderScene = SceneMap({
-    profile: TabProfile,
+    profileTeam: TabProfileTeam,
     history: TabTeams,
   });
   const renderTabBar = props => (

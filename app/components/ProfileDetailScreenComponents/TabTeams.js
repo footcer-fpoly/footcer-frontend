@@ -3,7 +3,7 @@ import {Text, StyleSheet, View, TextInput, ScrollView} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Team from './Team';
 
-export default class TabTeams extends React.Component {
+export default class TabTeams extends Component {
   render() {
     return (
       <View style={{backgroundColor: '#EDEDED', flex: 1}}>

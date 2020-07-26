@@ -85,6 +85,8 @@ target 'FootCer' do
 
   pod 'react-native-viewpager', :path => '../node_modules/@react-native-community/viewpager'
 
+  pod 'BVLinearGradient', :path => '../node_modules/react-native-linear-gradient'
+
   target 'FootCerTests' do
     inherit! :complete
     # Pods for testing
