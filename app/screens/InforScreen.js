@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
-import {Text, SafeAreaView, Button, View, Image} from 'react-native';
+import {Text, SafeAreaView, Button, View, Image, TouchableOpacity} from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 
 export default class InforScreen extends Component {
   render() {
     return (
-      <View style={{backgroundColor: 'white',height:'100%'}}>
+      <View style={{backgroundColor: 'white', height: '100%'}}>
         <View
           style={{
             backgroundColor: '#0AB134',
@@ -55,19 +55,22 @@ export default class InforScreen extends Component {
                 flexDirection: 'row',
                 alignItems: 'center',
                 width: 414,
-                height: 75,
+                height: 65,
                 borderBottomColor: 'grey',
                 borderBottomWidth: 0.3,
               }}>
-              <Feather
-                name="search"
-                color="#0AB134"
-                size={25}
-                style={{marginHorizontal: 20}}
-              />
-              <Text style={{marginLeft: 40, fontSize: 16}}>
-                Tìm kiếm đội bóng
-              </Text>
+              <TouchableOpacity
+                style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Feather
+                  name="search"
+                  color="#0AB134"
+                  size={25}
+                  style={{marginHorizontal: 20}}
+                />
+                <Text style={{marginLeft: 40, fontSize: 16}}>
+                  Tìm kiếm đội bóng
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
           <View>
@@ -76,19 +79,23 @@ export default class InforScreen extends Component {
                 flexDirection: 'row',
                 alignItems: 'center',
                 width: 414,
-                height: 75,
+                height: 65,
                 borderBottomColor: 'grey',
                 borderBottomWidth: 0.3,
               }}>
-              <Feather
-                name="user-plus"
-                color="#0AB134"
-                size={25}
-                style={{marginHorizontal: 20}}
-              />
-              <Text style={{marginLeft: 40, fontSize: 16}}>
-                Tạo đội bóng
-              </Text>
+              <TouchableOpacity
+                onPress={() => this.props.navigation.navigate('CreateTeam')}
+                style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Feather
+                  name="user-plus"
+                  color="#0AB134"
+                  size={25}
+                  style={{marginHorizontal: 20}}
+                />
+                <Text style={{marginLeft: 40, fontSize: 16}}>
+                  Tạo đội bóng
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
           <View>
@@ -97,19 +104,22 @@ export default class InforScreen extends Component {
                 flexDirection: 'row',
                 alignItems: 'center',
                 width: 414,
-                height: 75,
+                height: 65,
                 borderBottomColor: 'grey',
                 borderBottomWidth: 0.3,
               }}>
-              <Feather
-                name="share-2"
-                color="#0AB134"
-                size={25}
-                style={{marginHorizontal: 20}}
-              />
-              <Text style={{marginLeft: 40, fontSize: 16}}>
-                Mời bạn bè sử dụng app
-              </Text>
+              <TouchableOpacity
+                style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Feather
+                  name="share-2"
+                  color="#0AB134"
+                  size={25}
+                  style={{marginHorizontal: 20}}
+                />
+                <Text style={{marginLeft: 40, fontSize: 16}}>
+                  Mời bạn bè sử dụng app
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
           <View>
@@ -118,19 +128,22 @@ export default class InforScreen extends Component {
                 flexDirection: 'row',
                 alignItems: 'center',
                 width: 414,
-                height: 75,
+                height: 65,
                 borderBottomColor: 'grey',
                 borderBottomWidth: 0.3,
               }}>
-              <Feather
-                name="settings"
-                color="#0AB134"
-                size={25}
-                style={{marginHorizontal: 20}}
-              />
-              <Text style={{marginLeft: 40, fontSize: 16}}>
-                Thiết lập ứng dụng
-              </Text>
+              <TouchableOpacity
+                style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Feather
+                  name="settings"
+                  color="#0AB134"
+                  size={25}
+                  style={{marginHorizontal: 20}}
+                />
+                <Text style={{marginLeft: 40, fontSize: 16}}>
+                  Thiết lập ứng dụng
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
           <View>
@@ -139,17 +152,22 @@ export default class InforScreen extends Component {
                 flexDirection: 'row',
                 alignItems: 'center',
                 width: 414,
-                height: 75,
+                height: 65,
                 borderBottomColor: 'grey',
                 borderBottomWidth: 0.3,
               }}>
-              <Feather
-                name="log-out"
-                color="#0AB134"
-                size={25}
-                style={{marginHorizontal: 20}}
-              />
-              <Text style={{marginLeft: 40, fontSize: 16}}>Đăng xuất</Text>
+              <TouchableOpacity
+                style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Feather
+                  name="log-out"
+                  color="#0AB134"
+                  size={25}
+                  style={{marginHorizontal: 20}}
+                />
+                <Text style={{marginLeft: 40, fontSize: 16}}>
+                  Đăng xuất
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
           <View>
@@ -158,17 +176,20 @@ export default class InforScreen extends Component {
                 flexDirection: 'row',
                 alignItems: 'center',
                 width: 414,
-                height: 75,
+                height: 65,
               }}>
-              <Feather
-                name="codesandbox"
-                color="#0AB134"
-                size={25}
-                style={{marginHorizontal: 20}}
-              />
-              <Text style={{marginLeft: 40, fontSize: 16}}>
-                Quét QR Code
-              </Text>
+              <TouchableOpacity
+                style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Feather
+                  name="codesandbox"
+                  color="#0AB134"
+                  size={25}
+                  style={{marginHorizontal: 20}}
+                />
+                <Text style={{marginLeft: 40, fontSize: 16}}>
+                  Quét QR Code
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
         </View>

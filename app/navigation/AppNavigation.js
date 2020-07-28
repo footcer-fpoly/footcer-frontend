@@ -67,11 +67,10 @@ class CompetitorStack extends Component {
 class UserStack extends Component {
   render() {
     return (
-      <Stack.Navigator>
+      <Stack.Navigator screenOptions={{headerShown:false}}>
         <Stack.Screen
           name="Infor"
           component={InforScreen}
-          options={{headerShown: false}}
         />
         <Stack.Screen name="CreateTeam" component={CreateTeamScreen} />
       </Stack.Navigator>
