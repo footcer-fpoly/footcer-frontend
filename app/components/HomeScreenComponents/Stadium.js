@@ -13,7 +13,14 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 
 export default class Filed extends Component {
   render() {
-    const {urlImgStadium, nameStadium, priceStadium, addressStadium, time, range} = this.props;
+    const {
+      urlImgStadium,
+      nameStadium,
+      priceStadium,
+      addressStadium,
+      time,
+      range,
+    } = this.props;
     return (
       <View style={styles.stadiumContainer}>
         <View style={styles.stadium}>
@@ -25,17 +32,23 @@ export default class Filed extends Component {
           />
           <View style={styles.infoStadiumContainer}>
             <View style={styles.namePriceStadiumContainer}>
-              <Text style={styles.nameStadium} numberOfLines={1}>{nameStadium}</Text>
+              <Text style={styles.nameStadium} numberOfLines={1}>
+                {nameStadium}
+              </Text>
               <Text style={styles.priceStadium}>{priceStadium} đ/h</Text>
               {/* <Text>đ/h</Text> */}
             </View>
             <View style={styles.addressStadiumContainer}>
               <Icon name="place" color="#FF0000" size={15} />
-              <Text style={styles.addreess} numberOfLines={1}>{addressStadium}</Text>
+              <Text style={styles.addreess} numberOfLines={1}>
+                {addressStadium}
+              </Text>
             </View>
             <View style={styles.timeRangeStadiumContainer}>
               <Icon name="schedule" size={15} />
-              <Text style={styles.timeRange}>{time}p - {range}km</Text>
+              <Text style={styles.timeRange}>
+                {time}p - {range}km
+              </Text>
             </View>
           </View>
           <Text style={styles.go}>Đến sân ngay</Text>
@@ -45,7 +58,6 @@ export default class Filed extends Component {
   }
 }
 const styles = StyleSheet.create({
- 
   stadiumContainer: {
     backgroundColor: 'white',
     borderRadius: 10,

@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 export default class ItemHeader extends Component {
   render() {
     const {titleHeader} = this.props;
+
     return (
       <View style={styles.headerContainer}>
         <Icon style={styles.iconHeader} name="chevron-left" size={21} />

@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Text, StyleSheet, View} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
-export default class ItemHeader extends Component {
+export default class ItemHeader2 extends Component {
   render() {
     const {titleHeader} = this.props;
     return (
