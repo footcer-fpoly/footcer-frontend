@@ -8,7 +8,6 @@ export default class splashscreen extends Component {
                 <View style={styles.warpperLogo} >
                     <Image source={require('../assets/images/logo.png')} style={styles.logo}></Image>
                     <Text style={styles.sologan}> Be healthier everyday </Text>
-                    <Button title="Next" onPress={() => this.props.navigation.navigate('Login')} />
                 </View>
             </ImageBackground>
         );

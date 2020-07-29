@@ -10,12 +10,12 @@ import {
     Keyboard,
     TouchableWithoutFeedback
 } from 'react-native';
-import TopTitle from '../components/TopTitle';
-import Button from '../components/Button';
+import TopTitle from '../components/SignInSignUp/TopTitle';
+import Button from '../components/SignInSignUp/Button';
 import styles from '../theme/StyleLogin-Regis';
 
 
-export default class FillInfoScreen extends Component {
+export default class SignUpPhone extends Component {
     constructor(props) {
         super(props);
         this.state = {

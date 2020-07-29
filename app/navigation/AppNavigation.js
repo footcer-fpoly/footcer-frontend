@@ -3,14 +3,14 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Feather from 'react-native-vector-icons/Feather';
-import LoginScreen from '../screens/LoginScreen';
+import CheckPhoneScreen from '../screens/CheckPhoneScreen';
 import HomeScreen from '../screens/HomeScreen';
 import DetailsScreen from '../screens/DetailsScreen';
 import LocationsScreen from '../screens/LocationsScreen';
 import ViewLocations from '../screens/ViewLocationScreen';
 import SplashScreen from '../screens/SplashScreen';
 import OTPScreen from '../screens/OTPScreen';
-import FillInfoScreen from '../screens/FillInfoScreen';
+import SignUpPhoneScreen from '../screens/SignUpPhoneScreen';
 import CompetitorScreen from '../screens/CompetitorScreen';
 import CompetitorDetails from '../screens/CompetitorDetails';
 import InforScreen from '../screens/InforScreen';
@@ -120,11 +120,10 @@ export default class MainNavigation extends Component {
     return (
       <NavigationContainer>
         <Stack.Navigator screenOptions={{headerShown: false}}>
-          <Stack.Screen name="Splash" component={SplashScreen} />
-          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="CheckPhoneScreen" component={CheckPhoneScreen} />
           <Stack.Screen name="Dashboard" component={BottomNavigation} />
           <Stack.Screen name="OTPScreen" component={OTPScreen} />
-          <Stack.Screen name="FillInfoScreen" component={FillInfoScreen} />
+          <Stack.Screen name="SignUpPhoneScreen" component={SignUpPhoneScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     );

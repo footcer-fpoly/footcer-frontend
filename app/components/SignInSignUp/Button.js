@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Text, TouchableOpacity, StyleSheet } from 'react-native';
 
-export default class Buton extends Component {
+export default class Button extends Component {
     render() {
         const {text,onPressBtn} = this.props;
         return (

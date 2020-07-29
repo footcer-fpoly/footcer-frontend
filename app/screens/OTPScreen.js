@@ -11,10 +11,10 @@ import {
     TouchableWithoutFeedback,
     TouchableHighlight
 } from 'react-native';
-import TopTitle from '../components/TopTitle';
-import Button from '../components/Button';
+import TopTitle from '../components/SignInSignUp/TopTitle';
+import Button from '../components/SignInSignUp/Button';
 import styles from '../theme/StyleLogin-Regis';
-import LoginMore from '../components/LoginMore';
+import LoginMore from '../components/SignInSignUp/LoginMore';
 import firebase from '@react-native-firebase/app';
 
 
@@ -36,7 +36,7 @@ export default class OTPScreen extends Component {
                 .confirm(verificationCode)
                 .then(() => {
                     alert('done!')
-                    this.props.navigation.navigate('FillInfoScreen')
+                    this.props.navigation.navigate('SignUpPhoneScreen')
                 })
                 .catch(error => {
                     alert(error.message)

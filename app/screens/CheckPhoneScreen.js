@@ -10,13 +10,13 @@ import {
     Keyboard,
     TouchableWithoutFeedback
 } from 'react-native';
-import TopTitle from '../components/TopTitle';
-import Button from '../components/Button';
+import TopTitle from '../components/SignInSignUp/TopTitle';
+import Button from '../components/SignInSignUp/Button';
 import styles from '../theme/StyleLogin-Regis';
-import LoginMore from '../components/LoginMore';
+import LoginMore from '../components/SignInSignUp/LoginMore';
 import Dialog from "react-native-dialog";
 import firebase from '@react-native-firebase/app';
-export default class LoginScreen extends Component {
+export default class CheckPhoneScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
