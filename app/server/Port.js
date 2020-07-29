@@ -1,1 +1,1 @@
-export const PORT = 'footcer.tk'; //cf COF
+export const PORT = 'footcer.tk'; 

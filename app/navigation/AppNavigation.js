@@ -10,6 +10,7 @@ import LocationsScreen from '../screens/LocationsScreen';
 import ViewLocations from '../screens/ViewLocationScreen';
 import SplashScreen from '../screens/SplashScreen';
 import OTPScreen from '../screens/OTPScreen';
+import LoginScreen from '../screens/LoginScreen';
 import SignUpPhoneScreen from '../screens/SignUpPhoneScreen';
 import CompetitorScreen from '../screens/CompetitorScreen';
 import CompetitorDetails from '../screens/CompetitorDetails';
@@ -123,6 +124,7 @@ export default class MainNavigation extends Component {
           <Stack.Screen name="CheckPhoneScreen" component={CheckPhoneScreen} />
           <Stack.Screen name="Dashboard" component={BottomNavigation} />
           <Stack.Screen name="OTPScreen" component={OTPScreen} />
+          <Stack.Screen name="LoginScreen" component={LoginScreen} />
           <Stack.Screen name="SignUpPhoneScreen" component={SignUpPhoneScreen} />
         </Stack.Navigator>
       </NavigationContainer>
