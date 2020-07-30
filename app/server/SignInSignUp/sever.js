@@ -22,7 +22,6 @@ export const checkValidPhone = async (phone) => {
             })
         });
         let resJson = await response.json();
-        await console.log('status Code: ', resJson.code)
         return resJson.code;
     } catch (error) {
         console.error(error);
@@ -48,7 +47,7 @@ export const checkValidEmail = async (email) => {
     }
 }
 
-export const signUpPhone = async (user) => {
+export const signUpPhone = async (phone, password,email,displayName) => {
     try {
         let response = await fetch(API_SignUpPhone, {
             method: 'POST',
@@ -57,15 +56,14 @@ export const signUpPhone = async (user) => {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                "phone": "0903173",
+                "phone": phone,
                 "avatar": "/user/avatar.png",
-                "password": "123456",
-                "email": "oig29@gmail.com",
-                "displayName": "Nguoi dung 29"
+                "password": password,
+                "email": email,
+                "displayName": displayName
             })
         });
         let resJson = await response.json();
-        await console.log('status Code: ', resJson.code)
         return resJson.code;
     } catch (error) {
         console.error(error);
@@ -86,7 +84,6 @@ export const signInPhone = async (phone, pass) => {
             })
         });
         let resJson = await response.json();
-        await console.log('status Code----: ', resJson.code)
         return resJson.code;
     } catch (error) {
         console.error(error);

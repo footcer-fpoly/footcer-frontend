@@ -23,29 +23,27 @@ export default class LoginScreen extends Component {
         super(props);
         this.state = {
             pass: '',
-            flagLoading:0
+            flagLoading: 0
         };
     }
+    toggleLoading = () => {
+        const { flagLoading } = this.state
+        flagLoading ? this.setState({ flagLoading: 0 }) : this.setState({ flagLoading: 1 })
+    }
     checkLogin = async (phone, pass) => {
-        await this.setState({
-            flagLoading:1
-        })
+        this.toggleLoading();
         const status = await signInPhone(phone, pass);
         if (status === 200) {
             this._gotoHomeScreen();
-            this.setState({
-                flagLoading:0
-            })
+            await this.toggleLoading();
         } else {
-            this.setState({
-                flagLoading:0
-            })
+            await this.toggleLoading();
             alert('Sai mật khẩu')
         }
     }
 
     _gotoHomeScreen = () => {
-        this.props.navigation.navigation('Dashboard');
+        this.props.navigation.navigate('Dashboard');
     }
     onChangePass = pass => {
         this.setState({
@@ -55,7 +53,7 @@ export default class LoginScreen extends Component {
 
     render() {
         const { phone } = this.props.route.params;
-        const { pass,flagLoading } = this.state;
+        const { pass, flagLoading } = this.state;
         return (
             <ImageBackground source={require('../assets/images/bg.png')} style={styles.container}>
                 <Loading flag={flagLoading} />
