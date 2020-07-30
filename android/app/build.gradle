@@ -186,9 +186,14 @@ android {
         }
     }
 }
+apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
+    compile project(':react-native-spinkit')
+    //firebase
+    implementation 'com.google.firebase:firebase-analytics:17.2.2'
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
 

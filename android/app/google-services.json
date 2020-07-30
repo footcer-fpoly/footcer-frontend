@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "574215655379",
+    "firebase_url": "https://rnfootcer.firebaseio.com",
+    "project_id": "rnfootcer",
+    "storage_bucket": "rnfootcer.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:574215655379:android:5df85812259e73a0a22926",
+        "android_client_info": {
+          "package_name": "com.footcer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "574215655379-vvnk1e0slicup4osorlm8hk8segbkebt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.footcer",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "574215655379-e3rdbh6ccmrkgchqfigqkk3s14npmo0f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBG_v23Be5-oEQ6EsWGG8GE2J1SKvvmEWQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "574215655379-e3rdbh6ccmrkgchqfigqkk3s14npmo0f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

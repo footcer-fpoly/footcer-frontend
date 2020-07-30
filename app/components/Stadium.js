@@ -25,27 +25,42 @@ export default class Filed extends Component {
           />
           <View style={styles.infoStadiumContainer}>
             <View style={styles.namePriceStadiumContainer}>
-              <Text style={styles.nameStadium} numberOfLines={1}>{nameStadium}</Text>
+              <Text style={styles.nameStadium} numberOfLines={1}>
+                {nameStadium}
+              </Text>
               <Text style={styles.priceStadium}>{priceStadium} đ/h</Text>
               {/* <Text>đ/h</Text> */}
             </View>
+
             <View style={styles.addressStadiumContainer}>
               <Icon name="place" color="#FF0000" size={15} />
-              <Text style={styles.addreess} numberOfLines={1}>{addressStadium}</Text>
+              <Text style={styles.addreess} numberOfLines={1}>
+                {addressStadium}
+              </Text>
             </View>
+
             <View style={styles.timeRangeStadiumContainer}>
               <Icon name="schedule" size={15} />
-              <Text style={styles.timeRange}>{time}p - {range}km</Text>
+              <Text style={styles.timeRange}>
+                {time}p - {range}km
+              </Text>
             </View>
           </View>
-          <Text style={styles.go}>Đến sân ngay</Text>
+
+          <View
+            style={{
+              flex: 1,
+              borderTopWidth: 0.5,
+              borderTopColor: '#707070',
+            }}>
+            <Text style={styles.go}>Đến sân ngay</Text>
+          </View>
         </View>
       </View>
     );
   }
 }
 const styles = StyleSheet.create({
- 
   stadiumContainer: {
     backgroundColor: 'white',
     borderRadius: 10,
@@ -60,7 +75,7 @@ const styles = StyleSheet.create({
     marginRight: 15,
   },
   imgstadium: {
-    height: 100,
+    height: 150,
     width: 300,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
@@ -78,12 +93,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: 3,
     paddingBottom: 10,
-    borderBottomWidth: 0.5,
-    borderBottomColor: '#707070',
   },
   go: {
     paddingRight: 15,
-    paddingVertical: 5,
+    alignItems: 'center',
+    paddingVertical: 10,
     textAlign: 'right',
     fontSize: 13,
     color: '#0AB134',
