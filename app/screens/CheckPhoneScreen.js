@@ -15,6 +15,7 @@ import Button from '../components/SignInSignUp/Button';
 import styles from '../theme/StyleLogin-Regis';
 import LoginMore from '../components/SignInSignUp/LoginMore';
 import Loading from '../components/Loading'
+import LoginFb from '../components/SignInSignUp/LoginFb';
 import DialogSendOTP from '../components/DialogSendOTP'
 
 import { validatePhoneNumber, checkValidPhone } from '../server/SignInSignUp/sever'
@@ -97,6 +98,7 @@ export default class CheckPhoneScreen extends Component {
                 />
                 <Button text='Tiếp theo' onPressBtn={() => this.checkPhoneNumber(phone)} />
                 <LoginMore />
+                <LoginFb/>
             </ImageBackground>
 
         );
