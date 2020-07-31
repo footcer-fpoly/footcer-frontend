@@ -9,6 +9,7 @@ import 'react-native-gesture-handler';
 
 import SplashScreen from './app/screens/SplashScreen'
 import HomeScreen from './app/screens/HomeScreen'
+import SignUpFbGgScreen from './app/screens/SignUpFbGgScreen'
 
 
 class Main extends Component {

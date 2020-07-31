@@ -8,7 +8,8 @@ import {
     TextInput,
     KeyboardAvoidingView,
     Keyboard,
-    TouchableWithoutFeedback
+    TouchableWithoutFeedback,
+    Image
 } from 'react-native';
 import TopTitle from '../components/SignInSignUp/TopTitle';
 import Button from '../components/SignInSignUp/Button';
@@ -18,7 +19,16 @@ import Loading from '../components/Loading'
 import LoginFb from '../components/SignInSignUp/LoginFb';
 import DialogSendOTP from '../components/DialogSendOTP'
 
-import { validatePhoneNumber, checkValidPhone } from '../server/SignInSignUp/sever'
+import {
+    LoginManager,
+    AccessToken,
+    GraphRequest,
+    GraphRequestManager,
+    Permissions,
+    LoginButton, ShareDialog
+} from 'react-native-fbsdk';
+
+import { validatePhoneNumber, checkValidPhone, checkUUID } from '../server/SignInSignUp/sever'
 
 export default class CheckPhoneScreen extends Component {
     constructor(props) {
@@ -53,6 +63,12 @@ export default class CheckPhoneScreen extends Component {
     _gotoLoginScreen = (phone) => {
         this.props.navigation.navigate('LoginScreen', { phone: phone })
     }
+    _gotoSignUpFbGg = () => {
+        this.props.navigation.navigate('SignUpFbGgScreen')
+    }
+    _gotoDashboard = () => {
+        this.props.navigation.navigate('Dashboard')
+    }
 
 
 
@@ -69,6 +85,56 @@ export default class CheckPhoneScreen extends Component {
             }
         } else {
             alert('SĐT không đúng định dạng');
+        }
+    }
+
+    async LoginFb() {
+        try {
+            LoginManager.logInWithPermissions(['public_profile', 'email']).then((result) => {
+                if (result.isCancelled) {
+                    console.log('Login cancelled');
+                } else {
+                    AccessToken.getCurrentAccessToken().then((data) => {
+                        const accessToken = data.accessToken;
+                        const responseInfoCallback = (error, result) => {
+                            if (error) {
+                                console.log(error);
+                                console.log('Error fetching data=', error.toString());
+                                return false;
+                            } else {
+                                console.log('Success fetching data=', result.toString());
+                            }
+                        };
+                        const infoRequest = new GraphRequest(
+                            '/me',
+                            {
+                                accessToken,
+                                parameters: {
+                                    fields: {
+                                        string: 'id,email,name,picture.height(10000)',
+                                    },
+                                },
+                            }, (error, result) => {
+                                if (error) {
+                                    console.log(error);
+                                } else {
+                                    const { id } = result;
+                                    const status = checkUUID(id);
+                                    if (status === 200) {
+                                        this.props.navigation.navigate('SignUpFbGgScreen', { data: result })
+                                    } else {
+                                        this.props.navigation.navigate('Dashboard')
+                                    }
+                                }
+                                responseInfoCallback
+                            }
+                        );
+                        new GraphRequestManager().addRequest(infoRequest).start();
+                    });
+                }
+            });
+        } catch (error) {
+            alert('Login failed: ' + error)
         }
     }
     render() {
@@ -96,9 +162,10 @@ export default class CheckPhoneScreen extends Component {
                     maxLength={10}
                     autoCorrect={false}
                 />
-                <Button text='Tiếp theo' onPressBtn={() => this.checkPhoneNumber(phone)} />
+                {/* <Button text='Tiếp theo' onPressBtn={() => this.checkPhoneNumber(phone)} /> */}
+                <Button text='Tiếp theo' onPressBtn={() => this._gotoLoginScreen(phone)} />
                 <LoginMore />
-                <LoginFb/>
+                <LoginFb onPress={() => this.LoginFb()} />
             </ImageBackground>
 
         );

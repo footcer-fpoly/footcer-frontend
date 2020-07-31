@@ -2,8 +2,10 @@ import { PORT } from '../Port'
 
 const API_CheckValidPhone = `http://${PORT}:4000/users/valid-phone`
 const API_CheckValidEmail = `http://${PORT}:4000/users/valid-email`
+const API_CheckUUID = `http://${PORT}:4000/users/valid-uuid`
 const API_SignUpPhone = `http://${PORT}:4000/users/sign-up-phone`
 const API_SignInPhone = `http://${PORT}:4000/users/sign-in-phone`
+const API_SignUpFbGg = `http://${PORT}:4000/users/sign-in`
 
 export const validatePhoneNumber = (phone) => {
     var regexp = /^(03|07|08|09|01[2|6|8|9])+([0-9]{8})$/
@@ -46,8 +48,29 @@ export const checkValidEmail = async (email) => {
         console.error(error);
     }
 }
+// export const checkUUID = async (uuid) => {
+//     try {
+//         let response = await fetch(API_CheckUUID, {
+//             method: 'POST',
+//             headers: {
+//                 'Accept': 'application/json',
+//                 'Content-Type': 'application/json',
+//             },
+//             body: JSON.stringify({
+//                 "userId" : uuid
+//             })
+//         });
+//         let resJson = await response.json();
+//         return resJson.code
+//     } catch (error) {
+//         console.error(error);
+//     }
+// }
+export const checkUUID = (uuid) => {
+    return 200;
+}
 
-export const signUpPhone = async (phone, password,email,displayName) => {
+export const signUpPhone = async (phone, password, email, displayName) => {
     try {
         let response = await fetch(API_SignUpPhone, {
             method: 'POST',
@@ -70,6 +93,26 @@ export const signUpPhone = async (phone, password,email,displayName) => {
     }
 }
 export const signInPhone = async (phone, pass) => {
+    try {
+        console.log(phone, pass)
+        let response = await fetch(API_SignInPhone, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                "phone": phone,
+                "password": pass
+            })
+        });
+        let resJson = await response.json();
+        return resJson.code;
+    } catch (error) {
+        console.error(error);
+    }
+}
+export const signUpFbGg = async (phone, avatar, email, displayName, id) => {
     try {
         console.log(phone, pass)
         let response = await fetch(API_SignInPhone, {
