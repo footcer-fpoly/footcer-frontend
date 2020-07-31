@@ -13,30 +13,52 @@ import Loading from '../components/Loading'
 import { Avatar } from 'react-native-elements';
 import styless from '../theme/StyleLogin-Regis';
 import { signUpFbGg, checkValidEmail, checkValidPhone } from '../server/SignInSignUp/sever'
+
+
 export default class SignUpFbGgScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
             email: '',
             phone: '',
+            urlAvatar: null,
+            name: '',
+            id: ''
         };
     }
     componentDidMount() {
-        const { data } = this.props.route.params;
-        console.log('hahaha:', data);
+        this.checkLogin();
+    }
+    checkLogin() {
+        const { data, flag } = this.props.route.params;
+        if (flag) {
+            this.setState({
+                email: data.email,
+                name: data.name,
+                urlAvatar: data.photo,
+                id: data.id
+            })
+        } else {
+            this.setState({
+                email: data.email,
+                name: data.name,
+                urlAvatar: data.picture.data.url,
+                id: data.id
+            })
+        }
     }
     checkValidForm() {
-        const {phone, email} = this.state
-        if(email.length === 0 ){
+        const { phone, email } = this.state
+        if (email.length === 0) {
             ToastAndroid.show("Nhập email", ToastAndroid.SHORT);
             return false;
-        }else if(phone.length === 0){
+        } else if (phone.length === 0) {
             ToastAndroid.show("Nhập số điện thoại", ToastAndroid.SHORT);
             return false;
-        }else return true;
+        } else return true;
     }
     render() {
-        const { data } = this.props.route.params;
+        const { phone, email, urlAvatar, name } = this.state
         return (
             <ImageBackground source={require('../assets/images/bg.png')} style={styles.container}>
                 <Text style={styles.title}>Cập nhật thông tin</Text>
@@ -44,12 +66,9 @@ export default class SignUpFbGgScreen extends Component {
                 <Avatar
                     size="xlarge"
                     rounded
-                    source={{
-                        uri:
-                            data.picture.data.url,
-                    }}
+                    source={{ uri: urlAvatar, }}
                 />
-                <Text style={[styles.subTitle, { marginTop: 10, fontWeight: 'bold', fontSize: 20 }]}>{data.name}</Text>
+                <Text style={[styles.subTitle, { marginTop: 10, fontWeight: 'bold', fontSize: 20 }]}>{name}</Text>
                 <TextInput style={styless.input}
                     placeholder='Nhập email'
                     placeholderTextColor='#778ca3'
@@ -59,6 +78,7 @@ export default class SignUpFbGgScreen extends Component {
                         this.setState({ email })
                     }}
                     returnKeyType='next'
+                    value={email}
                     autoCorrect={false}
                 />
                 <TextInput style={styless.input}

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TouchableHighlight, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Button, SocialIcon } from 'react-native-elements';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
@@ -22,6 +22,7 @@ export default class LoginFb extends Component {
                     titleStyle={{ marginLeft: 15 }}
                     buttonStyle={styles.button}
                     onPress={onPress}
+                    TouchableComponent={TouchableOpacity}
                 />
                 {/* <SocialIcon
                     title='Đăng nhập bằng Google'
@@ -43,6 +44,8 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         backgroundColor: '#0488DB',
         paddingHorizontal: 20,
-        borderRadius: 50,
+        marginTop:20,
+        width:300,
+        borderRadius:25
     },
 });

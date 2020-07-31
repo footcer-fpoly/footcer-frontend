@@ -22,6 +22,8 @@ import com.facebook.reactnative.androidsdk.FBSDKCallbackManagerBaseJavaModule;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.facebook.reactnative.androidsdk.FBAppEventsLoggerModule;
 import com.facebook.FacebookSdk;
+import com.horcrux.svg.SvgPackage;
+import co.apptailor.googlesignin.RNGoogleSigninPackage;
 
 
 public class MainApplication extends Application implements ReactApplication {
