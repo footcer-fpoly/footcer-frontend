@@ -82,16 +82,20 @@ export default class CheckPhoneScreen extends Component {
     checkPhoneNumber = async (phone) => {
         if (validatePhoneNumber(phone)) {
             this.toggleLoading();
-            const statusCode = await checkValidPhone(phone);
-            if (statusCode === 200) {
-                this.toggleLoading();
-                this.toggleDialog()
-            } else if(statusCode === 409) {
-                this.toggleLoading();
-                this._gotoLoginScreen(phone);
-            }else {
-                this.toggleLoading();
-                alert ('Số điện thoại đã được đăng ký làm chủ sân')
+            try {
+                const statusCode = await checkValidPhone(phone);
+                if (statusCode === 200) {
+                    this.toggleLoading();
+                    this.toggleDialog()
+                } else if (statusCode === 409) {
+                    this.toggleLoading();
+                    this._gotoLoginScreen(phone);
+                } else {
+                    this.toggleLoading();
+                    alert('Số điện thoại đã được đăng ký làm chủ sân')
+                }
+            } catch (error) {
+                alert(error)
             }
         } else {
             alert('SĐT không đúng định dạng');
@@ -142,7 +146,7 @@ export default class CheckPhoneScreen extends Component {
                                     } else if (status === 409) {
                                         this.toggleLoading();
                                         this.props.navigation.navigate('Dashboard')
-                                    }else {
+                                    } else {
                                         this.toggleLoading();
                                         alert('status: ', status);
                                     }

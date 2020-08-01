@@ -117,21 +117,29 @@ export default class OTPScreen extends Component {
         console.log(data);
         console.log(flag);
         if (flag === 0) {
-            const statusCode = await signUpFbGg(phone, data.picture.data.url, data.email, data.name, data.id);
-            if (statusCode === 200) {
-                this.gotoDashboard();
-                alert('Vừa Sign Up Fb')
-            } else {
-                alert(statusCode);
+            try {
+                const statusCode = await signUpFbGg(phone, data.picture.data.url, data.name, data.id);
+                if (statusCode === 200) {
+                    this.gotoDashboard();
+                    alert('Vừa Sign Up Fb')
+                } else {
+                    alert(statusCode);
+                }
+            } catch (error) {
+                alert(error)
             }
         } else if (flag === 1) {
-            const statusCode = await signUpFbGg(phone, data.photo, data.email, data.name, data.id);
-            console.log(statusCode);
-            if (statusCode === 200) {
-                this.gotoDashboard();
-                alert('Vừa Sign Up GG')
-            } else {
-                alert(statusCode);
+            try {
+                const statusCode = await signUpFbGg(phone, data.photo, data.name, data.id);
+                console.log(statusCode);
+                if (statusCode === 200) {
+                    this.gotoDashboard();
+                    alert('Vừa Sign Up GG')
+                } else {
+                    alert(statusCode);
+                }
+            } catch (err) {
+                alert(err)
             }
         } else {
             this.gotoSignUpPhone(phone)

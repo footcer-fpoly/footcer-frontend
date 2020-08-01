@@ -1,6 +1,6 @@
 import { PORT } from '../Port'
 const API_CheckValidPhone = `http://${PORT}:4000/users/valid-phone`
-const API_CheckValidEmail = `http://${PORT}:4000/users/valid-email`
+// const API_CheckValidEmail = `http://${PORT}:4000/users/valid-email`
 const API_CheckUUID = `http://${PORT}:4000/users/valid-uuid`
 const API_SignUpPhone = `http://${PORT}:4000/users/sign-up-phone`
 const API_SignInPhone = `http://${PORT}:4000/users/sign-in-phone`
@@ -29,24 +29,24 @@ export const checkValidPhone = async (phone) => {
     }
 }
 
-export const checkValidEmail = async (email) => {
-    try {
-        let response = await fetch(API_CheckValidEmail, {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                "email": email
-            })
-        });
-        let resJson = await response.json();
-        return resJson.code
-    } catch (error) {
-        console.error(error);
-    }
-}
+// export const checkValidEmail = async (email) => {
+//     try {
+//         let response = await fetch(API_CheckValidEmail, {
+//             method: 'POST',
+//             headers: {
+//                 'Accept': 'application/json',
+//                 'Content-Type': 'application/json',
+//             },
+//             body: JSON.stringify({
+//                 "email": email
+//             })
+//         });
+//         let resJson = await response.json();
+//         return resJson.code
+//     } catch (error) {
+//         console.error(error);
+//     }
+// }
 export const checkUUID = async (uuid) => {
     try {
         let response = await fetch(API_CheckUUID, {
@@ -56,7 +56,7 @@ export const checkUUID = async (uuid) => {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                "userId" : uuid
+                "userId": uuid
             })
         });
         let resJson = await response.json();
@@ -67,7 +67,7 @@ export const checkUUID = async (uuid) => {
     }
 }
 
-export const signUpPhone = async (phone, password, email, displayName) => {
+export const signUpPhone = async (phone, password, displayName) => {
     try {
         let response = await fetch(API_SignUpPhone, {
             method: 'POST',
@@ -79,7 +79,6 @@ export const signUpPhone = async (phone, password, email, displayName) => {
                 "phone": phone,
                 "avatar": "/user/avatar.png",
                 "password": password,
-                "email": email,
                 "displayName": displayName
             })
         });
@@ -109,7 +108,7 @@ export const signInPhone = async (phone, pass) => {
         console.error(error);
     }
 }
-export const signUpFbGg = async (phone, avatar, email, displayName, id) => {
+export const signUpFbGg = async (phone, avatar, displayName, id) => {
     try {
         let response = await fetch(API_SignUpFbGg, {
             method: 'POST',
@@ -119,10 +118,9 @@ export const signUpFbGg = async (phone, avatar, email, displayName, id) => {
             },
             body: JSON.stringify({
                 "phone": phone,
-                "avatar" : avatar,
-                "email" : email,
-                "displayName" : displayName,
-                "userId" : id
+                "avatar": avatar,
+                "displayName": displayName,
+                "userId": id
             })
         });
         let resJson = await response.json();

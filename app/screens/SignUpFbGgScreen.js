@@ -13,7 +13,7 @@ import Button from '../components/SignInSignUp/Button';
 import Loading from '../components/Loading'
 import { Avatar } from 'react-native-elements';
 import styless from '../theme/StyleLogin-Regis';
-import { signUpFbGg, checkValidEmail, checkValidPhone, validatePhoneNumber } from '../server/SignInSignUp/sever'
+import { signUpFbGg, checkValidPhone, validatePhoneNumber } from '../server/SignInSignUp/sever'
 import DialogSendOTP from '../components/DialogSendOTP'
 
 
@@ -21,7 +21,6 @@ export default class SignUpFbGgScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            email: '',
             phone: '',
             urlAvatar: null,
             name: '',
@@ -41,14 +40,12 @@ export default class SignUpFbGgScreen extends Component {
         const { data, flag } = this.props.route.params;
         if (flag) {
             this.setState({
-                email: data.email,
                 name: data.name,
                 urlAvatar: data.photo,
                 id: data.id
             })
         } else {
             this.setState({
-                email: data.email,
                 name: data.name,
                 urlAvatar: data.picture.data.url,
                 id: data.id
@@ -56,31 +53,25 @@ export default class SignUpFbGgScreen extends Component {
         }
     }
     checkValidForm() {
-        const { phone, email } = this.state
-        if (email.length === 0) {
-            ToastAndroid.show("Nhập email", ToastAndroid.SHORT);
-            return false;
-        } else if (phone.length === 0) {
+        const { phone } = this.state
+        if (phone.length === 0) {
             ToastAndroid.show("Nhập số điện thoại", ToastAndroid.SHORT);
             return false;
         } else return true;
     }
-    checkEmailPhone = async (email, phone) => {
+    checkPhone = async (phone) => {
         if (this.checkValidForm()) {
-            const statusEmail = await checkValidEmail(email);
             const statusPhone = await checkValidPhone(phone);
-            if (statusEmail === 200) {
-                if (validatePhoneNumber(phone)) {
-                    if (statusPhone === 200) {
-                        this.toggleDialog(phone);
-                    } else {
-                        alert('Số điện thoại đã được đăng ký');
-                    }
+            if (validatePhoneNumber(phone)) {
+                if (statusPhone === 200) {
+                    this.toggleDialog(phone);
+                } else if (statusPhone === 409) {
+                    alert('Số điện thoại đã được đăng ký');
                 } else {
-                    ToastAndroid.show("Số điện thoại không đúng định dạng", ToastAndroid.SHORT);
+                    alert('Số điện thoại đã được đăng ký làm chủ sân')
                 }
             } else {
-                alert('Email đã được đăng ký');
+                ToastAndroid.show("Số điện thoại không đúng định dạng", ToastAndroid.SHORT);
             }
         }
     }
@@ -90,7 +81,7 @@ export default class SignUpFbGgScreen extends Component {
         this.props.navigation.navigate('OTPScreen', { phone: phone, data: data, flag: flag });
     }
     render() {
-        const { phone, email, urlAvatar, name, dialogVisible } = this.state
+        const { phone, urlAvatar, name, dialogVisible } = this.state
         return (
             <ImageBackground source={require('../assets/images/bg.png')} style={styles.container}>
                 <DialogSendOTP
@@ -108,17 +99,6 @@ export default class SignUpFbGgScreen extends Component {
                 />
                 <Text style={[styles.subTitle, { marginTop: 10, fontWeight: 'bold', fontSize: 20 }]}>{name}</Text>
                 <TextInput style={styless.input}
-                    placeholder='Nhập email'
-                    placeholderTextColor='#778ca3'
-                    keyboardType='email-address'
-                    onChangeText={email => {
-                        this.setState({ email })
-                    }}
-                    returnKeyType='next'
-                    value={email}
-                    autoCorrect={false}
-                />
-                <TextInput style={styless.input}
                     placeholder='Nhập số điện thoại'
                     placeholderTextColor='#778ca3'
                     onChangeText={phone => {
@@ -129,7 +109,7 @@ export default class SignUpFbGgScreen extends Component {
                     maxLength={10}
                     autoCorrect={false}
                 />
-                <Button text='Tiếp tục' onPressBtn={() => this.checkEmailPhone(email, phone)} />
+                <Button text='Tiếp tục' onPressBtn={() => this.checkPhone(phone)} />
             </ImageBackground>
 
         );
