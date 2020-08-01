@@ -86,9 +86,12 @@ export default class CheckPhoneScreen extends Component {
             if (statusCode === 200) {
                 this.toggleLoading();
                 this.toggleDialog()
-            } else {
+            } else if(statusCode === 409) {
                 this.toggleLoading();
                 this._gotoLoginScreen(phone);
+            }else {
+                this.toggleLoading();
+                alert ('Số điện thoại đã được đăng ký làm chủ sân')
             }
         } else {
             alert('SĐT không đúng định dạng');
@@ -98,7 +101,7 @@ export default class CheckPhoneScreen extends Component {
 
 
 
-    async LoginFb() {
+    LoginFb = async () => {
         try {
             LoginManager.logInWithPermissions(['public_profile', 'email']).then((result) => {
                 if (result.isCancelled) {
@@ -124,16 +127,24 @@ export default class CheckPhoneScreen extends Component {
                                         string: 'id,email,name,picture.height(10000)',
                                     },
                                 },
-                            }, (error, result) => {
+                            }, async (error, result) => {
                                 if (error) {
                                     console.log(error);
                                 } else {
                                     const { id } = result;
-                                    const status = checkUUID(id);
+                                    console.log(id)
+                                    this.toggleLoading();
+                                    const status = await checkUUID(id);
+                                    console.log(status);
                                     if (status === 200) {
-                                        this.props.navigation.navigate('SignUpFbGgScreen', { data: result })
-                                    } else {
+                                        this.toggleLoading();
+                                        this.props.navigation.navigate('SignUpFbGgScreen', { data: result, flag: 0 })
+                                    } else if (status === 409) {
+                                        this.toggleLoading();
                                         this.props.navigation.navigate('Dashboard')
+                                    }else {
+                                        this.toggleLoading();
+                                        alert('status: ', status);
                                     }
                                 }
                                 responseInfoCallback
@@ -165,11 +176,17 @@ export default class CheckPhoneScreen extends Component {
             console.log(userInfo.user)
             const { id } = userInfo.user;
             console.log(id)
-            const status = checkUUID(id);
+            this.toggleLoading();
+            const status = await checkUUID(id);
+            console.log('status:====', status);
             if (status === 200) {
-                this.props.navigation.navigate('SignUpFbGgScreen', { data: userInfo.user, flag:1 })
-            } else {
+                this.toggleLoading();
+                this.props.navigation.navigate('SignUpFbGgScreen', { data: userInfo.user, flag: 1 })
+            } else if (status === 409) {
+                this.toggleLoading();
                 this.props.navigation.navigate('Dashboard')
+            } else {
+                alert(statusCodes);
             }
             // this.setState({ userInfo });
         } catch (error) {

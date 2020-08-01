@@ -6,13 +6,15 @@ import {
     ImageBackground,
     TouchableOpacity,
     TextInput,
+    ToastAndroid
 } from 'react-native';
 import TopTitle from '../components/SignInSignUp/TopTitle';
 import Button from '../components/SignInSignUp/Button';
 import Loading from '../components/Loading'
 import { Avatar } from 'react-native-elements';
 import styless from '../theme/StyleLogin-Regis';
-import { signUpFbGg, checkValidEmail, checkValidPhone } from '../server/SignInSignUp/sever'
+import { signUpFbGg, checkValidEmail, checkValidPhone, validatePhoneNumber } from '../server/SignInSignUp/sever'
+import DialogSendOTP from '../components/DialogSendOTP'
 
 
 export default class SignUpFbGgScreen extends Component {
@@ -23,11 +25,17 @@ export default class SignUpFbGgScreen extends Component {
             phone: '',
             urlAvatar: null,
             name: '',
-            id: ''
+            id: '',
+            dialogVisible: false
         };
     }
     componentDidMount() {
         this.checkLogin();
+    }
+    toggleDialog = () => {
+        const { dialogVisible } = this.state
+        dialogVisible ? this.setState({ dialogVisible: false }) : this.setState({ dialogVisible: true })
+
     }
     checkLogin() {
         const { data, flag } = this.props.route.params;
@@ -57,12 +65,42 @@ export default class SignUpFbGgScreen extends Component {
             return false;
         } else return true;
     }
+    checkEmailPhone = async (email, phone) => {
+        if (this.checkValidForm()) {
+            const statusEmail = await checkValidEmail(email);
+            const statusPhone = await checkValidPhone(phone);
+            if (statusEmail === 200) {
+                if (validatePhoneNumber(phone)) {
+                    if (statusPhone === 200) {
+                        this.toggleDialog(phone);
+                    } else {
+                        alert('Số điện thoại đã được đăng ký');
+                    }
+                } else {
+                    ToastAndroid.show("Số điện thoại không đúng định dạng", ToastAndroid.SHORT);
+                }
+            } else {
+                alert('Email đã được đăng ký');
+            }
+        }
+    }
+    _gotoOTPScreen = (phone) => {
+        const { data, flag } = this.props.route.params;
+        this.toggleDialog();
+        this.props.navigation.navigate('OTPScreen', { phone: phone, data: data, flag: flag });
+    }
     render() {
-        const { phone, email, urlAvatar, name } = this.state
+        const { phone, email, urlAvatar, name, dialogVisible } = this.state
         return (
             <ImageBackground source={require('../assets/images/bg.png')} style={styles.container}>
+                <DialogSendOTP
+                    phone={phone}
+                    visible={dialogVisible}
+                    handleCancel={() => this.toggleDialog()}
+                    handleNext={() => this._gotoOTPScreen(phone)}
+                />
                 <Text style={styles.title}>Cập nhật thông tin</Text>
-                <Text style={styles.subTitle}>Cập nhật email và số điện thoại</Text>
+                <Text style={styles.subTitle}>Cập nhật số điện thoại</Text>
                 <Avatar
                     size="xlarge"
                     rounded
@@ -73,7 +111,6 @@ export default class SignUpFbGgScreen extends Component {
                     placeholder='Nhập email'
                     placeholderTextColor='#778ca3'
                     keyboardType='email-address'
-                    //onChangeText={this.onChangeTxtEmail}
                     onChangeText={email => {
                         this.setState({ email })
                     }}
@@ -89,10 +126,10 @@ export default class SignUpFbGgScreen extends Component {
                     }}
                     keyboardType='numeric'
                     returnKeyType='go'
-                    maxLength={6}
+                    maxLength={10}
                     autoCorrect={false}
                 />
-                <Button text='Tiếp tục' />
+                <Button text='Tiếp tục' onPressBtn={() => this.checkEmailPhone(email, phone)} />
             </ImageBackground>
 
         );

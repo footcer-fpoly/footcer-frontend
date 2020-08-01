@@ -1,5 +1,4 @@
 import { PORT } from '../Port'
-
 const API_CheckValidPhone = `http://${PORT}:4000/users/valid-phone`
 const API_CheckValidEmail = `http://${PORT}:4000/users/valid-email`
 const API_CheckUUID = `http://${PORT}:4000/users/valid-uuid`
@@ -48,26 +47,24 @@ export const checkValidEmail = async (email) => {
         console.error(error);
     }
 }
-// export const checkUUID = async (uuid) => {
-//     try {
-//         let response = await fetch(API_CheckUUID, {
-//             method: 'POST',
-//             headers: {
-//                 'Accept': 'application/json',
-//                 'Content-Type': 'application/json',
-//             },
-//             body: JSON.stringify({
-//                 "userId" : uuid
-//             })
-//         });
-//         let resJson = await response.json();
-//         return resJson.code
-//     } catch (error) {
-//         console.error(error);
-//     }
-// }
-export const checkUUID = (uuid) => {
-    return 200;
+export const checkUUID = async (uuid) => {
+    try {
+        let response = await fetch(API_CheckUUID, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                "userId" : uuid
+            })
+        });
+        let resJson = await response.json();
+        console.log(resJson.code);
+        return resJson.code
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 export const signUpPhone = async (phone, password, email, displayName) => {
@@ -114,8 +111,7 @@ export const signInPhone = async (phone, pass) => {
 }
 export const signUpFbGg = async (phone, avatar, email, displayName, id) => {
     try {
-        console.log(phone, pass)
-        let response = await fetch(API_SignInPhone, {
+        let response = await fetch(API_SignUpFbGg, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -123,7 +119,10 @@ export const signUpFbGg = async (phone, avatar, email, displayName, id) => {
             },
             body: JSON.stringify({
                 "phone": phone,
-                "password": pass
+                "avatar" : avatar,
+                "email" : email,
+                "displayName" : displayName,
+                "userId" : id
             })
         });
         let resJson = await response.json();
