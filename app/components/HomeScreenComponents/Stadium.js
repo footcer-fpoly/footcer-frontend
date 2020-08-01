@@ -13,7 +13,14 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 
 export default class Filed extends Component {
   render() {
-    const {urlImgStadium, nameStadium, priceStadium, addressStadium, time, range} = this.props;
+    const {
+      urlImgStadium,
+      nameStadium,
+      priceStadium,
+      addressStadium,
+      time,
+      range,
+    } = this.props;
     return (
       <View style={styles.stadiumContainer}>
         <View style={styles.stadium}>
@@ -104,7 +111,7 @@ const styles = StyleSheet.create({
   },
   infoStadiumContainer: {
     paddingHorizontal: 10,
-    paddingVertical: 5,
+    paddingTop: 5,
   },
   nameStadium: {
     fontSize: 14,

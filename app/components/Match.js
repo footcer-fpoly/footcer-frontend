@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react';
 import {
   View,
   Text,
@@ -9,40 +9,42 @@ import {
   StyleSheet,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import ItemMatch from './ItemMatch';
+import ItemMatch from './HomeScreenComponents/ItemMatch';
 
 export default class Match extends Component {
   render() {
     const {nameStadium, addressStadium, time, date, size} = this.props;
     return (
-      <View style={styles.matchContainer}>
-        <View style={styles.infoStadiumContainer}>
-          <Text style={styles.textMatchTitle}>{nameStadium}</Text>
-          <View style={styles.matchAddressContainer}>
-            <Icon name="place" color="#FF0000" size={18} />
-            <Text Text numberOfLines={1} style={styles.textMatchAddress}>
-              {addressStadium}
-            </Text>
+      <View style={{alignItems: 'center'}}>
+        <View style={styles.matchContainer}>
+          <View style={styles.infoStadiumContainer}>
+            <Text style={styles.textMatchTitle}>{nameStadium}</Text>
+            <View style={styles.matchAddressContainer}>
+              <Icon name="place" color="#FF0000" size={18} />
+              <Text Text numberOfLines={1} style={styles.textMatchAddress}>
+                {addressStadium}
+              </Text>
+            </View>
           </View>
-        </View>
-        <View style={styles.matchInfoContainer}>
-          <ItemMatch
-            urlImg="https://images.kienthuc.net.vn/zoom/800/uploaded/ctvcongdongtre/2019_11_23/4/he-lo-nhan-sac-that-khong-ngo-hot-girl-dong-phuc-10x-ha-nam-hinh-7.jpg"
-            nameTeam="Dương Hải Đăng"
-            status="Đã có sân"
-          />
-          <View style={styles.infoMatch}>
-            <Text style={styles.textTime}>{time}</Text>
-            <Text style={styles.textDate}>{date}</Text>
-            <Text style={styles.textMatchSize}>
-              {size} vs {size}
-            </Text>
+          <View style={styles.matchInfoContainer}>
+            <ItemMatch
+              urlImg="https://images.kienthuc.net.vn/zoom/800/uploaded/ctvcongdongtre/2019_11_23/4/he-lo-nhan-sac-that-khong-ngo-hot-girl-dong-phuc-10x-ha-nam-hinh-7.jpg"
+              nameTeam="Dương Hải Đăng"
+              status="Đã có sân"
+            />
+            <View style={styles.infoMatch}>
+              <Text style={styles.textTime}>{time}</Text>
+              <Text style={styles.textDate}>{date}</Text>
+              <Text style={styles.textMatchSize}>
+                {size} vs {size}
+              </Text>
+            </View>
+            <ItemMatch
+              urlImg="https://images.kienthuc.net.vn/zoom/800/uploaded/ctvcongdongtre/2019_11_23/4/he-lo-nhan-sac-that-khong-ngo-hot-girl-dong-phuc-10x-ha-nam-hinh-7.jpg"
+              nameTeam="Dương Quốc Hải"
+              status=""
+            />
           </View>
-          <ItemMatch
-            urlImg="https://images.kienthuc.net.vn/zoom/800/uploaded/ctvcongdongtre/2019_11_23/4/he-lo-nhan-sac-that-khong-ngo-hot-girl-dong-phuc-10x-ha-nam-hinh-7.jpg"
-            nameTeam="Dương Quốc Hải"
-            status=""
-          />
         </View>
       </View>
     );
@@ -52,11 +54,14 @@ export default class Match extends Component {
 const styles = StyleSheet.create({
   matchContainer: {
     position: 'absolute',
+<<<<<<< HEAD
     left: 0,
     right: 0,
     top: 150,
+=======
+>>>>>>> c5892c3ae346a219e6f5ee4220f65eb0112b378e
     backgroundColor: '#fff',
-    // width: '100%',
+    width: '95%',
     alignItems: 'center',
     borderRadius: 10,
     shadowColor: '#000',
@@ -68,7 +73,6 @@ const styles = StyleSheet.create({
     shadowRadius: 2.62,
     elevation: 4,
     marginTop: 10,
-    marginHorizontal: 12,
   },
   infoStadiumContainer: {
     alignItems: 'center',

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react';
 import {
   View,
   Text,
@@ -10,29 +10,35 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-import Match from './Match';
+import Match from '../Match';
 
 export default class HeaderHome extends Component {
   render() {
     return (
       <View style={styles.headerContainer}>
-    <View style={styles.inputContainer}>
-      <Icon name="search" color="white" size={30} style={{paddingLeft:10}}/>
-      <Text style={styles.textInput}>Nhập sân bóng cần tìm</Text>
-    </View>
-    <Text style={styles.textHeader}>Trận sắp tới</Text>
-    <Match  
-    nameStadium="Sân Bóng Chảo Lửa" 
-    addressStadium="30 Phan Thúc Duyệt, Tân Bình"
-    nameUser="Dương Hải Đăng" 
-    status="Đã có sân"
-    time="20:30" 
-    date="26/06/2020"
-    size="7"
-    nameUser2="Dương Quốc Hải"
-    status2="" />
-  </View>
-    )
+        <View style={styles.inputContainer}>
+          <Icon
+            name="search"
+            color="white"
+            size={30}
+            style={{paddingLeft: 10}}
+          />
+          <Text style={styles.textInput}>Nhập sân bóng cần tìm</Text>
+        </View>
+        <Text style={styles.textHeader}>Trận sắp tới</Text>
+        <View>
+          <Match
+            nameStadium="Sân Bóng Chảo Lửa"
+            addressStadium="30 Phan Thúc Duyệt, Tân Bình"
+            nameUser="Dương Hải Đăng"
+            status="Đã có sân"
+            time="20:30"
+            date="26/06/2020"
+            size="7"
+          />
+        </View>
+      </View>
+    );
   }
 }
 const styles = StyleSheet.create({
