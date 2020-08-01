@@ -106,7 +106,6 @@ const styles = StyleSheet.create({
   },
   addressStadium: {
     fontSize: 14,
-
     color: '#676767',
     marginLeft: 10,
   },

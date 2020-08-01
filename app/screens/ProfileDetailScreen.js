@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Text, View, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import ItemHeader from '../components/ItemHeader';
-import ProfileViewPager from '../navigation/ProfileViewPager';
+import ProfileViewPager from '../navigation/ProfileTabView';
 
 export default class ProfileDetailScreen extends Component {
   render() {
@@ -16,9 +16,9 @@ export default class ProfileDetailScreen extends Component {
           <View style={styles.viewRow}>
             <View>
               <Image style={styles.imgAvatar} source={{uri: urlImgAvatar}} />
-              <View style={styles.edit}>
+              <TouchableOpacity style={styles.edit}>
                 <Icon name={'pen'} size={12} color={'#fff'} />
-              </View>
+              </TouchableOpacity>
             </View>
             <View style={{paddingHorizontal: 15}}>
               <View style={styles.viewRow}>

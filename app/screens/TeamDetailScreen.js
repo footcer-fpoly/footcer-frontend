@@ -9,7 +9,7 @@ import {
   ScrollView,
 } from 'react-native';
 import ItemHeader from '../components/ItemHeader';
-import TeamViewPager from '../navigation/TeamViewPager';
+import TeamViewPager from '../navigation/TeamTabView';
 
 export default class ProfileDetailScreen extends Component {
   render() {

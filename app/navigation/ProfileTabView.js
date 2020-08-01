@@ -3,7 +3,7 @@ import TabProfile from '../components/ProfileDetailScreenComponents/TabProfile';
 import TabTeams from '../components/ProfileDetailScreenComponents/TabTeams';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 
-export default function ProfileViewPager() {
+export default function ProfileTabView() {
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
     {key: 'profile', title: 'Thông tin'},
