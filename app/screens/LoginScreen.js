@@ -65,6 +65,7 @@ export default class LoginScreen extends Component {
                     placeholderTextColor='#778ca3'
                     placeholder='_ _ _ _ _ _'
                     keyboardType='numeric'
+                    secureTextEntry={true}
                     autoFocus={true}
                     returnKeyType='go'
                     onChangeText={this.onChangePass}

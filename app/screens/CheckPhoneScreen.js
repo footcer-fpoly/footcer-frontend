@@ -81,8 +81,8 @@ export default class CheckPhoneScreen extends Component {
 
     checkPhoneNumber = async (phone) => {
         if (validatePhoneNumber(phone)) {
-            this.toggleLoading();
             try {
+                this.toggleLoading();
                 const statusCode = await checkValidPhone(phone);
                 if (statusCode === 200) {
                     this.toggleLoading();
