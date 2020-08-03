@@ -44,7 +44,9 @@ export default class CheckPhoneScreen extends Component {
             dialogVisible: false,
             phone: '',
             confirmResult: null,
-            flagLoading: 0
+            flagLoading: 0,
+            flag: null,
+            data: null
         };
     }
     onChangePhone = phone => {
@@ -62,13 +64,13 @@ export default class CheckPhoneScreen extends Component {
         const { flagLoading } = this.state
         flagLoading ? this.setState({ flagLoading: 0 }) : this.setState({ flagLoading: 1 })
     }
-    _gotoOTPScreen = (phone) => {
+    _gotoOTPScreen = (phone, data, flag) => {
         this.toggleDialog();
-        this.props.navigation.navigate('OTPScreen', { phone: phone })
+        this.props.navigation.navigate('OTPScreen', { phone: phone, data: data, flag: flag })
     }
 
-    _gotoLoginScreen = (phone) => {
-        this.props.navigation.navigate('LoginScreen', { phone: phone })
+    _gotoLoginScreen = (phone, data) => {
+        this.props.navigation.navigate('LoginScreen', { phone: phone, data: data })
     }
     _gotoSignUpFbGg = () => {
         this.props.navigation.navigate('SignUpFbGgScreen')
@@ -83,13 +85,24 @@ export default class CheckPhoneScreen extends Component {
         if (validatePhoneNumber(phone)) {
             try {
                 this.toggleLoading();
-                const statusCode = await checkValidPhone(phone);
-                if (statusCode === 200) {
+                const resPhone = await checkValidPhone(phone);
+                this.setState({
+                    data: resPhone.data
+                })
+                if (resPhone.code === 200) {
                     this.toggleLoading();
                     this.toggleDialog()
-                } else if (statusCode === 409) {
-                    this.toggleLoading();
-                    this._gotoLoginScreen(phone);
+                } else if (resPhone.code === 409) {
+                    if (resPhone.data.password === "") {
+                        this.toggleLoading();
+                        this.toggleDialog()
+                        this.setState({
+                            flag: 2
+                        })
+                    } else {
+                        this.toggleLoading();
+                        this._gotoLoginScreen(phone, resPhone.data);
+                    }
                 } else {
                     this.toggleLoading();
                     alert('Số điện thoại đã được đăng ký làm chủ sân')
@@ -207,16 +220,15 @@ export default class CheckPhoneScreen extends Component {
         }
     };
     render() {
-        const { phone, dialogVisible } = this.state;
+        const { phone, dialogVisible, flag, data } = this.state;
         return (
             <ImageBackground source={require('../assets/images/bg.png')} style={styles.container}>
-
                 <Loading flag={this.state.flagLoading} />
                 <DialogSendOTP
                     phone={phone}
                     visible={dialogVisible}
                     handleCancel={() => this.toggleDialog()}
-                    handleNext={() => this._gotoOTPScreen(phone)}
+                    handleNext={() => this._gotoOTPScreen(phone, data, flag)}
                 />
                 <TopTitle
                     title='Nhập số điện thoại'

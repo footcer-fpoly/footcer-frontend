@@ -61,11 +61,11 @@ export default class SignUpFbGgScreen extends Component {
     }
     checkPhone = async (phone) => {
         if (this.checkValidForm()) {
-            const statusPhone = await checkValidPhone(phone);
+            const resPhone = await checkValidPhone(phone);
             if (validatePhoneNumber(phone)) {
-                if (statusPhone === 200) {
+                if (resPhone.code === 200) {
                     this.toggleDialog(phone);
-                } else if (statusPhone === 409) {
+                } else if (resPhone.code === 409) {
                     alert('Số điện thoại đã được đăng ký');
                 } else {
                     alert('Số điện thoại đã được đăng ký làm chủ sân')

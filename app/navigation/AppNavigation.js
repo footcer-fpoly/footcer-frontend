@@ -9,6 +9,7 @@ import LoginScreen from '../screens/LoginScreen';
 import SignUpPhoneScreen from '../screens/SignUpPhoneScreen';
 import SignUpFbGgScreen from '../screens/SignUpFbGgScreen';
 import HomeScreen from '../screens/HomeScreen';
+import UpdatePassScreen from '../screens/UpdatePassScreen';
 import DetailsScreen from '../screens/DetailsScreen';
 import LocationsScreen from '../screens/LocationsScreen';
 import ViewLocations from '../screens/ViewLocationScreen';
@@ -126,7 +127,9 @@ export default class MainNavigation extends Component {
           <Stack.Screen name="LoginScreen" component={LoginScreen} />
           <Stack.Screen name="SignUpPhoneScreen" component={SignUpPhoneScreen} />
           <Stack.Screen name="SignUpFbGgScreen" component={SignUpFbGgScreen} />
+          <Stack.Screen name="UpdatePassScreen" component={UpdatePassScreen} />
           <Stack.Screen name="Dashboard" component={BottomNavigation} />
+          
         </Stack.Navigator>
       </NavigationContainer>
     );

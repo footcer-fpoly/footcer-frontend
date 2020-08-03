@@ -5,6 +5,7 @@ const API_CheckUUID = `http://${PORT}:4000/users/valid-uuid`
 const API_SignUpPhone = `http://${PORT}:4000/users/sign-up-phone`
 const API_SignInPhone = `http://${PORT}:4000/users/sign-in-phone`
 const API_SignUpFbGg = `http://${PORT}:4000/users/sign-in`
+const API_UpdatePass = `http://${PORT}:4000/users/change-password`
 
 export const validatePhoneNumber = (phone) => {
     var regexp = /^(03|07|08|09|01[2|6|8|9])+([0-9]{8})$/
@@ -23,30 +24,12 @@ export const checkValidPhone = async (phone) => {
             })
         });
         let resJson = await response.json();
-        return resJson.code;
+        return resJson;
     } catch (error) {
         console.error(error);
     }
 }
 
-// export const checkValidEmail = async (email) => {
-//     try {
-//         let response = await fetch(API_CheckValidEmail, {
-//             method: 'POST',
-//             headers: {
-//                 'Accept': 'application/json',
-//                 'Content-Type': 'application/json',
-//             },
-//             body: JSON.stringify({
-//                 "email": email
-//             })
-//         });
-//         let resJson = await response.json();
-//         return resJson.code
-//     } catch (error) {
-//         console.error(error);
-//     }
-// }
 export const checkUUID = async (uuid) => {
     try {
         let response = await fetch(API_CheckUUID, {
@@ -129,3 +112,24 @@ export const signUpFbGg = async (phone, avatar, displayName, id) => {
         console.error(error);
     }
 }
+
+export const updatePassword = async (phone, password) => {
+    try {
+        let response = await fetch(API_UpdatePass, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                "phone": phone,
+                "password": password,
+            })
+        });
+        let resJson = await response.json();
+        return resJson.code;
+    } catch (error) {
+        console.error(error);
+    }
+}
+

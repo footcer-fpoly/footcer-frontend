@@ -48,6 +48,9 @@ export default class OTPScreen extends Component {
     gotoSignUpPhone = (phone) => {
         this.props.navigation.replace('SignUpPhoneScreen', { phone: phone })
     }
+    gotoUpdatePass = (phone) => {
+        this.props.navigation.replace('SignUpPhoneScreen', { phone: phone })
+    }
     handleVerifyCode = (confirmResult) => {
         const { phone, data, flag } = this.props.route.params;
         console.log(phone);
@@ -113,9 +116,10 @@ export default class OTPScreen extends Component {
         }
     }
     _goToNext = async (flag, data, phone) => {
-        console.log(phone);
-        console.log(data);
-        console.log(flag);
+        console.log('phone: ', phone);
+        console.log('data', data);
+        console.log('flag', flag);
+        //flag = 0 sign fb -- flag = 1 sign gg -- flag = 2 update pass
         if (flag === 0) {
             try {
                 const statusCode = await signUpFbGg(phone, data.picture.data.url, data.name, data.id);
@@ -140,6 +144,13 @@ export default class OTPScreen extends Component {
                 }
             } catch (err) {
                 alert(err)
+            }
+        } else if (flag === 2) {
+            try {
+                this.props.navigation.navigate('UpdatePassScreen', { data: data, phone, phone });
+                alert('haha')
+            } catch (error) {
+                alert(error);
             }
         } else {
             this.gotoSignUpPhone(phone)
