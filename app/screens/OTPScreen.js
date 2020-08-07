@@ -18,6 +18,7 @@ import LoginMore from '../components/SignInSignUp/LoginMore';
 import Loading from '../components/Loading'
 import auth from '@react-native-firebase/auth';
 import firebase from '@react-native-firebase/app';
+import { signUpFbGg } from '../server/SignInSignUp/sever'
 
 
 
@@ -31,7 +32,7 @@ export default class OTPScreen extends Component {
             visibleCountdown: 'flex',
             opacity: 0.7,
             confirmResult: null,
-            flagLoading: 0
+            flagLoading: 0,
         };
     }
     toggleLoading = () => {
@@ -41,27 +42,41 @@ export default class OTPScreen extends Component {
     goToChangePhone = () => {
         this.props.navigation.replace('CheckPhoneScreen');
     }
-    handleVerifyCode = (phone, confirmResult) => {
-        // Request for OTP verification
+    gotoDashboard = () => {
+        this.props.navigation.replace('Dashboard');
+    }
+    gotoSignUpPhone = (phone) => {
+        this.props.navigation.replace('SignUpPhoneScreen', { phone: phone })
+    }
+    gotoUpdatePass = (phone) => {
+        this.props.navigation.replace('SignUpPhoneScreen', { phone: phone })
+    }
+    handleVerifyCode = (confirmResult) => {
+        const { phone, data, flag } = this.props.route.params;
+        console.log(phone);
+        console.log(data);
+        console.log(flag);
         this.toggleLoading()
         const { verificationCode } = this.state
         if (verificationCode.length == 6) {
             confirmResult
                 .confirm(verificationCode)
-                .then(() => {
-                    this.toggleLoading();
-                    this.props.navigation.navigate('SignUpPhoneScreen', { phone: phone })
+                .then(async () => {
+                    await this._goToNext(flag, data, phone);
+                    await this.toggleLoading();
                 })
                 .catch(error => {
                     this.toggleLoading();
                     alert(error.message)
-                    console.log(error)
+                    return false
                 })
         } else {
             this.toggleLoading();
             alert('Please enter a 6 digit OTP code.')
+            return false
         }
     }
+
     countdownOverOTP = (phone) => {
         var { timer } = this.state
         this.sendOTP(phone)
@@ -100,6 +115,47 @@ export default class OTPScreen extends Component {
             console.log(err)
         }
     }
+    _goToNext = async (flag, data, phone) => {
+        console.log('phone: ', phone);
+        console.log('data', data);
+        console.log('flag', flag);
+        //flag = 0 sign fb -- flag = 1 sign gg -- flag = 2 update pass
+        if (flag === 0) {
+            try {
+                const statusCode = await signUpFbGg(phone, data.picture.data.url, data.name, data.id);
+                if (statusCode === 200) {
+                    this.gotoDashboard();
+                    alert('Vừa Sign Up Fb')
+                } else {
+                    alert(statusCode);
+                }
+            } catch (error) {
+                alert(error)
+            }
+        } else if (flag === 1) {
+            try {
+                const statusCode = await signUpFbGg(phone, data.photo, data.name, data.id);
+                console.log(statusCode);
+                if (statusCode === 200) {
+                    this.gotoDashboard();
+                    alert('Vừa Sign Up GG')
+                } else {
+                    alert(statusCode);
+                }
+            } catch (err) {
+                alert(err)
+            }
+        } else if (flag === 2) {
+            try {
+                this.props.navigation.navigate('UpdatePassScreen', { data: data, phone, phone });
+                alert('haha')
+            } catch (error) {
+                alert(error);
+            }
+        } else {
+            this.gotoSignUpPhone(phone)
+        }
+    }
 
     componentDidMount() {
         const { phone } = this.props.route.params;
@@ -127,7 +183,7 @@ export default class OTPScreen extends Component {
                     }}
                     autoCorrect={false}
                 />
-                <Button text='Tiếp tục' onPressBtn={() => this.handleVerifyCode(phone, confirmResult)} />
+                <Button text='Tiếp tục' onPressBtn={() => this.handleVerifyCode(confirmResult)} />
                 <View style={styles.warpperResendAndChange}>
                     <TouchableOpacity onPress={() => this.goToChangePhone()}><Text style={styles.txtResendAndChange}>ĐỔI SĐT</Text></TouchableOpacity>
                     <TouchableOpacity onPress={() => this.countdownOverOTP(phone)}
@@ -140,7 +196,6 @@ export default class OTPScreen extends Component {
                     </TouchableOpacity>
 
                 </View>
-                <LoginMore />
             </ImageBackground>
         );
     }

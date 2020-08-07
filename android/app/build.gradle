@@ -192,6 +192,11 @@ apply plugin: 'com.google.gms.google-services'
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     compile project(':react-native-spinkit')
+    implementation 'com.facebook.android:facebook-android-sdk:[4,5)'
+    implementation 'com.facebook.android:facebook-login:[5,6)'
+    implementation project(':react-native-svg')
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
+    implementation(project(":react-native-google-signin"))
     //firebase
     implementation 'com.google.firebase:firebase-analytics:17.2.2'
     //noinspection GradleDynamicVersion
@@ -200,7 +205,7 @@ dependencies {
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
-      exclude group:'com.facebook.fbjni'
+        exclude group:'com.facebook.fbjni'
     }
 
     debugImplementation("com.facebook.flipper:flipper-network-plugin:${FLIPPER_VERSION}") {
@@ -228,3 +233,4 @@ task copyDownloadableDepsToLibs(type: Copy) {
 }
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
+apply plugin: 'com.google.gms.google-services'

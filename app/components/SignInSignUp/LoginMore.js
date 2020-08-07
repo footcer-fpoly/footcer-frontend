@@ -14,13 +14,11 @@ export default class LoginMore extends Component {
 const styles = StyleSheet.create({
     more: {
         width: '100%',
-        position: 'relative',
         marginTop: 50,
         alignItems: 'center'
     },
 
     txtMore: {
-        position: 'absolute',
         paddingHorizontal: 10,
         fontSize: 16,
         color: '#676767',

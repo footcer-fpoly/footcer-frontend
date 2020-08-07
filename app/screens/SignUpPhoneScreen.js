@@ -14,7 +14,7 @@ import TopTitle from '../components/SignInSignUp/TopTitle';
 import Button from '../components/SignInSignUp/Button';
 import styles from '../theme/StyleLogin-Regis';
 import Loading from '../components/Loading'
-import { signUpPhone, checkValidEmail } from '../server/SignInSignUp/sever'
+import { signUpPhone } from '../server/SignInSignUp/sever'
 
 export default class SignUpPhone extends Component {
     constructor(props) {
@@ -22,22 +22,14 @@ export default class SignUpPhone extends Component {
         this.state = {
             phone: '',
             displayName: '',
-            email: '',
             password: '',
             rePassword: '',
-            checkEmail: 0,
-            statusEmail: 0,
             flagLoading: 0
         };
     }
     onChangeTxtName = displayName => {
         this.setState({
             displayName
-        })
-    }
-    onChangeTxtEmail = email => {
-        this.setState({
-            email
         })
     }
     onChangeTxtPass = password => {
@@ -56,42 +48,37 @@ export default class SignUpPhone extends Component {
     }
 
     checkValidForm = () => {
-        const { displayName, email, password, rePassword } = this.state;
-        if (displayName === '' || email === '' || password === '', rePassword === '') {
+        const { displayName, password, rePassword } = this.state;
+        if (displayName === '' || password === '', rePassword === '') {
             alert('Hãy nhập đầy đủ các form')
             return false;
         } else {
-            if (password != rePassword || password.length < 6) {
-                alert('Mật khẩu không trùng nhau')
+            if (password.length < 6) {
+                alert('Mật khẩu gồm 6 số')
+                return false
+            } else if (password !== rePassword) {
+                alert('Mật khẩu không trùng khớp')
                 return false
             } else return true
         }
     }
-    signUp = async (phone, password, email, displayName) => {
+    signUp = async (phone, password, displayName) => {
         if (this.checkValidForm()) {
             this.toggleLoading();
-            const statusEmail = await checkValidEmail(email);
-            if (statusEmail === 200) {
-                const statusSignUp = await signUpPhone(phone, password, email, displayName);
-                if (statusSignUp === 200) {
-                    this.toggleLoading();
-                    this.props.navigation.navigate('Dashboard');
-                } else {
-                    this.toggleLoading();
-                    alert('Đăng kí thất bại')
-                }
+            const statusSignUp = await signUpPhone(phone, password, displayName);
+            if (statusSignUp === 200) {
+                this.toggleLoading();
+                this.props.navigation.navigate('Dashboard');
             } else {
                 this.toggleLoading();
-                alert('Email đã được đăng kí')
+                alert('Đăng kí thất bại')
             }
-        } else {
-            this.toggleLoading();
         }
     }
 
     render() {
         const { phone } = this.props.route.params;
-        const { email, password, displayName, flagLoading } = this.state
+        const { password, displayName, flagLoading } = this.state
         return (
             <ImageBackground source={require('../assets/images/bg.png')} style={styles.container}>
                 <Loading flag={flagLoading} />
@@ -108,19 +95,13 @@ export default class SignUpPhone extends Component {
                     autoCorrect={false}
                 />
                 <TextInput style={styles.input}
-                    placeholder='Nhập email'
-                    placeholderTextColor='#778ca3'
-                    keyboardType='email-address'
-                    onChangeText={this.onChangeTxtEmail}
-                    returnKeyType='next'
-                    autoCorrect={false}
-                />
-                <TextInput style={styles.input}
                     placeholder='Nhập mật khẩu'
                     placeholderTextColor='#778ca3'
                     onChangeText={this.onChangeTxtPass}
-                    keyboardType='numeric'
+                    secureTextEntry={true}
                     returnKeyType='next'
+                    keyboardType='numeric'
+                    type='password'
                     maxLength={6}
                     autoCorrect={false}
                 />
@@ -129,13 +110,13 @@ export default class SignUpPhone extends Component {
                     placeholderTextColor='#778ca3'
                     onChangeText={this.onChangeTxtRePass}
                     keyboardType='numeric'
+                    secureTextEntry={true}
+                    returnKeyType='go'
                     maxLength={6}
                     autoCorrect={false}
                 />
-                <Button text='Tiếp tục' onPressBtn={() => this.signUp(phone, password, email, displayName)} />
+                <Button text='Tiếp tục' onPressBtn={() => this.signUp(phone, password, displayName)} />
             </ImageBackground>
-
-
         );
     }
 }
