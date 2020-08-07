@@ -7,15 +7,12 @@ import App from './app/App'
 import { name as appName } from './app.json';
 import 'react-native-gesture-handler';
 
-<<<<<<< HEAD
 import SplashScreen from './app/screens/SplashScreen'
-import HomeScreen from './app/screens/HomeScreen'
-import SignUpFbGgScreen from './app/screens/SignUpFbGgScreen'
-=======
-import {AppRegistry} from 'react-native';
-import App from './app/screens/FindOpponentScreen';
-import {name as appName} from './app.json';
->>>>>>> c5892c3ae346a219e6f5ee4220f65eb0112b378e
+// import HomeScreen from './app/screens/HomeScreen'
+// import SignUpFbGgScreen from './app/screens/SignUpFbGgScreen'
+// // import {AppRegistry} from 'react-native';
+// import App from './app/screens/FindOpponentScreen';
+// import {name as appName} from './app.json';
 
 
 class Main extends Component {

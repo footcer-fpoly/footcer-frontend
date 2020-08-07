@@ -54,12 +54,9 @@ export default class Match extends Component {
 const styles = StyleSheet.create({
   matchContainer: {
     position: 'absolute',
-<<<<<<< HEAD
     left: 0,
     right: 0,
     top: 150,
-=======
->>>>>>> c5892c3ae346a219e6f5ee4220f65eb0112b378e
     backgroundColor: '#fff',
     width: '95%',
     alignItems: 'center',

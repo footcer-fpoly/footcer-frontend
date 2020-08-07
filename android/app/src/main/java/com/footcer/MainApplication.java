@@ -4,20 +4,6 @@ import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
-import com.react.rnspinkit.RNSpinkitPackage;
-import com.oblador.vectoricons.VectorIconsPackage;
-<<<<<<< HEAD
-import com.oblador.vectoricons.VectorIconsPackage;
-import com.oblador.vectoricons.VectorIconsPackage;
-import com.oblador.vectoricons.VectorIconsPackage;
-
-=======
-import com.BV.LinearGradient.LinearGradientPackage;
-import com.reactnativecommunity.viewpager.RNCViewPagerPackage;
-import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
-import com.swmansion.reanimated.ReanimatedPackage;
-import com.oblador.vectoricons.VectorIconsPackage;
->>>>>>> c5892c3ae346a219e6f5ee4220f65eb0112b378e
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -25,13 +11,18 @@ import com.facebook.soloader.SoLoader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 //fb Login
-import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.facebook.reactnative.androidsdk.FBSDKCallbackManagerBaseJavaModule;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.facebook.reactnative.androidsdk.FBAppEventsLoggerModule;
 import com.facebook.FacebookSdk;
 import com.horcrux.svg.SvgPackage;
 import co.apptailor.googlesignin.RNGoogleSigninPackage;
+import com.react.rnspinkit.RNSpinkitPackage;
+import com.oblador.vectoricons.VectorIconsPackage;
+import com.BV.LinearGradient.LinearGradientPackage;
+import com.reactnativecommunity.viewpager.RNCViewPagerPackage;
+import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
+import com.swmansion.reanimated.ReanimatedPackage;
 
 
 public class MainApplication extends Application implements ReactApplication {
