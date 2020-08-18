@@ -16,18 +16,18 @@ export default class TopTitle extends Component {
 }
 const styles = StyleSheet.create({
     container: {
-        width:'90%',
-        marginBottom:50
+        width:'100%',
+        marginBottom:50,
     },
     title: {
-        fontSize:25,
+        fontSize:22,
         color:'white',
         fontWeight:'bold',
         textAlign:'center',
         marginBottom:10
     },
     subTitle:{
-        fontSize:18,
+        fontSize:16,
         color:'white',
         textAlign:'center'
 

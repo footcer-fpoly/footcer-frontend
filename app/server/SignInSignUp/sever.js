@@ -8,8 +8,24 @@ const API_SignUpFbGg = `http://${PORT}:4000/users/sign-in`
 const API_UpdatePass = `http://${PORT}:4000/users/change-password`
 
 export const validatePhoneNumber = (phone) => {
-    var regexp = /^(03|07|08|09|01[2|6|8|9])+([0-9]{8})$/
-    return regexp.test(phone)
+    if (phone.length === 10) {
+        var regexp = /^(03|07|08|09|01[2|6|8|9])+([0-9]{8})$/
+        if (regexp.test(phone)) {
+            return false
+        } else {
+            return 'Số điện thoại không đúng định dạng'
+        }
+    } else {
+        return 'Số điện thoại gồm 10 kí tự'
+    }
+}
+
+export const validatePassword = (password) => {
+    if (password.length === 6) {
+        return false
+    } else {
+        return 'Mật khẩu gồm 6 kí tự'
+    }
 }
 export const checkValidPhone = async (phone) => {
     try {
@@ -73,7 +89,6 @@ export const signUpPhone = async (phone, password, displayName) => {
 }
 export const signInPhone = async (phone, pass) => {
     try {
-        console.log(phone, pass)
         let response = await fetch(API_SignInPhone, {
             method: 'POST',
             headers: {

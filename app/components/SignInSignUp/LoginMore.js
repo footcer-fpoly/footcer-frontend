@@ -14,7 +14,7 @@ export default class LoginMore extends Component {
 const styles = StyleSheet.create({
     more: {
         width: '100%',
-        marginTop: 50,
+        marginTop: 10,
         alignItems: 'center'
     },
 

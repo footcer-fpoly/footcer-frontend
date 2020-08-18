@@ -12,7 +12,7 @@ import TopTitle from '../components/SignInSignUp/TopTitle';
 import Button from '../components/SignInSignUp/Button';
 import Loading from '../components/Loading'
 import { Avatar } from 'react-native-elements';
-import styless from '../theme/StyleLogin-Regis';
+import styless from '../theme/StylesAuth';
 import { signUpFbGg, checkValidPhone, validatePhoneNumber } from '../server/SignInSignUp/sever'
 import DialogSendOTP from '../components/DialogSendOTP'
 

@@ -1,18 +1,31 @@
-import React, { Component } from 'react';
-import { View, Text, StyleSheet, ImageBackground, Image, Button } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, StyleSheet, ImageBackground, StatusBar } from 'react-native';
+import * as Animatable from 'react-native-animatable';
+import COLOR from '../theme/color'
 
-export default class splashscreen extends Component {
-    render() {
-        return (
-            <ImageBackground source={require('../assets/images/bg.png')} style={styles.container}>
-                <View style={styles.warpperLogo} >
-                    <Image source={require('../assets/images/logo.png')} style={styles.logo}></Image>
-                    <Text style={styles.sologan}> Be healthier everyday </Text>
-                </View>
-            </ImageBackground>
-        );
-    }
+const SplashScreen = ({ navigation }) => {
+    useEffect(() => {
+        setTimeout(() => {
+            navigation.replace('CheckPhoneScreen');
+        }, 2000)
+    });
+    return (
+        <ImageBackground source={require('../assets/images/bg.png')} style={styles.container}>
+            <StatusBar backgroundColor={COLOR.STATUSBAR_COLOR} barStyle='light-content' />
+            <View style={styles.warpperLogo} >
+                <Animatable.Image
+                    animation="fadeInUp"
+                    duration={2000}
+                    source={require('../assets/images/logo.png')}
+                    style={styles.logo}
+                />
+                <Animatable.Text animation="fadeIn" style={styles.sologan}> Be healthier everyday </Animatable.Text>
+            </View>
+        </ImageBackground>
+    );
 }
+
+export default SplashScreen;
 
 const styles = StyleSheet.create({
     container: {

@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import TopTitle from '../components/SignInSignUp/TopTitle';
 import Button from '../components/SignInSignUp/Button';
-import styles from '../theme/StyleLogin-Regis';
+import styles from '../theme/StylesAuth';
 import LoginMore from '../components/SignInSignUp/LoginMore';
 import Loading from '../components/Loading'
 import auth from '@react-native-firebase/auth';

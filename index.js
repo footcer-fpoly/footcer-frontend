@@ -15,19 +15,19 @@ import SplashScreen from './app/screens/SplashScreen'
 // import {name as appName} from './app.json';
 
 
-class Main extends Component {
-    constructor(props) {
-        super(props);
-        this.state = { currentScreen: 'SplashScreen' }  
-        setTimeout(() => {
-            this.setState({currentScreen:'App'})
-        }, 3000)
-    }
-    render() {
-        const { currentScreen } = this.state
-        let mainScreen = currentScreen === 'SplashScreen' ? <SplashScreen /> : <App />
-        return mainScreen
-    }
-}
+// class Main extends Component {
+//     constructor(props) {
+//         super(props);
+//         this.state = { currentScreen: 'SplashScreen' }  
+//         setTimeout(() => {
+//             this.setState({currentScreen:'App'})
+//         }, 3000)
+//     }
+//     render() {
+//         const { currentScreen } = this.state
+//         let mainScreen = currentScreen === 'SplashScreen' ? <SplashScreen /> : <App />
+//         return mainScreen
+//     }
+// }
 
-AppRegistry.registerComponent(appName, () => Main);
+AppRegistry.registerComponent(appName, () => App);

@@ -11,7 +11,7 @@ export default class Loading extends Component {
   render() {
     const { flag } = this.props
     return (
-      <View style={flag == 1 ? styles.container : { display: 'none' }}>
+      <View style={flag ? styles.container : { display: 'none' }}>
         <View style={styles.overlay}></View>
         <Spinner isVisible={true} size={80} type={'Circle'} color={'white'} />
       </View>
@@ -37,4 +37,4 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
     opacity: 0.6,
   },
- });
+});

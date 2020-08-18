@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import TopTitle from '../components/SignInSignUp/TopTitle';
 import Button from '../components/SignInSignUp/Button';
-import styles from '../theme/StyleLogin-Regis';
+import styles from '../theme/StylesAuth';
 import Loading from '../components/Loading'
 import DialogSendOTP from '../components/DialogSendOTP'
 
@@ -102,3 +102,4 @@ export default class LoginScreen extends Component {
         );
     }
 }
+

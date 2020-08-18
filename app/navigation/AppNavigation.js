@@ -1,7 +1,9 @@
-import React, {Component} from 'react';
-import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import React, { Component } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { ApplicationProvider } from '@ui-kitten/components';
+import * as eva from '@eva-design/eva';
 import Feather from 'react-native-vector-icons/Feather';
 import CheckPhoneScreen from '../screens/CheckPhoneScreen';
 import OTPScreen from '../screens/OTPScreen';
@@ -17,6 +19,7 @@ import CompetitorScreen from '../screens/CompetitorScreen';
 import CompetitorDetails from '../screens/CompetitorDetails';
 import InforScreen from '../screens/InforScreen';
 import CreateTeamScreen from '../screens/CreateTeamScreen';
+import AuthStackScreen from './AuthStackScreen'
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -28,7 +31,7 @@ class HomeStack extends Component {
         <Stack.Screen
           name="Dashboard"
           component={HomeScreen}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen name="MainDetails" component={DetailsScreen} />
       </Stack.Navigator>
@@ -43,7 +46,7 @@ class LocationStack extends Component {
         <Stack.Screen
           name="Location"
           component={LocationsScreen}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen name="ViewLocations" component={ViewLocations} />
       </Stack.Navigator>
@@ -58,7 +61,7 @@ class CompetitorStack extends Component {
         <Stack.Screen
           name="Competitor"
           component={CompetitorScreen}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen name="CompetitorDetails" component={CompetitorDetails} />
       </Stack.Navigator>
@@ -69,7 +72,7 @@ class CompetitorStack extends Component {
 class UserStack extends Component {
   render() {
     return (
-      <Stack.Navigator screenOptions={{headerShown:false}}>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen
           name="Infor"
           component={InforScreen}
@@ -85,8 +88,8 @@ class BottomNavigation extends Component {
     return (
       <Tab.Navigator
         initialRouteName="Home"
-        screenOptions={({route}) => ({
-          tabBarIcon: ({focused, color, size}) => {
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused, color, size }) => {
             let iconName;
 
             if (route.name === 'Home') {
@@ -120,8 +123,10 @@ class BottomNavigation extends Component {
 export default class MainNavigation extends Component {
   render() {
     return (
-      <NavigationContainer>
-        <Stack.Navigator screenOptions={{headerShown: false}}>
+      <ApplicationProvider {...eva} theme={eva.light}>
+        <NavigationContainer>
+          <AuthStackScreen />
+          {/* <Stack.Navigator screenOptions={{headerShown: false}}>
           <Stack.Screen name="CheckPhoneScreen" component={CheckPhoneScreen} />
           <Stack.Screen name="OTPScreen" component={OTPScreen} />
           <Stack.Screen name="LoginScreen" component={LoginScreen} />
@@ -129,9 +134,9 @@ export default class MainNavigation extends Component {
           <Stack.Screen name="SignUpFbGgScreen" component={SignUpFbGgScreen} />
           <Stack.Screen name="UpdatePassScreen" component={UpdatePassScreen} />
           <Stack.Screen name="Dashboard" component={BottomNavigation} />
-          
-        </Stack.Navigator>
-      </NavigationContainer>
+        </Stack.Navigator> */}
+        </NavigationContainer>
+      </ApplicationProvider>
     );
   }
 }
