@@ -1,23 +1,20 @@
-import React, { Component } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React from 'react';
+import { Dimensions, StyleSheet, View } from 'react-native';
 import Spinner from "react-native-spinkit";
 
-import { Dimensions } from "react-native";
 const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
 
-export default class Loading extends Component {
+const Loading = ({ visible }) => {
+  return (
+    <View style={visible ? styles.container : { display: 'none' }}>
+      <View style={styles.overlay}></View>
+      <Spinner isVisible={true} size={80} type={'Circle'} color={'white'} />
+    </View>
+  );
 
-  render() {
-    const { flag } = this.props
-    return (
-      <View style={flag ? styles.container : { display: 'none' }}>
-        <View style={styles.overlay}></View>
-        <Spinner isVisible={true} size={80} type={'Circle'} color={'white'} />
-      </View>
-    );
-  }
 }
+export default Loading;
 const styles = StyleSheet.create({
   container: {
     width: screenWidth,

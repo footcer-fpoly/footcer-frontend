@@ -27,6 +27,24 @@ export const validatePassword = (password) => {
         return 'Mật khẩu gồm 6 kí tự'
     }
 }
+
+export const confirmPassword = (password, rePassword) => {
+    if (password === rePassword) {
+        return false
+    } else {
+        return 'Mật khẩu không trùng nhau'
+    }
+}
+
+// export const validateName = (name) => {
+//     if (name.length) {
+//         return false
+//     } else {
+//         return 'Họ và tên không được để trống'
+//     }
+// }
+
+
 export const checkValidPhone = async (phone) => {
     try {
         let response = await fetch(API_CheckValidPhone, {
@@ -66,7 +84,7 @@ export const checkUUID = async (uuid) => {
     }
 }
 
-export const signUpPhone = async (phone, password, displayName) => {
+export const signUpPhone = async (data) => {
     try {
         let response = await fetch(API_SignUpPhone, {
             method: 'POST',
@@ -75,14 +93,14 @@ export const signUpPhone = async (phone, password, displayName) => {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                "phone": phone,
+                "phone": data.phone,
                 "avatar": "/user/avatar.png",
-                "password": password,
-                "displayName": displayName
+                "password": data.password,
+                "displayName": data.name
             })
         });
         let resJson = await response.json();
-        return resJson.code;
+        return resJson;
     } catch (error) {
         console.error(error);
     }
@@ -101,7 +119,7 @@ export const signInPhone = async (phone, pass) => {
             })
         });
         let resJson = await response.json();
-        return resJson.code;
+        return resJson;
     } catch (error) {
         console.error(error);
     }

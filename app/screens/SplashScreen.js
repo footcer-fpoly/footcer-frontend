@@ -6,7 +6,7 @@ import COLOR from '../theme/color'
 const SplashScreen = ({ navigation }) => {
     useEffect(() => {
         setTimeout(() => {
-            navigation.replace('CheckPhoneScreen');
+            navigation.replace('SignInScreen');
         }, 2000)
     });
     return (

@@ -278,9 +278,11 @@ import styles from '../theme/StylesAuth'
 import COLOR from '../theme/color'
 import LoginFb from '../components/SignInSignUp/LoginFb';
 import LoginGg from '../components/SignInSignUp/LoginGg';
-import LoginMore from '../components/SignInSignUp/LoginMore';
 import Loading from '../components/Loading'
-import AlertSuccessful from '../utils/alert/AlertSuccessful'
+import AlertSuccessful from '../utils/alerts/AlertSuccessful'
+import DialogConfirmSendOPT from '../utils/dialogs/DialogConfirmSendOPT'
+import { AuthContext } from '../navigation/AuthContext'
+
 
 import {
     validatePhoneNumber,
@@ -290,7 +292,7 @@ import {
     checkUUID
 } from '../server/SignInSignUp/sever'
 
-const CheckPhoneScreen = ({ navigation }) => {
+const SignInScreen = ({ navigation }) => {
     const [data, setData] = useState({
         phone: '',
         password: '',
@@ -306,6 +308,8 @@ const CheckPhoneScreen = ({ navigation }) => {
 
     const [phoneSuccess, setPhoneSuccess] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [flag, setFlag] = useState(null);
 
     const changeInputPhone = (phone) => {
         setData({
@@ -366,11 +370,11 @@ const CheckPhoneScreen = ({ navigation }) => {
                 setIsLoading(true)
                 const resPhone = await checkValidPhone(phone);
                 if (resPhone.code === 200) {
-
-
+                    setIsLoading(false)
+                    setIsModalVisible(true)
                 } else if (resPhone.code === 409) {
                     if (resPhone.data.password === "") {
-
+                        //-------------------
                     } else {
                         setIsLoading(false)
                         setPhoneSuccess(true);
@@ -387,17 +391,20 @@ const CheckPhoneScreen = ({ navigation }) => {
             alert(error)
         }
     }
-
+    const { signIn } = React.useContext(AuthContext)
     const login = async (phone, password) => {
         if (checkTxtPassword(password)) {
             setIsLoading(true)
-            const status = await signInPhone(phone, password);
-            if (status === 200) {
+            const res = await signInPhone(phone, password);
+            if (res.code === 200) {
                 setIsLoading(false)
                 setAlertSuccess({
                     visible: true,
                     text: 'Đăng nhập thành công'
                 })
+                setTimeout(() => {
+                    signIn(res.data);
+                }, 2000)
                 Keyboard.dismiss();
             } else {
                 setIsLoading(false)
@@ -412,8 +419,14 @@ const CheckPhoneScreen = ({ navigation }) => {
         <ImageBackground source={require('../assets/images/bg.png')} style={{ flex: 1 }}>
             <StatusBar backgroundColor={COLOR.STATUSBAR_COLOR} barStyle='light-content' />
             <SafeAreaView style={styles.container}>
-                <Loading flag={isLoading} />
+                <Loading visible={isLoading} />
                 <AlertSuccessful visible={alertSuccess.visible} text={alertSuccess.text} />
+                <DialogConfirmSendOPT
+                    phone={data.phone}
+                    flag={flag}
+                    visible={isModalVisible}
+                    navigation={navigation}
+                    dismiss={() => setIsModalVisible(false)} />
                 <Animatable.View animation="zoomIn" style={styles.header}>
                     <Image source={require('../assets/images/logo.png')} style={styles.logo} />
                 </Animatable.View>
@@ -455,8 +468,7 @@ const CheckPhoneScreen = ({ navigation }) => {
                             </Animatable.View>
                             :
                             <Animatable.View
-                                duration={2000}
-                                animation="fadeIn">
+                                animation="fadeInRight">
                                 <TouchableOpacity
                                     style={{ marginBottom: 10, flexDirection: 'row', alignItems: 'center' }}
                                     onPress={() => {
@@ -489,7 +501,7 @@ const CheckPhoneScreen = ({ navigation }) => {
                                         keyboardType='numeric'
                                         returnKeyType='next'
                                         secureTextEntry={true}
-                                        autoFocus={true}
+                                        // autoFocus={true}
                                         onChangeText={(val) => changeInputPassword(val)}
                                         style={styles.input}
                                     />
@@ -519,7 +531,9 @@ const CheckPhoneScreen = ({ navigation }) => {
                             </Animatable.Text>
                         }
                         <Text style={{ color: '#95a5a6' }}>* Nhập số điện thoại dùng để đăng nhập hoặc đăng kí</Text>
-                        <LoginMore />
+                        <View style={styles.more}>
+                            <Text style={styles.txtMore}>Hoặc</Text>
+                        </View>
                         <LoginGg
                         // onPress={() => this.LoginGg()}
                         />
@@ -533,4 +547,4 @@ const CheckPhoneScreen = ({ navigation }) => {
     );
 }
 
-export default CheckPhoneScreen;
+export default SignInScreen;

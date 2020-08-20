@@ -1,17 +1,12 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { ApplicationProvider } from '@ui-kitten/components';
+import * as Animatable from 'react-native-animatable';
 import * as eva from '@eva-design/eva';
 import Feather from 'react-native-vector-icons/Feather';
-import CheckPhoneScreen from '../screens/CheckPhoneScreen';
-import OTPScreen from '../screens/OTPScreen';
-import LoginScreen from '../screens/LoginScreen';
-import SignUpPhoneScreen from '../screens/SignUpPhoneScreen';
-import SignUpFbGgScreen from '../screens/SignUpFbGgScreen';
 import HomeScreen from '../screens/HomeScreen';
-import UpdatePassScreen from '../screens/UpdatePassScreen';
 import DetailsScreen from '../screens/DetailsScreen';
 import LocationsScreen from '../screens/LocationsScreen';
 import ViewLocations from '../screens/ViewLocationScreen';
@@ -20,6 +15,15 @@ import CompetitorDetails from '../screens/CompetitorDetails';
 import InforScreen from '../screens/InforScreen';
 import CreateTeamScreen from '../screens/CreateTeamScreen';
 import AuthStackScreen from './AuthStackScreen'
+import AsyncStorage from '@react-native-community/async-storage';
+import { AuthContext } from './AuthContext'
+import Spinner from "react-native-spinkit";
+import {
+  View,
+  StatusBar,
+} from 'react-native';
+
+
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -120,23 +124,125 @@ class BottomNavigation extends Component {
   }
 }
 
-export default class MainNavigation extends Component {
-  render() {
+
+
+const MainNavigation = () => {
+  const initialLoginState = {
+    isLoading: true,
+    dataUser: null,
+    userToken: null,
+  };
+  const loginReducer = (prevState, action) => {
+    switch (action.type) {
+      case 'RETRIEVE_TOKEN':
+        return {
+          ...prevState,
+          userToken: action.token,
+          isLoading: false,
+        };
+      case 'LOGIN':
+        return {
+          ...prevState,
+          dataUser: action.data,
+          userToken: action.token,
+          isLoading: false,
+        };
+      case 'LOGOUT':
+        return {
+          ...prevState,
+          dataUser: null,
+          userToken: null,
+          isLoading: false,
+        };
+      case 'REGISTER':
+        return {
+          ...prevState,
+          dataUser: action.data,
+          userToken: action.token,
+          isLoading: false,
+        };
+    }
+  };
+  const [loginState, dispatch] = React.useReducer(loginReducer, initialLoginState);
+
+  const authContext = React.useMemo(() => ({
+    signIn: async (User) => {
+      const userToken = String(User.token);
+      const stringDataUser = JSON.stringify(User);
+      try {
+        await AsyncStorage.setItem('dataUser', stringDataUser)
+      } catch (e) {
+        console.log(e);
+      }
+      dispatch({ type: 'LOGIN', data: User, token: userToken })
+    },
+    signOut: async () => {
+      try {
+        await AsyncStorage.removeItem('dataUser')
+      } catch (e) {
+        console.log(e);
+      }
+      dispatch({ type: 'LOGOUT' })
+    },
+    signUp: async (User) => {
+      const userToken = String(User.token);
+      const stringDataUser = JSON.stringify(User);
+      try {
+        await AsyncStorage.setItem('dataUser', stringDataUser)
+      } catch (e) {
+        console.log(e);
+      }
+      dispatch({ type: 'REGISTER', data: User, token: userToken })
+    }
+  }));
+
+  useEffect(() => {
+    setTimeout(async () => {
+      // setIsLoading(false);
+      let userToken;
+      userToken = null;
+      try {
+        const stringDataUser = await AsyncStorage.getItem('dataUser');
+        const jsonDataUser = JSON.parse(stringDataUser)
+        if (jsonDataUser !== null) {
+          userToken = jsonDataUser.userId
+        }
+      } catch (e) {
+        console.log(e);
+      }
+      dispatch({ type: 'RETRIEVE_TOKEN', token: userToken })
+    }, 0)
+  }, []);
+
+  if (loginState.isLoading) {
     return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#00C27F' }}>
+        <StatusBar backgroundColor={'#00C27F'} barStyle='light-content' />
+        <Spinner isVisible={true} size={80} type={'9CubeGrid'} color={'white'} />
+        <Animatable.Text
+          style={{
+            fontSize: 15,
+            color: 'white',
+            marginTop: 20
+          }}
+          animation="zoomIn" duraton="1500">Waitings ...</Animatable.Text>
+      </View>
+    )
+  }
+  return (
+    <AuthContext.Provider value={authContext}>
       <ApplicationProvider {...eva} theme={eva.light}>
         <NavigationContainer>
-          <AuthStackScreen />
-          {/* <Stack.Navigator screenOptions={{headerShown: false}}>
-          <Stack.Screen name="CheckPhoneScreen" component={CheckPhoneScreen} />
-          <Stack.Screen name="OTPScreen" component={OTPScreen} />
-          <Stack.Screen name="LoginScreen" component={LoginScreen} />
-          <Stack.Screen name="SignUpPhoneScreen" component={SignUpPhoneScreen} />
-          <Stack.Screen name="SignUpFbGgScreen" component={SignUpFbGgScreen} />
-          <Stack.Screen name="UpdatePassScreen" component={UpdatePassScreen} />
-          <Stack.Screen name="Dashboard" component={BottomNavigation} />
-        </Stack.Navigator> */}
+          {
+            loginState.userToken !== null ? (
+              <Stack.Navigator screenOptions={{ headerShown: false }}>
+                <Stack.Screen name="Dashboard" component={BottomNavigation} />
+              </Stack.Navigator>
+            ) : <AuthStackScreen />
+          }
         </NavigationContainer>
       </ApplicationProvider>
-    );
-  }
+    </AuthContext.Provider>
+  );
 }
+export default MainNavigation;

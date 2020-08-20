@@ -23,6 +23,7 @@ import com.BV.LinearGradient.LinearGradientPackage;
 import com.reactnativecommunity.viewpager.RNCViewPagerPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.swmansion.reanimated.ReanimatedPackage;
+import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 
 
 public class MainApplication extends Application implements ReactApplication {
