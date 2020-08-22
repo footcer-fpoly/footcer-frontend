@@ -5,10 +5,10 @@ import { Button, Card, Text, Modal } from '@ui-kitten/components';
 
 
 
-const DialogConfirmSendOPT = ({ phone, flag, navigation, visible, dismiss }) => {
-    const _gotoOTPScreen = (phone, flag, dismiss) => {
+const DialogConfirmSendOPT = ({ phone, flag, navigation, visible, dismiss, data }) => {
+    const _gotoOTPScreen = (phone, flag, dismiss, data) => {
         dismiss()
-        navigation.navigate('OTPScreen', { phone: phone, flag: flag })
+        navigation.navigate('OTPScreen', { phone: phone, flag: flag, data: data })
     }
     return (
         <Modal
@@ -19,12 +19,11 @@ const DialogConfirmSendOPT = ({ phone, flag, navigation, visible, dismiss }) => 
         >
             <Card >
                 <View>
-                    <Text category='h5'>Bạn đã nhập</Text>
+                    <Text category='h5'>Xác thực số điện thoại</Text>
                     <Text style={{ fontWeight: 'bold', fontSize: 18, marginTop: 5, color: '#16a085' }}>{phone}</Text>
                 </View>
                 <Text style={{ marginVertical: 10 }}>
-                    Chúng tôi sẻ gữi một mã xác thực đến số điện
-                    thoại bạn đã nhập. Bạn có muốn tiếp tục?
+                    Chúng tôi sẻ gữi một mã xác thực đến {phone}. Bạn có muốn tiếp tục?
                 </Text>
                 <View style={styles.footerContainer}>
                     <Button
@@ -35,7 +34,7 @@ const DialogConfirmSendOPT = ({ phone, flag, navigation, visible, dismiss }) => 
                         HỦY
                      </Button>
                     <Button
-                        onPress={() => _gotoOTPScreen(phone, flag, dismiss)}
+                        onPress={() => _gotoOTPScreen(phone, flag, dismiss, data)}
                         style={[styles.footerControl, { marginLeft: 10, backgroundColor: '#27ae60' }]}
                         size='small'>
                         TIẾP TỤC
@@ -72,6 +71,7 @@ const styles = StyleSheet.create({
     },
 
     footerContainer: {
+        marginTop: 15,
         flexDirection: 'row',
         justifyContent: 'flex-end',
     },

@@ -5,8 +5,6 @@ export default StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'flex-end',
-        // paddingTop: 100
-        // justifyContent: 'space-between'
     },
     header: {
         alignItems: 'center',
@@ -55,6 +53,18 @@ export default StyleSheet.create({
         paddingLeft: 10,
         color: '#57606f',
         fontSize: 20,
+    },
+    inputBorder: {
+        width: '100%',
+        paddingVertical: 10,
+        borderRadius: 5,
+        textAlign: 'center',
+        marginTop: 30,
+        borderWidth: 1,
+        borderColor: 'green',
+        color: '#000',
+        fontSize: 20,
+        letterSpacing: 1.4
     },
     btnNext: {
         backgroundColor: '#27ae60',
@@ -109,7 +119,8 @@ export default StyleSheet.create({
     btnGoBack: {
         position: 'absolute',
         top: 20,
-        left: 15
+        left: 15,
+        zIndex: 999
     },
     titleScreen: {
         color: 'white',

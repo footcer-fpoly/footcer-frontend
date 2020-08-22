@@ -47,6 +47,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
         marginBottom: 20,
         color: '#05375a',
-        fontSize: 18
+        fontSize: 18,
+        textAlign: 'center'
     }
 });

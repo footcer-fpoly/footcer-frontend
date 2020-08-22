@@ -36,15 +36,6 @@ export const confirmPassword = (password, rePassword) => {
     }
 }
 
-// export const validateName = (name) => {
-//     if (name.length) {
-//         return false
-//     } else {
-//         return 'Họ và tên không được để trống'
-//     }
-// }
-
-
 export const checkValidPhone = async (phone) => {
     try {
         let response = await fetch(API_CheckValidPhone, {
@@ -77,8 +68,7 @@ export const checkUUID = async (uuid) => {
             })
         });
         let resJson = await response.json();
-        console.log(resJson.code);
-        return resJson.code
+        return resJson
     } catch (error) {
         console.error(error);
     }
@@ -124,7 +114,7 @@ export const signInPhone = async (phone, pass) => {
         console.error(error);
     }
 }
-export const signUpFbGg = async (phone, avatar, displayName, id) => {
+export const signUpFbGg = async (data) => {
     try {
         let response = await fetch(API_SignUpFbGg, {
             method: 'POST',
@@ -133,14 +123,14 @@ export const signUpFbGg = async (phone, avatar, displayName, id) => {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                "phone": phone,
-                "avatar": avatar,
-                "displayName": displayName,
-                "userId": id
+                "phone": data.phone,
+                "avatar": data.image,
+                "displayName": data.name,
+                "userId": data.id
             })
         });
         let resJson = await response.json();
-        return resJson.code;
+        return resJson;
     } catch (error) {
         console.error(error);
     }

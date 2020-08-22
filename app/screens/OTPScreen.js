@@ -223,12 +223,11 @@ import styles from '../theme/StylesAuth'
 import Loading from '../components/Loading'
 import AlertSuccessful from '../utils/alerts/AlertSuccessful'
 import AlertError from '../utils/alerts/AlertError'
-
-
-
+import { AuthContext } from '../navigation/AuthContext'
+import { signUpFbGg } from '../server/SignInSignUp/sever'
 
 const OTPScreen = ({ route, navigation }) => {
-    const { phone } = route.params
+    const { phone, data, flag } = route.params;
     const [pin1, setPin1] = useState('');
     const [pin2, setPin2] = useState('');
     const [pin3, setPin3] = useState('');
@@ -298,9 +297,8 @@ const OTPScreen = ({ route, navigation }) => {
             confirmResult
                 .confirm(pin)
                 .then(async () => {
-                    setAlertSuccess({ visible: true, text: 'Xác thực thành công' })
                     setIsLoading(false);
-                    setTimeout(() => _goToNext(1, 2, phone), 2000);
+                    _goToNext(flag, data, phone)
                 })
                 .catch(error => {
                     setAlertError({ visible: true, text: 'Mã xác thực không đúng' })
@@ -311,9 +309,33 @@ const OTPScreen = ({ route, navigation }) => {
             setIsLoading(false);
         }
     }
+    const { signUp } = React.useContext(AuthContext)
 
-    const _goToNext = (flag, data, phone) => {
-        navigation.replace('SignUpPhoneScreen', { phone: phone })
+    const _goToNext = async (flag, data, phone) => {
+        if (flag === 0 || flag === 1) {
+            const res = await signUpFbGg(data);
+            if (res && res.code === 200) {
+                setAlertSuccess({ visible: true, text: 'Đăng kí tại khoản thành công' })
+                setTimeout(() => {
+                    signUp(res.data);
+                }, 2000)
+            } else {
+                setAlertError({ visible: true, text: 'Đăng kí thất bại' })
+            }
+            console.log(res)
+        } else if (flag === 2) {
+            setAlertSuccess({ visible: true, text: 'Xác thực thành công' })
+            setTimeout(() => {
+                navigation.replace('UpdatePassScreen', { phone: phone });
+            }, 2000)
+        }
+        else {
+            setAlertSuccess({ visible: true, text: 'Xác thực thành công' })
+            setTimeout(() => {
+                navigation.replace('SignUpPhoneScreen', { phone: phone })
+            }, 2000)
+        }
+
     }
 
     useEffect(() => {
@@ -324,7 +346,10 @@ const OTPScreen = ({ route, navigation }) => {
             <StatusBar backgroundColor={COLOR.STATUSBAR_COLOR} barStyle='light-content' />
             <SafeAreaView style={{ flex: 1 }}>
                 <Loading visible={isLoading} />
-                <AlertSuccessful visible={alertSuccess.visible} text={alertSuccess.text} />
+                <AlertSuccessful
+                    visible={alertSuccess.visible}
+                    text={alertSuccess.text}
+                />
                 <AlertError
                     visible={alertError.visible}
                     text={alertError.text}

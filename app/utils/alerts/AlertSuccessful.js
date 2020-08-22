@@ -1,12 +1,13 @@
 //src/Utils/UI/Alert/Alert.js
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, View, ActivityIndicator, Text } from 'react-native';
 import { Button, Card, Modal } from '@ui-kitten/components';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import * as Animatable from 'react-native-animatable';
 export default ({ visible, text }) => {
+   
     return (
-        <View style={styles.container}>
+        <View View style={styles.container} >
             <Modal
                 visible={visible}
                 backdropStyle={styles.backdrop}>
@@ -42,6 +43,7 @@ const styles = StyleSheet.create({
     text: {
         marginTop: 20,
         color: '#05375a',
-        fontSize: 18
+        fontSize: 18,
+        textAlign:'center'
     }
 });

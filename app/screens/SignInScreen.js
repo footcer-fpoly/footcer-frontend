@@ -283,7 +283,6 @@ import AlertSuccessful from '../utils/alerts/AlertSuccessful'
 import DialogConfirmSendOPT from '../utils/dialogs/DialogConfirmSendOPT'
 import { AuthContext } from '../navigation/AuthContext'
 
-
 import {
     validatePhoneNumber,
     checkValidPhone,
@@ -374,7 +373,8 @@ const SignInScreen = ({ navigation }) => {
                     setIsModalVisible(true)
                 } else if (resPhone.code === 409) {
                     if (resPhone.data.password === "") {
-                        //-------------------
+                        setIsLoading(false)
+                        updatePassword()
                     } else {
                         setIsLoading(false)
                         setPhoneSuccess(true);
@@ -391,6 +391,11 @@ const SignInScreen = ({ navigation }) => {
             alert(error)
         }
     }
+    const updatePassword = () => {
+        setFlag(2);
+        setIsModalVisible(true)
+    }
+
     const { signIn } = React.useContext(AuthContext)
     const login = async (phone, password) => {
         if (checkTxtPassword(password)) {
@@ -410,22 +415,27 @@ const SignInScreen = ({ navigation }) => {
                 setIsLoading(false)
                 setValidError({
                     visible: true,
-                    text: 'Sai mật khẩu'
+                    text: 'Mật khẩu không chính xác'
                 })
             }
         }
     }
+
     return (
         <ImageBackground source={require('../assets/images/bg.png')} style={{ flex: 1 }}>
             <StatusBar backgroundColor={COLOR.STATUSBAR_COLOR} barStyle='light-content' />
             <SafeAreaView style={styles.container}>
                 <Loading visible={isLoading} />
-                <AlertSuccessful visible={alertSuccess.visible} text={alertSuccess.text} />
+                <AlertSuccessful
+                    visible={alertSuccess.visible}
+                    text={alertSuccess.text}
+                />
                 <DialogConfirmSendOPT
                     phone={data.phone}
                     flag={flag}
                     visible={isModalVisible}
                     navigation={navigation}
+                    data={data}
                     dismiss={() => setIsModalVisible(false)} />
                 <Animatable.View animation="zoomIn" style={styles.header}>
                     <Image source={require('../assets/images/logo.png')} style={styles.logo} />
@@ -517,6 +527,7 @@ const SignInScreen = ({ navigation }) => {
 
                                 </View>
                                 <TouchableOpacity
+                                    onPress={() => updatePassword()}
                                     style={{ marginBottom: 10, alignItems: 'flex-end', marginTop: 10 }}
                                 >
                                     <Text style={{ fontSize: 16, marginLeft: 10, color: '#676767' }}>Quên mật khẩu</Text>
@@ -534,12 +545,8 @@ const SignInScreen = ({ navigation }) => {
                         <View style={styles.more}>
                             <Text style={styles.txtMore}>Hoặc</Text>
                         </View>
-                        <LoginGg
-                        // onPress={() => this.LoginGg()}
-                        />
-                        <LoginFb
-                        // onPress={() => this.LoginFb()} 
-                        />
+                        <LoginFb navigation={navigation} />
+                        <LoginGg navigation={navigation} />
                     </Animatable.View>
                 </TouchableWithoutFeedback>
             </SafeAreaView>

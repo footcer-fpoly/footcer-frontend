@@ -7,6 +7,8 @@ import SignInScreen from '../screens/SignInScreen';
 import OTPScreen from '../screens/OTPScreen';
 import SignUpFbGgScreen from '../screens/SignUpFbGgScreen';
 import SignUpPhoneScreen from '../screens/SignUpPhoneScreen';
+import UpdatePassScreen from '../screens/UpdatePassScreen';
+
 
 const RootStack = createStackNavigator();
 
@@ -17,6 +19,7 @@ const AuthStackScreen = ({ navigation }) => (
         <RootStack.Screen name="SignUpPhoneScreen" component={SignUpPhoneScreen} />
         <RootStack.Screen name="SignUpFbGgScreen" component={SignUpFbGgScreen} />
         <RootStack.Screen name="OTPScreen" component={OTPScreen} />
+        <RootStack.Screen name="UpdatePassScreen" component={UpdatePassScreen} />
     </RootStack.Navigator>
 );
 

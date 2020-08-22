@@ -168,9 +168,8 @@ const MainNavigation = () => {
   const authContext = React.useMemo(() => ({
     signIn: async (User) => {
       const userToken = String(User.token);
-      const stringDataUser = JSON.stringify(User);
       try {
-        await AsyncStorage.setItem('dataUser', stringDataUser)
+        await AsyncStorage.setItem('userToken', userToken)
       } catch (e) {
         console.log(e);
       }
@@ -178,7 +177,7 @@ const MainNavigation = () => {
     },
     signOut: async () => {
       try {
-        await AsyncStorage.removeItem('dataUser')
+        await AsyncStorage.removeItem('userToken')
       } catch (e) {
         console.log(e);
       }
@@ -186,9 +185,8 @@ const MainNavigation = () => {
     },
     signUp: async (User) => {
       const userToken = String(User.token);
-      const stringDataUser = JSON.stringify(User);
       try {
-        await AsyncStorage.setItem('dataUser', stringDataUser)
+        await AsyncStorage.setItem('userToken', userToken)
       } catch (e) {
         console.log(e);
       }
@@ -202,10 +200,9 @@ const MainNavigation = () => {
       let userToken;
       userToken = null;
       try {
-        const stringDataUser = await AsyncStorage.getItem('dataUser');
-        const jsonDataUser = JSON.parse(stringDataUser)
-        if (jsonDataUser !== null) {
-          userToken = jsonDataUser.userId
+        const token = await AsyncStorage.getItem('userToken');
+        if (token !== null) {
+          userToken = token
         }
       } catch (e) {
         console.log(e);
