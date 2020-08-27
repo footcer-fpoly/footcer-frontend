@@ -1,64 +1,115 @@
 import React, {Component} from 'react';
-import {Text, SafeAreaView, View, Image,StyleSheet} from 'react-native';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import {Text, SafeAreaView, View, Image, StyleSheet} from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import {TouchableOpacity} from 'react-native';
 
-export default class Item extends Component {
-  render() {
-    const {urlImg, name, location, time, range} = this.props;
-    return (
-      <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
-        <View style={styles.container}>
-          <View style={styles.content}>
-            <Image style={{width:96, height:80, borderRadius:7}} source={{uri: urlImg}} />
+export default function Item({item, navigation}) {
+  return (
+    <View style={styles.stadiumContainer}>
+      <View style={styles.stadium}>
+        <Image
+          style={styles.imgstadium}
+          source={{
+            uri: item.image,
+          }}
+        />
+        <View style={styles.infoStadiumContainer}>
+          <View style={styles.nameStadiumContainer}>
+            <Text style={styles.nameStadium} numberOfLines={1}>
+              {item.stadiumName}
+            </Text>
           </View>
-          <View style={styles.textName}>
-            <Text style={styles.textStyle}>{name}</Text>
-            <View style={styles.viewAddress}>
-              <FontAwesome5 name="map-marker-alt" size={15} color="red" />
-              <Text style={styles.textAddress}>{location}</Text>
-            </View>
-            <View style={styles.viewTime}>
-              <FontAwesome5 name="clock" size={15} color="black" />
-              <Text style={styles.textAddress}>{time}p - {range}km</Text>
-            </View>
+
+          <View style={styles.addressStadiumContainer}>
+            <Icon name="place" color="#FF0000" size={15} />
+            <Text style={styles.addreess} numberOfLines={1}>
+              {item.address}
+            </Text>
+          </View>
+
+          <View style={styles.timeRangeStadiumContainer}>
+            <Icon name="schedule" size={15} />
+            <Text style={styles.timeRange}>
+              {item.timer}p - {item.distance}km
+            </Text>
           </View>
         </View>
-      </SafeAreaView>
-    );
-  }
-}
 
+        <View
+          style={{
+            flex: 1,
+            borderTopWidth: 0.5,
+            borderTopColor: '#707070',
+          }}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('StadiumDetail', {item})}>
+            <Text style={styles.go}>Xem chi tiết</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </View>
+  );
+}
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
+  stadiumContainer: {
     backgroundColor: 'white',
-    width: 414,
-    height: 100,
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
+    elevation: 4,
+    margin: 10,
+  },
+  imgstadium: {
+    height: 200,
+    width: '100%',
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    // overflow: 'hidden',
+  },
+  nameStadiumContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  addressStadiumContainer: {
+    flexDirection: 'row',
+    paddingTop: 5,
+  },
+  timeRangeStadiumContainer: {
+    flexDirection: 'row',
+    marginTop: 3,
+    paddingBottom: 10,
+  },
+  go: {
+    paddingRight: 15,
     alignItems: 'center',
-    borderBottomWidth: 0.25,
-    borderColor: 'black',
-  },
-  content: {
-    marginHorizontal: 5,
-  },
-  textName: {
-    marginHorizontal: 10,
-  },
-  textStyle: {
-    fontSize: 16,
+    paddingVertical: 10,
+    textAlign: 'right',
+    fontSize: 13,
     color: '#0AB134',
-    marginBottom: 10,
   },
-  viewAddress: {
-    flexDirection: 'row',
-    marginBottom: 10,
+  infoStadiumContainer: {
+    paddingHorizontal: 10,
+    paddingTop: 5,
   },
-  textAddress: {
-    fontSize: 15,
-    textAlign: 'center',
-    marginLeft: 5,
+  nameStadium: {
+    fontSize: 14,
+    maxWidth: '90%',
   },
-  viewTime: {
-    flexDirection: 'row',
+  priceStadium: {
+    fontSize: 13,
+  },
+  addreess: {
+    fontSize: 12,
+    paddingLeft: 5,
+    maxWidth: '90%',
+  },
+  timeRange: {
+    fontSize: 12,
+    paddingLeft: 5,
   },
 });

@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Text,
   StyleSheet,
@@ -69,109 +69,117 @@ const DATASERVICE = [
   },
 ];
 
-export default class StadiumDetailScreen extends Component {
-  render() {
-    const renderChooseTime = ({item}) => (
-      <ChooseTime
-        time={item.time}
-        price={item.price}
-        timeLimit={item.timeLimit}
-      />
-    );
-    const renderItemService = ({item}) => (
-      <ItemServeice txtService={item.txtService} imgService={item.imgService} />
-    );
-    const province = 'TP Hồ Chí Minh';
-    const district = 'Quận Tân Bình';
-    const village = 'Phường 4';
-    const category = 'Sân cỏ nhân tạo';
-    const nameStadium = 'Sân bóng chảo lửa';
-    const imgStadium =
-      'https://pndathletics.com/common/controls/image_handler.aspx?thumb_id=0&image_path=/images/2016/3/21/PNDSoccerField2015Super.jpg';
-    return (
-      <View style={{flex: 1, backgroundColor: '#EDEDED'}}>
-        <View>
-          <Image style={styles.imgStadium} source={{uri: imgStadium}} />
-          <ItemHeader titleHeader="Chi tiết sân" />
-          <View style={{margin: 10, marginTop: 50}}>
-            <Text style={styles.nameStadium}>{nameStadium}</Text>
-            <TouchableOpacity style={styles.review}>
-              <Text style={styles.txtReview}>Đánh giá</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        <View style={{flex: 1, marginTop: 15}}>
-          <ScrollView>
-            <View style={styles.viewSection}>
-              <Text style={styles.title}>Giờ đấu</Text>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <ButtonDate />
-                <TouchableOpacity style={styles.btnSize}>
-                  <Text style={styles.txtSize}>5 người</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.btnSize}>
-                  <Text style={styles.txtSize}>7 người</Text>
-                </TouchableOpacity>
-              </View>
-              <FlatList
-                style={{marginTop: 10}}
-                data={DATA}
-                renderItem={renderChooseTime}
-                keyExtractor={item => item.id}
-                horizontal
-                showsHorizontalScrollIndicator={false}
-              />
-            </View>
-            <View style={styles.viewSection}>
-              <Text style={styles.title}>Dịch vụ</Text>
-              <FlatList
-                style={{marginTop: 10}}
-                data={DATASERVICE}
-                renderItem={renderItemService}
-                keyExtractor={item => item.id}
-                horizontal
-                showsHorizontalScrollIndicator={false}
-              />
-            </View>
-            <View style={styles.viewSection}>
-              <Text style={styles.title}>Thông tin sân</Text>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  marginTop: 10,
-                }}>
-                <Text style={styles.txt}>Loại sân</Text>
-                <Text style={styles.txtCategory}>{category}</Text>
-              </View>
-            </View>
-            <View style={styles.viewSection}>
-              <Text style={styles.title}>Địa chỉ</Text>
-              <View style={styles.address}>
-                <Text style={styles.txt}>Tỉnh/Thành Phố</Text>
-                <Text style={styles.txtCategorys}>{province}</Text>
-              </View>
-              <View style={styles.address}>
-                <Text style={styles.txt}>Quận/Huyện</Text>
-                <Text style={styles.txtCategory}>{district}</Text>
-              </View>
-              <View style={styles.address}>
-                <Text style={styles.txt}>Xã/Phường</Text>
-                <Text style={styles.txtCategory}>{village}</Text>
-              </View>
-              <TouchableOpacity style={styles.btnBooking}>
-                <Text style={styles.txtBooking}>Đặt Sân</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.viewSection}>
-              <Text style={styles.title}>Đánh giá</Text>
-            </View>
-          </ScrollView>
+export default function StadiumDetailScreen({route, navigation}) {
+  const [address, setAddress] = useState([]);
+  const {item} = route.params;
+
+  const slpitAddress = () => {
+    const fullAddress = item.address;
+    setAddress(fullAddress.split(', '));
+  };
+
+  const renderChooseTime = ({item}) => (
+    <ChooseTime
+      time={item.time}
+      price={item.price}
+      timeLimit={item.timeLimit}
+    />
+  );
+  const renderItemService = ({item}) => (
+    <ItemServeice txtService={item.txtService} imgService={item.imgService} />
+  );
+  useEffect(() => {
+    slpitAddress();
+  }, []);
+  return (
+    <View style={{flex: 1, backgroundColor: '#EDEDED'}}>
+      <View>
+        <Image style={styles.imgStadium} source={{uri: item.image}} />
+        <ItemHeader title="Chi tiết sân" navigation={navigation} />
+        <View style={{margin: 10, marginTop: 50}}>
+          <Text style={styles.nameStadium}>{item.stadiumName}</Text>
+          <TouchableOpacity
+            style={styles.review}
+            onPress={() => navigation.navigate('ReviewScreen', {item})}>
+            <Text style={styles.txtReview}>Đánh giá</Text>
+          </TouchableOpacity>
         </View>
       </View>
-    );
-  }
+      <View style={{flex: 1, marginTop: 15}}>
+        <ScrollView>
+          <View style={styles.viewSection}>
+            <Text style={styles.title}>Giờ đấu</Text>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <ButtonDate />
+              <TouchableOpacity style={styles.btnSize}>
+                <Text style={styles.txtSize}>5 người</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.btnSize}>
+                <Text style={styles.txtSize}>7 người</Text>
+              </TouchableOpacity>
+            </View>
+            <FlatList
+              style={{marginTop: 10}}
+              data={DATA}
+              renderItem={renderChooseTime}
+              keyExtractor={item => item.id}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+            />
+          </View>
+          <View style={styles.viewSection}>
+            <Text style={styles.title}>Dịch vụ</Text>
+            <FlatList
+              style={{marginTop: 10}}
+              data={DATASERVICE}
+              renderItem={renderItemService}
+              keyExtractor={item => item.id}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+            />
+          </View>
+          <View style={styles.viewSection}>
+            <Text style={styles.title}>Thông tin sân</Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                marginTop: 10,
+              }}>
+              <Text style={styles.txt}>Loại sân</Text>
+              <Text style={styles.txtCategory}>{item.category}</Text>
+            </View>
+          </View>
+          <View style={styles.viewSection}>
+            <Text style={styles.title}>Địa chỉ</Text>
+            <View style={styles.address}>
+              <Text style={styles.txt}>Tỉnh/Thành Phố</Text>
+              <Text style={styles.txtCategorys}>{address[3]}</Text>
+            </View>
+            <View style={styles.address}>
+              <Text style={styles.txt}>Quận/Huyện</Text>
+              <Text style={styles.txtCategory}>{address[2]}</Text>
+            </View>
+            <View style={styles.address}>
+              <Text style={styles.txt}>Xã/Phường</Text>
+              <Text style={styles.txtCategory}>{address[1]}</Text>
+            </View>
+            <View style={styles.address}>
+              <Text style={styles.txt}>Đường</Text>
+              <Text style={styles.txtCategory}>{address[0]}</Text>
+            </View>
+            <TouchableOpacity style={styles.btnBooking}>
+              <Text style={styles.txtBooking}>Đặt Sân</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.viewSection}>
+            <Text style={styles.title}>Đánh giá</Text>
+          </View>
+        </ScrollView>
+      </View>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -184,6 +192,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     color: '#fff',
     fontSize: 16,
+    fontWeight: 'bold',
   },
   review: {
     alignItems: 'center',
