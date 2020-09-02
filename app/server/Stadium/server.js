@@ -18,3 +18,19 @@ export const GetStadiumLocation = async props => {
     console.error(error);
   }
 };
+export const GetStadiumID = async props => {
+  const API_SearchID = `http://${PORT}/stadium/info-id/${props.stadiumId}`;
+  try {
+    let response = await axios.get(API_SearchID, {
+      // params: {
+      //   stadiumId: props.stadiumId,
+      // },
+      headers: {
+        Authorization: `Bearer ${props.userToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};

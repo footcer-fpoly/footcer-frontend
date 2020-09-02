@@ -7,11 +7,16 @@ import {
   TouchableOpacity,
   FlatList,
   ScrollView,
+  ToastAndroid,
 } from 'react-native';
 import ItemHeader from '../components/ItemHeader2';
 import ItemServeice from '../components/StadiumDetailScreenComponents/ItemServeice';
 import ButtonDate from '../components/StadiumDetailScreenComponents/ButonModalDate';
 import ChooseTime from '../components/StadiumDetailScreenComponents/ChooseTimeComponent';
+import AsyncStorage from '@react-native-community/async-storage';
+import {GetStadiumID} from '../server/Stadium/server';
+import StarRating from 'react-native-star-rating';
+import LinearGradient from 'react-native-linear-gradient';
 
 const DATA = [
   {
@@ -71,11 +76,65 @@ const DATASERVICE = [
 
 export default function StadiumDetailScreen({route, navigation}) {
   const [address, setAddress] = useState([]);
+  const [listReview, setListReview] = useState([]);
+  const [rateCount, setRateCount] = useState(0);
   const {item} = route.params;
+  const lengthListReviews = listReview.length;
+  const renderItemReview = ({item}) => (
+    <View
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderBottomWidth: 0.5,
+      }}>
+      <Image
+        style={{
+          width: 80,
+          height: 80,
+          borderRadius: 40,
+        }}
+        source={{uri: item.user.avatar}}
+      />
+      <View
+        style={{marginLeft: 10, justifyContent: 'center', paddingVertical: 20}}>
+        <View>
+          <Text numberOfLines={1} style={{fontSize: 20}}>
+            {item.user.displayName}
+          </Text>
+        </View>
+        <View style={{width: 60}}>
+          <StarRating
+            disabled={true}
+            maxStars={5}
+            rating={item.rate}
+            fullStarColor={'#FFDF00'}
+            starSize={15}
+          />
+        </View>
+        <View style={{width: '89%'}}>
+          <Text>{item.content}</Text>
+        </View>
+      </View>
+    </View>
+  );
 
-  const slpitAddress = () => {
+  const slpitAddress = async () => {
     const fullAddress = item.address;
     setAddress(fullAddress.split(', '));
+  };
+
+  const GetReview = async () => {
+    const stadiumId = item.stadiumId;
+    const userToken = await AsyncStorage.getItem('userToken');
+    if ((stadiumId != null) & (userToken != null)) {
+      const data = await GetStadiumID({userToken, stadiumId});
+      if (data.code === 200) {
+        setListReview(data.data.review);
+        setRateCount(data.data.rateCount);
+      } else {
+        ToastAndroid.show('Lỗi', ToastAndroid.SHORT);
+      }
+    }
   };
 
   const renderChooseTime = ({item}) => (
@@ -88,97 +147,133 @@ export default function StadiumDetailScreen({route, navigation}) {
   const renderItemService = ({item}) => (
     <ItemServeice txtService={item.txtService} imgService={item.imgService} />
   );
+
+  useEffect(() => {
+    GetReview();
+  }, []);
   useEffect(() => {
     slpitAddress();
   }, []);
+
   return (
-    <View style={{flex: 1, backgroundColor: '#EDEDED'}}>
+    <ScrollView style={{flex: 1, backgroundColor: '#EDEDED'}}>
       <View>
+        <LinearGradient
+          colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.8)']}
+          style={styles.imgStadium}>
+          <View style={styles.imgStadium} />
+        </LinearGradient>
         <Image style={styles.imgStadium} source={{uri: item.image}} />
         <ItemHeader title="Chi tiết sân" navigation={navigation} />
-        <View style={{margin: 10, marginTop: 50}}>
+
+        <View
+          style={{
+            margin: 10,
+            marginTop: 50,
+          }}>
           <Text style={styles.nameStadium}>{item.stadiumName}</Text>
-          <TouchableOpacity
-            style={styles.review}
-            onPress={() => navigation.navigate('ReviewScreen', {item})}>
-            <Text style={styles.txtReview}>Đánh giá</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-      <View style={{flex: 1, marginTop: 15}}>
-        <ScrollView>
-          <View style={styles.viewSection}>
-            <Text style={styles.title}>Giờ đấu</Text>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <ButtonDate />
-              <TouchableOpacity style={styles.btnSize}>
-                <Text style={styles.txtSize}>5 người</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.btnSize}>
-                <Text style={styles.txtSize}>7 người</Text>
-              </TouchableOpacity>
-            </View>
-            <FlatList
-              style={{marginTop: 10}}
-              data={DATA}
-              renderItem={renderChooseTime}
-              keyExtractor={item => item.id}
-              horizontal
-              showsHorizontalScrollIndicator={false}
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginTop: 10,
+            }}>
+            <StarRating
+              disabled={true}
+              maxStars={5}
+              rating={rateCount}
+              fullStarColor={'#FFDF00'}
+              starSize={20}
             />
-          </View>
-          <View style={styles.viewSection}>
-            <Text style={styles.title}>Dịch vụ</Text>
-            <FlatList
-              style={{marginTop: 10}}
-              data={DATASERVICE}
-              renderItem={renderItemService}
-              keyExtractor={item => item.id}
-              horizontal
-              showsHorizontalScrollIndicator={false}
-            />
-          </View>
-          <View style={styles.viewSection}>
-            <Text style={styles.title}>Thông tin sân</Text>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                marginTop: 10,
-              }}>
-              <Text style={styles.txt}>Loại sân</Text>
-              <Text style={styles.txtCategory}>{item.category}</Text>
-            </View>
-          </View>
-          <View style={styles.viewSection}>
-            <Text style={styles.title}>Địa chỉ</Text>
-            <View style={styles.address}>
-              <Text style={styles.txt}>Tỉnh/Thành Phố</Text>
-              <Text style={styles.txtCategorys}>{address[3]}</Text>
-            </View>
-            <View style={styles.address}>
-              <Text style={styles.txt}>Quận/Huyện</Text>
-              <Text style={styles.txtCategory}>{address[2]}</Text>
-            </View>
-            <View style={styles.address}>
-              <Text style={styles.txt}>Xã/Phường</Text>
-              <Text style={styles.txtCategory}>{address[1]}</Text>
-            </View>
-            <View style={styles.address}>
-              <Text style={styles.txt}>Đường</Text>
-              <Text style={styles.txtCategory}>{address[0]}</Text>
-            </View>
-            <TouchableOpacity style={styles.btnBooking}>
-              <Text style={styles.txtBooking}>Đặt Sân</Text>
+            <Text style={{color: '#fff'}}>{rateCount}</Text>
+            <TouchableOpacity
+              style={styles.review}
+              onPress={() => navigation.navigate('ReviewScreen', {item})}>
+              <Text style={styles.txtReview}>Đánh giá</Text>
             </TouchableOpacity>
           </View>
-          <View style={styles.viewSection}>
-            <Text style={styles.title}>Đánh giá</Text>
-          </View>
-        </ScrollView>
+        </View>
       </View>
-    </View>
+      <View style={{flex: 1, marginTop: 10}}>
+        <View style={styles.viewSection}>
+          <Text style={styles.title}>Giờ đấu</Text>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <ButtonDate />
+            <TouchableOpacity style={styles.btnSize}>
+              <Text style={styles.txtSize}>5 người</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.btnSize}>
+              <Text style={styles.txtSize}>7 người</Text>
+            </TouchableOpacity>
+          </View>
+          <FlatList
+            style={{marginTop: 10}}
+            data={DATA}
+            renderItem={renderChooseTime}
+            keyExtractor={item => item.id}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+          />
+        </View>
+        <View style={styles.viewSection}>
+          <Text style={styles.title}>Dịch vụ</Text>
+          <FlatList
+            style={{marginTop: 10}}
+            data={DATASERVICE}
+            renderItem={renderItemService}
+            keyExtractor={item => item.id}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+          />
+        </View>
+        <View style={styles.viewSection}>
+          <Text style={styles.title}>Thông tin sân</Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginTop: 10,
+            }}>
+            <Text style={styles.txt}>Loại sân</Text>
+            <Text style={styles.txtCategory}>{item.category}</Text>
+          </View>
+        </View>
+        <View style={styles.viewSection}>
+          <Text style={styles.title}>Địa chỉ</Text>
+          <View style={styles.address}>
+            <Text style={styles.txt}>Tỉnh/Thành Phố</Text>
+            <Text style={styles.txtCategorys}>{address[3]}</Text>
+          </View>
+          <View style={styles.address}>
+            <Text style={styles.txt}>Quận/Huyện</Text>
+            <Text style={styles.txtCategory}>{address[2]}</Text>
+          </View>
+          <View style={styles.address}>
+            <Text style={styles.txt}>Xã/Phường</Text>
+            <Text style={styles.txtCategory}>{address[1]}</Text>
+          </View>
+          <View style={styles.address}>
+            <Text style={styles.txt}>Đường</Text>
+            <Text style={styles.txtCategory}>{address[0]}</Text>
+          </View>
+          <TouchableOpacity style={styles.btnBooking}>
+            <Text style={styles.txtBooking}>Đặt Sân</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.viewSection}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Text style={styles.title}>Đánh giá</Text>
+            <Text> ({lengthListReviews})</Text>
+          </View>
+          <FlatList
+            data={listReview}
+            renderItem={renderItemReview}
+            keyExtractor={item => item.id}
+          />
+        </View>
+      </View>
+    </ScrollView>
   );
 }
 
@@ -188,10 +283,16 @@ const styles = StyleSheet.create({
     width: '100%',
     position: 'absolute',
   },
+  transparent: {
+    height: 200,
+    width: '100%',
+    position: 'absolute',
+    backgroundColor: 'rgba(0,0,0,0.4)',
+  },
   nameStadium: {
     bottom: 0,
     color: '#fff',
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: 'bold',
   },
   review: {
@@ -202,7 +303,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#fff',
     borderRadius: 8,
-    marginTop: 10,
+    marginLeft: 10,
   },
   txtReview: {
     color: '#fff',
@@ -253,5 +354,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginHorizontal: 10,
     marginTop: 20,
+  },
+  title: {
+    fontSize: 18,
   },
 });

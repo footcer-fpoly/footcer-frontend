@@ -65,9 +65,14 @@ export default function LocationsScreen({navigation}) {
       }
     }
   };
+
   useEffect(() => {
     GetPosition();
+  }, []);
+  useEffect(() => {
     GetToken();
+  }, []);
+  useEffect(() => {
     GetStadium();
   }, [longitude]);
   return (
