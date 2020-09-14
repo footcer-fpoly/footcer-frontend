@@ -8,6 +8,7 @@ import {
   FlatList,
   ScrollView,
   ToastAndroid,
+  RefreshControl,
 } from 'react-native';
 import ItemHeader from '../components/ItemHeader2';
 import ItemServeice from '../components/StadiumDetailScreenComponents/ItemServeice';
@@ -78,8 +79,10 @@ export default function StadiumDetailScreen({route, navigation}) {
   const [address, setAddress] = useState([]);
   const [listReview, setListReview] = useState([]);
   const [rateCount, setRateCount] = useState(0);
+  const [refreshing, setRefreshing] = useState(false);
   const {item} = route.params;
   const lengthListReviews = listReview.length;
+
   const renderItemReview = ({item}) => (
     <View
       style={{
@@ -137,6 +140,12 @@ export default function StadiumDetailScreen({route, navigation}) {
     }
   };
 
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await GetReview();
+    setRefreshing(false);
+  };
+
   const renderChooseTime = ({item}) => (
     <ChooseTime
       time={item.time}
@@ -156,7 +165,11 @@ export default function StadiumDetailScreen({route, navigation}) {
   }, []);
 
   return (
-    <ScrollView style={{flex: 1, backgroundColor: '#EDEDED'}}>
+    <ScrollView
+      style={{flex: 1, backgroundColor: '#EDEDED'}}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }>
       <View>
         <LinearGradient
           colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.8)']}

@@ -32,7 +32,6 @@ export default function ReviewScreen({route, navigation}) {
     if (token != null) {
       const stadiumId = item.stadiumId;
       const data = await AddReview({rating, stadiumId, content, token});
-      console.log(data);
       if (data.code === 200) {
         ToastAndroid.show('Đã đánh giá thành công', ToastAndroid.SHORT);
         navigation.goBack();

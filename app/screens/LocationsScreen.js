@@ -19,6 +19,7 @@ export default function LocationsScreen({navigation}) {
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const [token, setToken] = useState(null);
+  const [refreshing, setRefreshing] = useState(false);
 
   const requestLocationPermission = async () => {
     try {
@@ -66,6 +67,12 @@ export default function LocationsScreen({navigation}) {
     }
   };
 
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await GetStadium();
+    setRefreshing(false);
+  };
+
   useEffect(() => {
     GetPosition();
   }, []);
@@ -79,6 +86,8 @@ export default function LocationsScreen({navigation}) {
     <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
       <Loading visible={isLoading} />
       <FlatList
+        refreshing={refreshing}
+        onRefresh={onRefresh}
         showsVerticalScrollIndicator={false}
         data={listStadium}
         renderItem={renderItem}
