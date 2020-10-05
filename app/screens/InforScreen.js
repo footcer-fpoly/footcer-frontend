@@ -31,7 +31,7 @@ const InforScreen = ({ navigation }) => {
   const { signOut } = React.useContext(AuthContext)
 
   return (
-    <View style={{ backgroundColor: 'white', height: '100%' }}>
+    <View style={{backgroundColor: 'white', height: '100%'}}>
       <View
         style={{
           backgroundColor: '#0AB134',
@@ -66,12 +66,12 @@ const InforScreen = ({ navigation }) => {
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Text style={{ color: 'white', fontSize: 14 }}>
               Chỉnh sửa tài khoản
-              </Text>
+            </Text>
             <Feather
               name="chevron-right"
               color="white"
               size={15}
-              style={{ marginLeft: 10 }}
+              style={{marginLeft: 10}}
             />
           </View>
         </View>
@@ -86,5 +86,5 @@ const InforScreen = ({ navigation }) => {
       </View>
     </View >
   );
-}
+};
 export default InforScreen;

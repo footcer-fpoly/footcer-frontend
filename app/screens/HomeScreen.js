@@ -13,7 +13,7 @@ export default class HomeScreen extends Component {
           <HeaderHome style={styles.header} />
         </View>
         <View style={styles.body}>
-          <ItemMore title="Sân bóng quanh đây"/>
+          <ItemMore title="Sân bóng quanh đây" />
           <ScrollView
             horizontal={true}
             showsHorizontalScrollIndicator={false}
@@ -69,19 +69,15 @@ export default class HomeScreen extends Component {
 }
 const styles = StyleSheet.create({
   container: {
-    position: 'relative',
     flex: 1,
     zIndex: 10,
     backgroundColor: '#EDEDED',
   },
   header: {
-    position: 'absolute',
     zIndex: 20,
   },
   body: {
     zIndex: -1,
-    position: 'absolute',
-    top: 320,
     paddingHorizontal: 15,
   },
 });

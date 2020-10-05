@@ -1,18 +1,18 @@
 import React, {Component} from 'react';
 import {Text, StyleSheet, View} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import {TouchableOpacity} from 'react-native';
 
-export default class ItemHeader2 extends Component {
-  render() {
-    const {titleHeader} = this.props;
-    return (
-      <View style={styles.headerContainer}>
+export default function ItemHeader2({title, navigation}) {
+  return (
+    <View style={styles.headerContainer}>
+      <TouchableOpacity onPress={() => navigation.goBack()}>
         <Icon style={styles.iconHeader} name="chevron-left" size={21} />
-        <Text style={styles.titleHeader}>{titleHeader}</Text>
-        <View style={{width: 21}} />
-      </View>
-    );
-  }
+      </TouchableOpacity>
+      <Text style={styles.titleHeader}>{title}</Text>
+      <View style={{paddingHorizontal: 25}} />
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -20,7 +20,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: 20,
   },
   titleHeader: {
     fontSize: 16,
@@ -29,5 +28,6 @@ const styles = StyleSheet.create({
   },
   iconHeader: {
     color: '#fff',
+    padding: 20,
   },
 });

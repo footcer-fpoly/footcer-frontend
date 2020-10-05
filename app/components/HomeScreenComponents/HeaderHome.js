@@ -27,7 +27,7 @@ export default class HeaderHome extends Component {
         </View>
         <Text style={styles.textHeader}>Trận sắp tới</Text>
         <View>
-          <Match
+          {/* <Match
             nameStadium="Sân Bóng Chảo Lửa"
             addressStadium="30 Phan Thúc Duyệt, Tân Bình"
             nameUser="Dương Hải Đăng"
@@ -35,7 +35,7 @@ export default class HeaderHome extends Component {
             time="20:30"
             date="26/06/2020"
             size="7"
-          />
+          /> */}
         </View>
       </View>
     );
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    height:40,
+    height: 40,
     borderRadius: 10,
     borderWidth: 2,
     borderColor: '#fff',
