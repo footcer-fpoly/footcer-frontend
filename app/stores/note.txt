@@ -1,1 +1,0 @@
-stores nơi chứa store của app

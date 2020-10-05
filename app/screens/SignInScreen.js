@@ -281,7 +281,7 @@ import LoginGg from '../components/SignInSignUp/LoginGg';
 import Loading from '../components/Loading'
 import AlertSuccessful from '../utils/alerts/AlertSuccessful'
 import DialogConfirmSendOPT from '../utils/dialogs/DialogConfirmSendOPT'
-import { AuthContext } from '../navigation/AuthContext'
+import { AuthContext } from '../navigations/AuthContext'
 
 import {
     validatePhoneNumber,

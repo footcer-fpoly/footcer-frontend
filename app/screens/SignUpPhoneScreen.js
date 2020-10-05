@@ -25,7 +25,7 @@ import {
 import Loading from '../components/Loading'
 import AlertSuccessful from '../utils/alerts/AlertSuccessful'
 import AlertError from '../utils/alerts/AlertError'
-import { AuthContext } from '../navigation/AuthContext'
+import { AuthContext } from '../navigations/AuthContext'
 
 const SignUpPhoneScreen = ({ navigation, route }) => {
     const [data, setData] = useState({

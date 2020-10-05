@@ -10,7 +10,7 @@ import {
 } from '@react-native-community/google-signin';
 import { checkUUID } from '../../server/SignInSignUp/sever'
 import { Spinner } from '@ui-kitten/components';
-import { AuthContext } from '../../navigation/AuthContext'
+import { AuthContext } from '../../navigations/AuthContext'
 
 
 

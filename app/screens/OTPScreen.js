@@ -223,7 +223,7 @@ import styles from '../theme/StylesAuth'
 import Loading from '../components/Loading'
 import AlertSuccessful from '../utils/alerts/AlertSuccessful'
 import AlertError from '../utils/alerts/AlertError'
-import { AuthContext } from '../navigation/AuthContext'
+import { AuthContext } from '../navigations/AuthContext'
 import { signUpFbGg } from '../server/SignInSignUp/sever'
 
 const OTPScreen = ({ route, navigation }) => {
@@ -293,6 +293,7 @@ const OTPScreen = ({ route, navigation }) => {
     const handleVerifyCode = (confirmResult) => {
         if (pin1 && pin2 && pin3 && pin4 && pin5 && pin6) {
             const pin = pin1 + pin2 + pin3 + pin4 + pin5 + pin6;
+            console.log(pin)
             setIsLoading(true);
             confirmResult
                 .confirm(pin)

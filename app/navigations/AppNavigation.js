@@ -6,6 +6,7 @@ import { ApplicationProvider } from '@ui-kitten/components';
 import * as Animatable from 'react-native-animatable';
 import * as eva from '@eva-design/eva';
 import Feather from 'react-native-vector-icons/Feather';
+import AsyncStorage from '@react-native-community/async-storage';
 import HomeScreen from '../screens/HomeScreen';
 import DetailsScreen from '../screens/DetailsScreen';
 import LocationsScreen from '../screens/LocationsScreen';
@@ -15,7 +16,6 @@ import CompetitorDetails from '../screens/CompetitorDetails';
 import InforScreen from '../screens/InforScreen';
 import CreateTeamScreen from '../screens/CreateTeamScreen';
 import AuthStackScreen from './AuthStackScreen'
-import AsyncStorage from '@react-native-community/async-storage';
 import { AuthContext } from './AuthContext'
 import Spinner from "react-native-spinkit";
 import {

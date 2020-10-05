@@ -1,9 +1,35 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, SafeAreaView, Button, View, Image, TouchableOpacity } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
-import { AuthContext } from '../navigation/AuthContext'
-const InforScreen = () => {
+import AsyncStorage from '@react-native-community/async-storage';
+
+import { AuthContext } from '../navigations/AuthContext'
+import { getInforUser } from '../server/User/server'
+
+
+import RowItem from '../components/ProfileScreenComponents/RowItem'
+
+const InforScreen = ({ navigation }) => {
+
+  const [dataUser, setDataUser] = useState({});
+  const getInfo = async () => {
+    const token = await AsyncStorage.getItem('userToken');
+    const res = await getInforUser(token);
+    if (res.code === 200) {
+      setDataUser(res.data);
+    } else {
+      alert('huhu');
+    }
+  }
+
+  useEffect(() => {
+    getInfo();
+    console.log(dataUser)
+  }, [])
+
+
   const { signOut } = React.useContext(AuthContext)
+
   return (
     <View style={{ backgroundColor: 'white', height: '100%' }}>
       <View
@@ -25,7 +51,9 @@ const InforScreen = () => {
             marginTop: 80,
           }}>
           <Image
-            source={require('../assets/images/avatar.jpg')}
+            source={{
+              uri: dataUser.avatar ? dataUser.avatar : null,
+            }}
             style={{ width: 90, height: 90, borderRadius: 80 }}
             resizeMode="cover"
           />
@@ -33,8 +61,8 @@ const InforScreen = () => {
         <View
           style={{ position: 'absolute', marginLeft: 145, marginTop: 110 }}>
           <Text style={{ color: 'white', fontSize: 18, marginBottom: 10 }}>
-            Huỳnh Xuân Bình
-            </Text>
+            {dataUser.displayName}
+          </Text>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Text style={{ color: 'white', fontSize: 14 }}>
               Chỉnh sửa tài khoản
@@ -49,152 +77,14 @@ const InforScreen = () => {
         </View>
       </View>
       <View style={{ backgroundColor: 'white' }}>
-        <View>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              width: 414,
-              height: 65,
-              borderBottomColor: 'grey',
-              borderBottomWidth: 0.3,
-            }}>
-            <TouchableOpacity
-              style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Feather
-                name="search"
-                color="#0AB134"
-                size={25}
-                style={{ marginHorizontal: 20 }}
-              />
-              <Text style={{ marginLeft: 40, fontSize: 16 }}>
-                Tìm kiếm đội bóng
-                </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        <View>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              width: 414,
-              height: 65,
-              borderBottomColor: 'grey',
-              borderBottomWidth: 0.3,
-            }}>
-            <TouchableOpacity
-              onPress={() => this.props.navigation.navigate('CreateTeam')}
-              style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Feather
-                name="user-plus"
-                color="#0AB134"
-                size={25}
-                style={{ marginHorizontal: 20 }}
-              />
-              <Text style={{ marginLeft: 40, fontSize: 16 }}>
-                Tạo đội bóng
-                </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        <View>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              width: 414,
-              height: 65,
-              borderBottomColor: 'grey',
-              borderBottomWidth: 0.3,
-            }}>
-            <TouchableOpacity
-              style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Feather
-                name="share-2"
-                color="#0AB134"
-                size={25}
-                style={{ marginHorizontal: 20 }}
-              />
-              <Text style={{ marginLeft: 40, fontSize: 16 }}>
-                Mời bạn bè sử dụng app
-                </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        <View>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              width: 414,
-              height: 65,
-              borderBottomColor: 'grey',
-              borderBottomWidth: 0.3,
-            }}>
-            <TouchableOpacity
-              style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Feather
-                name="settings"
-                color="#0AB134"
-                size={25}
-                style={{ marginHorizontal: 20 }}
-              />
-              <Text style={{ marginLeft: 40, fontSize: 16 }}>
-                Thiết lập ứng dụng
-                </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        <View>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              width: 414,
-              height: 65,
-              borderBottomColor: 'grey',
-              borderBottomWidth: 0.3,
-            }}>
-            <TouchableOpacity
-              onPress={() => signOut()}
-              style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Feather
-                name="log-out"
-                color="#0AB134"
-                size={25}
-                style={{ marginHorizontal: 20 }}
-              />
-              <Text style={{ marginLeft: 40, fontSize: 16 }}>
-                Đăng xuất
-                </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        <View>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              width: 414,
-              height: 65,
-            }}>
-            <TouchableOpacity
-              style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Feather
-                name="codesandbox"
-                color="#0AB134"
-                size={25}
-                style={{ marginHorizontal: 20 }}
-              />
-              <Text style={{ marginLeft: 40, fontSize: 16 }}>
-                Quét QR Code
-                </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+        <RowItem icon='search' text='Tìm kiếm đội bóng' />
+        <RowItem icon='user-plus' text='Tạo đội bóng' onPress={() => navigation.navigate('CreateTeam', { dataUser })} />
+        <RowItem icon='share-2' text='Mời bạn bè sử dụng app' />
+        <RowItem icon='settings' text='Thiết lập ứng dụng' />
+        <RowItem icon='log-out' text='Đăng xuất' onPress={() => signOut()} />
+        <RowItem icon='codesandbox' text='Quét QR Code' />
       </View>
-    </View>
+    </View >
   );
 }
 export default InforScreen;

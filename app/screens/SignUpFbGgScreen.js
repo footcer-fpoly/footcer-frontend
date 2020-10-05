@@ -172,6 +172,7 @@ const SignUpFbGgScreen = ({ navigation, route }) => {
         image: ''
     });
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [isLoading, setIsLoading] = useState();
     const [validError, setValidError] = useState({
         visible: false,
         text: '',
