@@ -1,0 +1,23 @@
+const colors = {
+  main: '#2ecc71',
+  grayLight: '#ecf0f1',
+  gray: '#57606f',
+  grayDark: '#676767',
+  primary: '#0C2A64',
+  primaryOpacity: '#CEDBE8',
+  success: '#00C27F',
+  successBackground: '#48b169',
+  error: '#F01F0E',
+  errorBackground: '#f95757',
+  blue: '#0488DB',
+  green: '#27ae60',
+  greenDark: '#16a085',
+  red: '#e74c3c',
+  captionText: '#000000',
+  placeHolder: '#95a5a6',
+  blurText: '#555555',
+  black: '#000000',
+  blackOpacity: 'rgba(0, 0, 0, 0.5)',
+  white: '#ffffff',
+};
+export default colors;

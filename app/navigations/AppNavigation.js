@@ -1,30 +1,32 @@
-import React, {Component, useEffect} from 'react';
+import * as eva from '@eva-design/eva';
+import AsyncStorage from '@react-native-community/async-storage';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {ApplicationProvider} from '@ui-kitten/components';
+import React, {Component, useEffect} from 'react';
+import {StatusBar, View} from 'react-native';
 import * as Animatable from 'react-native-animatable';
-import * as eva from '@eva-design/eva';
-import Feather from 'react-native-vector-icons/Feather';
-import AsyncStorage from '@react-native-community/async-storage';
-import HomeScreen from '../screens/HomeScreen';
-import DetailsScreen from '../screens/DetailsScreen';
-import LocationsScreen from '../screens/LocationsScreen';
-import ViewLocations from '../screens/ViewLocationScreen';
-import CompetitorScreen from '../screens/CompetitorScreen';
-import CompetitorDetails from '../screens/CompetitorDetails';
-import InforScreen from '../screens/InforScreen';
-import CreateTeamScreen from '../screens/CreateTeamScreen';
-import AuthStackScreen from './AuthStackScreen';
-import AsyncStorage from '@react-native-community/async-storage';
-import {AuthContext} from './AuthContext';
 import Spinner from 'react-native-spinkit';
-import {View, StatusBar} from 'react-native';
-import StadiumDetailScreen from '../screens/StadiumDetailScreen';
+import Feather from 'react-native-vector-icons/Feather';
+import {Provider} from 'react-redux';
+import configureStore from '../redux/store/configure-store';
+import CompetitorDetails from '../screens/CompetitorDetails';
+import CompetitorScreen from '../screens/CompetitorScreen';
+import CreateTeamScreen from '../screens/CreateTeamScreen';
+import DetailsScreen from '../screens/DetailsScreen';
+import HomeScreen from '../screens/HomeScreen';
+import InforScreen from '../screens/InforScreen';
+import LocationsScreen from '../screens/LocationsScreen';
 import ReviewScreen from '../screens/ReviewScreen';
+import StadiumDetailScreen from '../screens/StadiumDetailScreen';
+import ViewLocations from '../screens/ViewLocationScreen';
+import {AuthContext} from './AuthContext';
+import AuthStackScreen from './AuthStackScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+const store = configureStore();
 
 class HomeStack extends Component {
   render() {
@@ -235,24 +237,26 @@ const MainNavigation = () => {
     );
   }
   return (
-    <AuthContext.Provider value={authContext}>
-      <ApplicationProvider {...eva} theme={eva.light}>
-        <NavigationContainer>
-          {loginState.userToken !== null ? (
-            <Stack.Navigator screenOptions={{headerShown: false}}>
-              <Stack.Screen name="Dashboard" component={BottomNavigation} />
-              <Stack.Screen
-                name="StadiumDetail"
-                component={StadiumDetailScreen}
-              />
-              <Stack.Screen name="ReviewScreen" component={ReviewScreen} />
-            </Stack.Navigator>
-          ) : (
-            <AuthStackScreen />
-          )}
-        </NavigationContainer>
-      </ApplicationProvider>
-    </AuthContext.Provider>
+    <Provider store={store}>
+      <AuthContext.Provider value={authContext}>
+        <ApplicationProvider {...eva} theme={eva.light}>
+          <NavigationContainer>
+            {loginState.userToken !== null ? (
+              <Stack.Navigator screenOptions={{headerShown: false}}>
+                <Stack.Screen name="Dashboard" component={BottomNavigation} />
+                <Stack.Screen
+                  name="StadiumDetail"
+                  component={StadiumDetailScreen}
+                />
+                <Stack.Screen name="ReviewScreen" component={ReviewScreen} />
+              </Stack.Navigator>
+            ) : (
+              <AuthStackScreen />
+            )}
+          </NavigationContainer>
+        </ApplicationProvider>
+      </AuthContext.Provider>
+    </Provider>
   );
 };
 export default MainNavigation;

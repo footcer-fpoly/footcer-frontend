@@ -2,16 +2,16 @@ import React from 'react';
 
 import {createStackNavigator} from '@react-navigation/stack';
 
-import SplashScreen from '../screens/SplashScreen';
-import SignInScreen from '../screens/SignInScreen';
-import OTPScreen from '../screens/OTPScreen';
-import SignUpFbGgScreen from '../screens/SignUpFbGgScreen';
-import SignUpPhoneScreen from '../screens/SignUpPhoneScreen';
+import SplashScreen from '../screens/AuthScreens/SplashScreen';
+import SignInScreen from '../screens/AuthScreens/SignInScreen';
+import OTPScreen from '../screens/AuthScreens/OTPScreen';
+import SignUpFbGgScreen from '../screens/AuthScreens/SignUpFbGgScreen';
+import SignUpPhoneScreen from '../screens/AuthScreens/SignUpPhoneScreen';
 import UpdatePassScreen from '../screens/UpdatePassScreen';
 
 const RootStack = createStackNavigator();
 
-const AuthStackScreen = ({navigation}) => (
+const AuthStackScreen = () => (
   <RootStack.Navigator screenOptions={{headerShown: false}}>
     <RootStack.Screen name="SplashScreen" component={SplashScreen} />
     <RootStack.Screen name="SignInScreen" component={SignInScreen} />
