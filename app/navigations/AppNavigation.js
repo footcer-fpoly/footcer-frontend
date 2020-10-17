@@ -20,7 +20,7 @@ import InforScreen from '../screens/InforScreen';
 import LocationsScreen from '../screens/LocationsScreen';
 import ReviewScreen from '../screens/ReviewScreen';
 import StadiumDetailScreen from '../screens/StadiumDetailScreen';
-import ViewLocations from '../screens/ViewLocationScreen';
+import ViewLocationScreen from '../screens/ViewLocationScreen';
 import {AuthContext} from './AuthContext';
 import AuthStackScreen from './AuthStackScreen';
 
@@ -48,11 +48,11 @@ class LocationStack extends Component {
     return (
       <Stack.Navigator>
         <Stack.Screen
-          name="Location"
+          name="Locations"
           component={LocationsScreen}
           options={{headerShown: false}}
         />
-        <Stack.Screen name="ViewLocations" component={ViewLocations} />
+        <Stack.Screen name="ViewLocations" component={ViewLocationScreen} />
       </Stack.Navigator>
     );
   }
@@ -92,7 +92,6 @@ class BottomNavigation extends Component {
         screenOptions={({route}) => ({
           tabBarIcon: ({focused, color, size}) => {
             let iconName;
-
             if (route.name === 'Home') {
               iconName = 'home';
             } else if (route.name === 'Locations') {
@@ -102,7 +101,6 @@ class BottomNavigation extends Component {
             } else if (route.name === 'Information') {
               iconName = 'user';
             }
-
             return <Feather name={iconName} size={size} color={color} />;
           },
         })}

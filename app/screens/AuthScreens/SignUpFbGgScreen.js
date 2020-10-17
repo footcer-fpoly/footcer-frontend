@@ -14,18 +14,14 @@ import {
 import * as Animatable from 'react-native-animatable';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {connect} from 'react-redux';
-import {
-  checkValidPhone,
-  validatePhoneNumber,
-} from '../../server/SignInSignUp/sever';
-import colors from '../../theme/colors';
+import {checkValidPhoneService} from '../../api/auth.api';
+import {StatusCode} from '../../api/status-code';
+import {backgroundImage} from '../../assets/Images';
+import Loading from '../../components/common/loadings/Loading';
+import {validatePhoneNumber} from '../../helpers/validate.helper';
+import {hideLoading, showLoading} from '../../redux/actions/loading.action';
 import styles from '../../theme/StylesAuth';
 import DialogConfirmSendOPT from '../../utils/dialogs/DialogConfirmSendOPT';
-import {hideLoading, showLoading} from '../../redux/actions/loading.action';
-import Loading from '../../components/common/loadings/Loading';
-import {checkValidPhoneService} from '../../api/auth.api';
-import {SUCCESS} from '../../configs/app.config';
-import {backgroundImage} from '../../assets/Images';
 
 const SignUpFbGgScreen = ({navigation, route, showLoading, hideLoading}) => {
   const {data, flag} = route.params;
@@ -69,19 +65,19 @@ const SignUpFbGgScreen = ({navigation, route, showLoading, hideLoading}) => {
       showLoading();
       const res = await checkValidPhoneService(phone);
       console.log('checkValidPhoneService => res: ', res);
-      if (res.code === SUCCESS) {
-        hideLoading();
+      if (res.code === StatusCode.SUCCESS) {
         setIsModalVisible(true);
-      } else if (res.code === 203) {
-        hideLoading();
+      } else if (res.code === StatusCode.validPhone.USER_EXISTS) {
         setValidError({visible: true, text: 'Số điện thoại đã được đăng ký'});
-      } else {
-        hideLoading();
+      } else if (res.code === StatusCode.validPhone.USER_IS_ADMIN) {
         setValidError({
           visible: true,
           text: 'Số điện thoại đã được đăng ký làm chủ sân',
         });
+      } else {
+        alert('Lỗi :', res.code);
       }
+      hideLoading();
     }
   };
 

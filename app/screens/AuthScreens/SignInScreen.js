@@ -1,3 +1,4 @@
+import {statusCodes} from '@react-native-community/google-signin';
 import React, {useState} from 'react';
 import {
   Image,
@@ -16,6 +17,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
 import {connect} from 'react-redux';
 import {checkValidPhoneService, signInPhoneService} from '../../api/auth.api';
+import {StatusCode} from '../../api/status-code';
 import {backgroundImage, logoImage} from '../../assets/Images';
 import LoginFb from '../../components/auth/LoginFb';
 import LoginGg from '../../components/auth/LoginGg';
@@ -103,31 +105,28 @@ const SignInScreen = ({navigation, showLoading, hideLoading}) => {
   const checkExistPhone = async phone => {
     try {
       if (checkTxtPhone(phone)) {
-        // setIsLoading(true);
         showLoading();
         const resPhone = await checkValidPhoneService(phone);
         console.log('resPhone: ', resPhone);
         console.log('resPhone.code: ', resPhone.code);
-        if (resPhone.code === 200) {
+        if (resPhone.code === StatusCode.SUCCESS) {
           setIsModalVisible(true);
-          hideLoading();
-        } else if (resPhone.code === 209) {
+        } else if (resPhone.code === StatusCode.validPhone.USER_EXISTS) {
           if (resPhone.data.password === '') {
             updatePassword();
-            hideLoading();
           } else {
             setPhoneSuccess(true);
-            hideLoading();
           }
         } else {
-          hideLoading();
           setValidError({
             visible: true,
             text: 'Số điện thoại đã được đăng ký làm chủ sân',
           });
         }
+        hideLoading();
       }
     } catch (error) {
+      console.log('checkValidPhoneService => err: ', error);
       hideLoading();
     }
   };

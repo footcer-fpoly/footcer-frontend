@@ -4,9 +4,9 @@ import React, {useEffect, useState} from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import {Button} from 'react-native-elements';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {AuthContext} from '../../navigations/AuthContext';
-import {checkUUID} from '../../server/SignInSignUp/sever';
+import {checkUUIDService} from '../../api/auth.api';
 import {AppConfig} from '../../configs/app.config';
+import {AuthContext} from '../../navigations/AuthContext';
 
 const LoginGg = ({navigation}) => {
   const [loading, setLoading] = useState(false);
@@ -29,7 +29,7 @@ const LoginGg = ({navigation}) => {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
       const {id} = userInfo.user;
-      const res = await checkUUID(id);
+      const res = await checkUUIDService(id);
       if (res.code === 200) {
         setLoading(false);
         navigation.navigate('SignUpFbGgScreen', {data: userInfo.user, flag: 1});

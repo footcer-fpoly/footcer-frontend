@@ -11,8 +11,8 @@ import {
 export const checkValidPhoneService = phone => {
   return RequestHelper.post(CHECK_VALID_PHONE, {phone});
 };
-export const checkUUIDService = uuid => {
-  return RequestHelper.post(CHECK_UUID, {uuid});
+export const checkUUIDService = userId => {
+  return RequestHelper.post(CHECK_UUID, {userId});
 };
 export const signUpPhoneService = data => {
   return RequestHelper.post(SIGN_UP_PHONE, {
@@ -34,5 +34,5 @@ export const signUpFbGgService = data => {
   });
 };
 export const updatePassService = (phone, pass) => {
-  return RequestHelper.post(UPDATE_PASS, {phone, pass});
+  return RequestHelper.put(UPDATE_PASS, {phone, pass});
 };

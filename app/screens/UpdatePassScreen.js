@@ -13,17 +13,18 @@ import {
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {updatePassService} from '../api/auth.api';
-import {
-  checkValidPhone,
-  confirmPassword,
-  validatePassword,
-} from '../helpers/validate.helper';
+import {connect} from 'react-redux';
+import {checkValidPhoneService, updatePassService} from '../api/auth.api';
+import {StatusCode} from '../api/status-code';
+import {backgroundImage} from '../assets/Images';
+import Loading from '../components/common/loadings/Loading';
+import {confirmPassword, validatePassword} from '../helpers/validate.helper';
+import {hideLoading, showLoading} from '../redux/actions/loading.action';
 import colors from '../theme/colors';
 import styles from '../theme/StylesAuth';
 import AlertSuccessful from '../utils/alerts/AlertSuccessful';
 
-const UpdatePassScreen = ({navigation, route}) => {
+const UpdatePassScreen = ({navigation, route, showLoading, hideLoading}) => {
   const {phone} = route.params;
   const [user, setUser] = useState({
     phone: '',
@@ -32,7 +33,6 @@ const UpdatePassScreen = ({navigation, route}) => {
     rePassword: '',
     avatar: null,
   });
-  const [isLoading, setIsLoading] = useState(false);
 
   const [alertSuccess, setAlertSuccess] = useState({
     visible: false,
@@ -44,16 +44,23 @@ const UpdatePassScreen = ({navigation, route}) => {
     text: 'haha',
   });
   const getData = async () => {
-    const res = await checkValidPhone(phone);
-    console.log(phone);
-    console.log(res);
-    setUser({
-      ...user,
-      phone: res.data.phone,
-      name: res.data.displayName,
-      avatar: res.data.avatar,
-    });
+    try {
+      const res = await checkValidPhoneService(phone);
+      console.log(phone);
+      console.log(res);
+      setUser({
+        ...user,
+        phone: res.data.phone,
+        name: res.data.displayName,
+        avatar: res.data.avatar,
+      });
+    } catch (error) {
+      console.log('getData updatePass => err: ', error);
+    }
   };
+  useEffect(() => {
+    getData();
+  }, []);
 
   const changeTxtPass = val => {
     setUser({
@@ -75,10 +82,6 @@ const UpdatePassScreen = ({navigation, route}) => {
       rePassword: false,
     });
   };
-
-  useEffect(() => {
-    getData();
-  }, []);
 
   const checkForm = () => {
     const err = validatePassword(user.password);
@@ -110,29 +113,35 @@ const UpdatePassScreen = ({navigation, route}) => {
   };
 
   const updatePass = async () => {
-    if (checkForm()) {
-      setIsLoading(true);
-      const res = await updatePassService(user.phone, user.password);
-      if (res === 200) {
-        setIsLoading(false);
-        setAlertSuccess({
-          visible: true,
-          text: 'Cập nhật mật khẩu thành công',
-        });
-        setTimeout(() => {
-          navigation.goBack();
-        }, 2000);
-      } else alert('huhu');
+    try {
+      if (checkForm()) {
+        showLoading();
+        const res = await updatePassService(user.phone, user.password);
+        console.log('updatePass => res: ', res);
+        if (res.code === StatusCode.SUCCESS) {
+          setAlertSuccess({
+            visible: true,
+            text: 'Cập nhật mật khẩu thành công',
+          });
+          setTimeout(() => {
+            navigation.goBack();
+          }, 2000);
+        } else {
+          console.log('updatePass => res.code: ', res.code);
+        }
+        hideLoading();
+      }
+    } catch (error) {
+      hideLoading();
+      console.log('updatePass => err: ', error);
     }
   };
 
   return (
-    <ImageBackground
-      source={require('../assets/images/bg.png')}
-      style={{flex: 1}}>
+    <ImageBackground source={backgroundImage} style={{flex: 1}}>
       <StatusBar backgroundColor={colors.mainks} barStyle="light-content" />
       <SafeAreaView style={{flex: 1}}>
-        {/* <Loading visible={isLoading} /> */}
+        <Loading />
         <AlertSuccessful
           visible={alertSuccess.visible}
           text={alertSuccess.text}
@@ -147,8 +156,6 @@ const UpdatePassScreen = ({navigation, route}) => {
             <View
               style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
               <Text style={styles.titleScreen}>Cập nhật mật khẩu</Text>
-              <Text style={styles.subTitleScreen} />
-              <Text style={styles.subTitleScreen} />
             </View>
             <View
               style={{
@@ -243,4 +250,12 @@ const UpdatePassScreen = ({navigation, route}) => {
     </ImageBackground>
   );
 };
-export default UpdatePassScreen;
+const mapDispatchToProps = {
+  showLoading,
+  hideLoading,
+};
+
+export default connect(
+  null,
+  mapDispatchToProps,
+)(UpdatePassScreen);

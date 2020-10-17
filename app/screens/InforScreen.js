@@ -1,16 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import { Text, SafeAreaView, Button, View, Image, TouchableOpacity } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  Text,
+  SafeAreaView,
+  Button,
+  View,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import AsyncStorage from '@react-native-community/async-storage';
 
-import { AuthContext } from '../navigations/AuthContext'
-import { getInforUser } from '../server/User/server'
+import {AuthContext} from '../navigations/AuthContext';
+import {getInforUser} from '../server/User/server';
 
+import RowItem from '../components/ProfileScreenComponents/RowItem';
 
-import RowItem from '../components/ProfileScreenComponents/RowItem'
-
-const InforScreen = ({ navigation }) => {
-
+const InforScreen = ({navigation}) => {
   const [dataUser, setDataUser] = useState({});
   const getInfo = async () => {
     const token = await AsyncStorage.getItem('userToken');
@@ -20,15 +25,14 @@ const InforScreen = ({ navigation }) => {
     } else {
       alert('huhu');
     }
-  }
+  };
 
   useEffect(() => {
     getInfo();
-    console.log(dataUser)
-  }, [])
+    console.log(dataUser);
+  }, []);
 
-
-  const { signOut } = React.useContext(AuthContext)
+  const {signOut} = React.useContext(AuthContext);
 
   return (
     <View style={{backgroundColor: 'white', height: '100%'}}>
@@ -54,17 +58,16 @@ const InforScreen = ({ navigation }) => {
             source={{
               uri: dataUser.avatar ? dataUser.avatar : null,
             }}
-            style={{ width: 90, height: 90, borderRadius: 80 }}
+            style={{width: 90, height: 90, borderRadius: 80}}
             resizeMode="cover"
           />
         </View>
-        <View
-          style={{ position: 'absolute', marginLeft: 145, marginTop: 110 }}>
-          <Text style={{ color: 'white', fontSize: 18, marginBottom: 10 }}>
+        <View style={{position: 'absolute', marginLeft: 145, marginTop: 110}}>
+          <Text style={{color: 'white', fontSize: 18, marginBottom: 10}}>
             {dataUser.displayName}
           </Text>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={{ color: 'white', fontSize: 14 }}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Text style={{color: 'white', fontSize: 14}}>
               Chỉnh sửa tài khoản
             </Text>
             <Feather
@@ -76,15 +79,19 @@ const InforScreen = ({ navigation }) => {
           </View>
         </View>
       </View>
-      <View style={{ backgroundColor: 'white' }}>
-        <RowItem icon='search' text='Tìm kiếm đội bóng' />
-        <RowItem icon='user-plus' text='Tạo đội bóng' onPress={() => navigation.navigate('CreateTeam', { dataUser })} />
-        <RowItem icon='share-2' text='Mời bạn bè sử dụng app' />
-        <RowItem icon='settings' text='Thiết lập ứng dụng' />
-        <RowItem icon='log-out' text='Đăng xuất' onPress={() => signOut()} />
-        <RowItem icon='codesandbox' text='Quét QR Code' />
+      <View style={{backgroundColor: 'white'}}>
+        <RowItem icon="search" text="Tìm kiếm đội bóng" />
+        <RowItem
+          icon="user-plus"
+          text="Tạo đội bóng"
+          onPress={() => navigation.navigate('CreateTeam', {dataUser})}
+        />
+        <RowItem icon="share-2" text="Mời bạn bè sử dụng app" />
+        <RowItem icon="settings" text="Thiết lập ứng dụng" />
+        <RowItem icon="log-out" text="Đăng xuất" onPress={() => signOut()} />
+        <RowItem icon="codesandbox" text="Quét QR Code" />
       </View>
-    </View >
+    </View>
   );
 };
 export default InforScreen;

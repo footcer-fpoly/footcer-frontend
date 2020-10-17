@@ -112,6 +112,7 @@ const OTPScreen = ({route, navigation, showLoading, hideLoading}) => {
   const {signUp} = React.useContext(AuthContext);
 
   const _goToNext = async (flag, data, phone) => {
+    console.log('OTPScreen => flag: ', flag);
     if (flag === 0 || flag === 1) {
       try {
         const res = await signUpFbGgService(data);

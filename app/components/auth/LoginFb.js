@@ -1,18 +1,16 @@
+import {Spinner} from '@ui-kitten/components';
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
-import {Button, SocialIcon} from 'react-native-elements';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {Button} from 'react-native-elements';
 import {
-  LoginManager,
   AccessToken,
   GraphRequest,
   GraphRequestManager,
-  Permissions,
-  LoginButton,
-  ShareDialog,
+  LoginManager,
 } from 'react-native-fbsdk';
-import {checkUUID} from '../../server/SignInSignUp/sever';
-import {Spinner} from '@ui-kitten/components';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import {checkUUIDService} from '../../api/auth.api';
+import {StatusCode} from '../../api/status-code';
 import {AuthContext} from '../../navigations/AuthContext';
 
 const LoginFb = ({navigation}) => {
@@ -59,19 +57,20 @@ const LoginFb = ({navigation}) => {
                     const {id} = result;
                     console.log(id);
                     setLoading(false);
-                    const res = await checkUUID(id);
-                    if (res.code === 200) {
+                    const res = await checkUUIDService(id);
+                    console.log('checkUUIDService => res: ', res);
+                    if (res.code === StatusCode.SUCCESS) {
                       setLoading(false);
                       navigation.navigate('SignUpFbGgScreen', {
                         data: result,
                         flag: 0,
                       });
-                    } else if (res.code === 409) {
+                    } else if (res.code === StatusCode.checkUUID.ALLOW_LOGIN) {
                       setLoading(false);
                       signIn(res.data);
                     } else {
                       setLoading(false);
-                      alert('status: ', status);
+                      console.log('checkUUIDService => res.code', res.code);
                     }
                   }
                   responseInfoCallback;
