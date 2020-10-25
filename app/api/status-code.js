@@ -1,6 +1,7 @@
 export const StatusCode = {
   SUCCESS: 200,
   validPhone: {
+    //200 Người dùng chưa tồn tại
     USER_EXISTS: 209, //Người dùng đã tồn tại => (cho phép đăng kí) || tồn tại nhưng pass null => updatePassword
     USER_IS_ADMIN: 203, //Người dùng đã là chủ sân
   },

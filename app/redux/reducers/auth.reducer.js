@@ -1,27 +1,32 @@
-import {
-  GET_USER_PROFILE_SUCCESS,
-  LOGOUT_SUCCESS,
-  VERITY_SUCCESS,
-} from '../actions/types';
+import {removeToken, saveToken} from '../../helpers/storage.helper';
+import {LOGIN, LOGOUT, REGISTER} from '../actions/types';
 
 const authState = {
   isLogedIn: false,
   profile: {
-    userId: '',
+    userId: null,
     phone: '',
-    avatar: '',
+    avatar: null,
     displayName: '',
+    birthday: '',
+    position: '',
+    level: '',
   },
 };
 
 export const authReducer = (state = authState, action) => {
   switch (action.type) {
-    case GET_USER_PROFILE_SUCCESS:
+    case REGISTER:
+    case LOGIN:
+      const profile = {...action.data};
+      saveToken(profile?.token);
       return {
         ...state,
-        profile: action.payload,
+        isLogedIn: true,
+        profile,
       };
-    case LOGOUT_SUCCESS:
+    case LOGOUT:
+      removeToken();
       return {
         ...authState,
       };

@@ -4,7 +4,6 @@ import {connect} from 'react-redux';
 import Spinner from 'react-native-spinkit';
 
 const Loading = ({loading}) => {
-  console.log('loading: ', loading);
   if (loading) {
     return (
       <View style={styles.container}>

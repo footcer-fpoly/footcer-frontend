@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:opacity="opaque"
+    tools:ignore="MissingDefaultResource">
+    <item android:gravity="fill_horizontal|fill_vertical">
+        <bitmap
+            android:gravity="fill_horizontal|fill_vertical"
+            android:src="@mipmap/bg" />
+    </item>
+<!--    <item-->
+<!--        android:width="300dp"-->
+<!--        android:height="300dp"-->
+<!--        android:gravity="center">-->
+<!--        <bitmap-->
+<!--            android:gravity="center"-->
+<!--            android:src="@mipmap/logo" />-->
+<!--    </item>-->
+</layer-list>

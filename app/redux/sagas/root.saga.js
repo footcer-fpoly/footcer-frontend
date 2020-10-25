@@ -1,8 +1,7 @@
-import {call} from 'redux-saga/effects';
-import {requestSignInPhoneSaga} from './auth.saga';
+import {all, takeLatest} from 'redux-saga/effects';
+import {LOGIN_REQUESTED} from '../actions/types';
+import {requestSignInSaga} from './auth.saga';
 
-function* rootSaga() {
-  yield call(requestSignInPhoneSaga);
+export default function* rootSaga() {
+  yield all([yield takeLatest(LOGIN_REQUESTED, requestSignInSaga)]);
 }
-
-export default rootSaga;

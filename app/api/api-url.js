@@ -12,3 +12,5 @@ export const UPDATE_PASS = `${ROOT_API_URL}/users/change-password`;
 //API USER
 export const GET_USER_PROFILE = `${ROOT_API_URL}/users/profile`;
 export const SEARCH_PHONE_USER = `${ROOT_API_URL}/team/search-phone`;
+
+export const UPDATE_USER = `${ROOT_API_URL}/users/update`;

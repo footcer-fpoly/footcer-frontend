@@ -1,14 +1,8 @@
 import React from 'react';
-import MaterialIcon from './MaterialIcon';
 import {SvgXml} from 'react-native-svg';
+import MaterialIcon from './MaterialIcon';
 
-export default function IconMaterialOrImageOrSvg({
-  type,
-  name,
-  style,
-  size,
-  nameSvg,
-}) {
+export default function IconMaterialOrSvg({type, name, style, size, SVGIcon}) {
   if (
     [IconType.MaterialIcons, IconType.MaterialCommunityIcons].includes(type)
   ) {
@@ -20,7 +14,7 @@ export default function IconMaterialOrImageOrSvg({
       />
     );
   }
-  return <SvgXml width={size} height={size} xml={nameSvg} />;
+  return <SvgXml xml={SVGIcon} width={size} height={size} />;
 }
 
 export const IconType = {

@@ -1,6 +1,6 @@
 import React from 'react';
 import {Text as RNText, StyleSheet} from 'react-native';
-import {theme} from '../../theme';
+import theme from '../../theme/theme';
 
 // Possible value for prop "type" for Text
 

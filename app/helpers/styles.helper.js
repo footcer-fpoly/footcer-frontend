@@ -5,8 +5,14 @@ import {scale} from '../helpers/size.helper';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const Styles = {
-  container: {
+  flex1: {
     flex: 1,
+  },
+  flex32: {
+    flex: 0.32,
+  },
+  flex49: {
+    flex: 0.49,
   },
   windowWidth: {
     width: windowWidth,
@@ -29,6 +35,10 @@ const Styles = {
     justifyContent: 'center',
     alignItems: 'center',
   },
+  rowAlignCenter: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   rowBetween: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -44,30 +54,17 @@ const Styles = {
       borderRadius: diameter / 2,
     };
   },
+  borderColor: (color, width) => {
+    return {
+      borderWidth: width,
+      borderColor: color,
+    };
+  },
   txtErr: {
     color: colors.error,
   },
   txtSuccess: {
     color: colors.success,
-  },
-  fontTitle: {
-    fontSize: scale(28),
-    fontWeight: 'bold',
-  },
-  fontTini: {
-    fontSize: scale(13),
-  },
-  fontSmall: {
-    fontSize: scale(18),
-  },
-  fontMedium: {
-    fontSize: scale(20),
-  },
-  fontLarge: {
-    fontSize: scale(25),
-  },
-  fontExtraLarge: {
-    fontSize: scale(25),
   },
 };
 

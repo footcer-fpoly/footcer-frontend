@@ -7,11 +7,11 @@ import {
   FlatList,
 } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import Item from '../components/locations/Item';
+// import Item from '../components/locations/Item';
 import AsyncStorage from '@react-native-community/async-storage';
 import {GetStadiumLocation} from '../server/Stadium/server';
 import Geolocation from 'react-native-geolocation-service';
-import Loading from '../components/Loading';
+// import Loading from '../components/Loading';
 
 export default function LocationsScreen({navigation}) {
   const [listStadium, setListStadium] = useState([]);
@@ -37,7 +37,7 @@ export default function LocationsScreen({navigation}) {
     }
   };
 
-  const renderItem = ({item}) => <Item item={item} navigation={navigation} />;
+  // const renderItem = ({item}) => <Item item={item} navigation={navigation} />;
   const GetPosition = async () => {
     await requestLocationPermission();
     Geolocation.getCurrentPosition(
@@ -84,15 +84,15 @@ export default function LocationsScreen({navigation}) {
   }, [longitude]);
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
-      <Loading visible={isLoading} />
-      <FlatList
+      {/* <Loading visible={isLoading} /> */}
+      {/* <FlatList
         refreshing={refreshing}
         onRefresh={onRefresh}
         showsVerticalScrollIndicator={false}
         data={listStadium}
         renderItem={renderItem}
         keyExtractor={item => item.id}
-      />
+      /> */}
     </SafeAreaView>
   );
 }

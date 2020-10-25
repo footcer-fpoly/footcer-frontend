@@ -22,7 +22,7 @@ import com.oblador.vectoricons.VectorIconsPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
 import com.reactnativecommunity.viewpager.RNCViewPagerPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
-//import com.swmansion.reanimated.ReanimatedPackage;
+import com.swmansion.reanimated.ReanimatedPackage;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 
 

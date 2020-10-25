@@ -2,6 +2,7 @@ import React from 'react';
 import {View} from 'react-native';
 import {StyleSheet} from 'react-native';
 import {Button, Card, Text, Modal} from '@ui-kitten/components';
+import {OTP_SCREEN} from '../../navigations/route-name';
 
 const DialogConfirmSendOPT = ({
   phone,
@@ -13,7 +14,7 @@ const DialogConfirmSendOPT = ({
 }) => {
   const _gotoOTPScreen = (phone, flag, dismiss, data) => {
     dismiss();
-    navigation.navigate('OTPScreen', {phone, flag, data});
+    navigation.navigate(OTP_SCREEN, {phone, flag, data});
   };
   return (
     <Modal

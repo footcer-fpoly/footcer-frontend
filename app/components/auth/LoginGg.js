@@ -4,17 +4,20 @@ import React, {useEffect, useState} from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import {Button} from 'react-native-elements';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import {connect} from 'react-redux';
 import {checkUUIDService} from '../../api/auth.api';
 import {AppConfig} from '../../configs/app.config';
-import {AuthContext} from '../../navigations/AuthContext';
+import {SIGN_UP_FB_GG_SCREEN} from '../../navigations/route-name';
+import {showLoading, hideLoading} from '../../redux/actions/loading.action';
+import {login} from '../../redux/actions/auth.action';
 
-const LoginGg = ({navigation}) => {
+const LoginGg = ({navigation, login, showLoading, hideLoading}) => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     googleSignin();
   }, []);
-  const {signIn} = React.useContext(AuthContext);
+  // const {signIn} = React.useContext(AuthContext);
   const googleSignin = () => {
     GoogleSignin.configure({
       scopes: ['https://www.googleapis.com/auth/drive.readonly'], // what API you want to access on behalf of the user, default is email and profile
@@ -32,10 +35,13 @@ const LoginGg = ({navigation}) => {
       const res = await checkUUIDService(id);
       if (res.code === 200) {
         setLoading(false);
-        navigation.navigate('SignUpFbGgScreen', {data: userInfo.user, flag: 1});
+        navigation.navigate(SIGN_UP_FB_GG_SCREEN, {
+          data: userInfo.user,
+          flag: 1,
+        });
       } else if (res.code === 409) {
         setLoading(false);
-        signIn(res.data);
+        login(res.data);
       } else {
         setLoading(false);
         alert(statusCodes);
@@ -76,14 +82,8 @@ const LoginGg = ({navigation}) => {
     />
   );
 };
-export default LoginGg;
 const styles = StyleSheet.create({
   button: {
-    // marginTop: 20,
-    // backgroundColor: '#e74c3c',
-    // width: 350,
-    // borderRadius: 5,
-
     paddingVertical: 10,
     backgroundColor: '#e74c3c',
     paddingHorizontal: 20,
@@ -92,3 +92,14 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
 });
+
+const mapDispatchToProps = {
+  showLoading,
+  hideLoading,
+  login,
+};
+
+export default connect(
+  null,
+  mapDispatchToProps,
+)(LoginGg);

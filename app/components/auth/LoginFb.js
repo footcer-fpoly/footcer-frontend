@@ -9,13 +9,16 @@ import {
   LoginManager,
 } from 'react-native-fbsdk';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import {connect} from 'react-redux';
 import {checkUUIDService} from '../../api/auth.api';
 import {StatusCode} from '../../api/status-code';
-import {AuthContext} from '../../navigations/AuthContext';
+import {SIGN_UP_FB_GG_SCREEN} from '../../navigations/route-name';
+import {showLoading, hideLoading} from '../../redux/actions/loading.action';
+import {login} from '../../redux/actions/auth.action';
 
-const LoginFb = ({navigation}) => {
+const LoginFb = ({navigation, login, showLoading, hideLoading}) => {
   const [loading, setLoading] = useState(false);
-  const {signIn} = React.useContext(AuthContext);
+  // const {signIn} = React.useContext(AuthContext);
   const loginFb = async () => {
     try {
       setLoading(true);
@@ -61,13 +64,13 @@ const LoginFb = ({navigation}) => {
                     console.log('checkUUIDService => res: ', res);
                     if (res.code === StatusCode.SUCCESS) {
                       setLoading(false);
-                      navigation.navigate('SignUpFbGgScreen', {
+                      navigation.navigate(SIGN_UP_FB_GG_SCREEN, {
                         data: result,
                         flag: 0,
                       });
                     } else if (res.code === StatusCode.checkUUID.ALLOW_LOGIN) {
                       setLoading(false);
-                      signIn(res.data);
+                      login(res.data);
                     } else {
                       setLoading(false);
                       console.log('checkUUIDService => res.code', res.code);
@@ -105,7 +108,6 @@ const LoginFb = ({navigation}) => {
     </View>
   );
 };
-export default LoginFb;
 const styles = StyleSheet.create({
   button: {
     paddingVertical: 10,
@@ -116,3 +118,14 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
 });
+
+const mapDispatchToProps = {
+  showLoading,
+  hideLoading,
+  login,
+};
+
+export default connect(
+  null,
+  mapDispatchToProps,
+)(LoginFb);
