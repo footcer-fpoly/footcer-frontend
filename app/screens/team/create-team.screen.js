@@ -1,39 +1,41 @@
-import React, {useState, useRef} from 'react';
+import React, {useRef, useState} from 'react';
 import {
   FlatList,
-  Image,
-  ImageBackground,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
   View,
 } from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
-import LinearGradient from 'react-native-linear-gradient';
+import {Host} from 'react-native-portalize';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {yardImage} from '../../assets/Images';
+import Avatar from '../../components/common/Avatar';
+import BackgroudImage from '../../components/common/BackgroudImage';
+import BackIcon from '../../components/common/BackIcon';
 import {IconType} from '../../components/common/IconMaterialOrSvg';
+import ModalPicker from '../../components/common/ModalPicker';
 import PrimaryButton from '../../components/common/PrimaryButton';
-import {body2, body3, Text} from '../../components/common/Text';
 import TitleTextInputField from '../../components/common/TitleTextInputField';
 import ModalAddMember from '../../components/CreateTeam/ModalAddMember';
+import ItemTeamMember from '../../components/team/ItemTeamMember';
+import {ListProvince} from '../../helpers/data-local.helper';
 import {scale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
 import colors from '../../theme/colors';
 import spacing from '../../theme/spacing';
-import BackIcon from '../../components/common/BackIcon';
-import ModalPicker from '../../components/common/ModalPicker';
-import {ListProvince} from '../../helpers/data-local.helper';
-import {Host} from 'react-native-portalize';
 
 const CreateTeamScreen = () => {
   const modalizeRef = useRef();
   const [visibleModal, setVisibleModal] = useState(false);
   const [listMember, setListMember] = useState([1, 2, 3, 4, 5, 6]);
+  const [dataTeam, setDataTeam] = useState({
+    background: '',
+    avatar: '',
+  });
   const toggleModal = () => {
     setVisibleModal(!visibleModal);
   };
-  const onPressPickImage = () => async () => {
+  const onPressPickImage = async () => {
     try {
       const image = await ImagePicker.openPicker({
         multiple: false,
@@ -41,17 +43,7 @@ const CreateTeamScreen = () => {
         width: 300,
         height: 400,
       });
-      // 4 000 000 == 4Mb
       console.log('image onPressPickImage: ', image);
-      // if (image?.size < 4000000) {
-      //   const res = await updateUserService({
-      //     ...data,
-      //     avatar: image,
-      //   });
-      //   console.log('updateUserService -->res: ', res);
-      // } else {
-      //   alert('Ảnh quá lớn!');
-      // }
     } catch (error) {
       console.log('onPressPickImage -> error', error);
     }
@@ -91,23 +83,7 @@ const CreateTeamScreen = () => {
     // }
   };
   const renderItem = item => {
-    return (
-      <View style={styles.warpperItemMem}>
-        <View>
-          <Image
-            style={styles.imgMember}
-            source={{
-              uri:
-                'https://upload.wikimedia.org/wikipedia/en/8/8e/Vietnam_national_football_team.png',
-            }}
-          />
-          <TouchableOpacity style={styles.iconRemoveMem}>
-            <Icon name="close-circle" size={20} color={colors.gray} />
-          </TouchableOpacity>
-        </View>
-        <Text type={body3}>Huỳnh Bình</Text>
-      </View>
-    );
+    return <ItemTeamMember />;
   };
 
   const renderCreateMember = () => {
@@ -132,29 +108,24 @@ const CreateTeamScreen = () => {
       <ScrollView style={styles.container}>
         <ModalAddMember visible={visibleModal} />
         <BackIcon />
-        <ImageBackground source={yardImage} style={styles.header}>
-          <LinearGradient
-            colors={['#00000000', '#00000070', '#00000090']}
-            style={styles.center}>
-            <TouchableOpacity
-              onPress={onPressPickImage()}
-              style={styles.warpperAvatar}>
-              <Image
-                source={{
-                  uri:
-                    'https://cdnmedia.webthethao.vn/uploads/files/17-6/Logo/mu.png',
-                }}
-                style={styles.avatar}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={onPressPickImage()}
-              style={styles.iconEditImgBg}>
-              <Icon name="pencil" size={18} color={colors.white} />
-            </TouchableOpacity>
-          </LinearGradient>
-        </ImageBackground>
+        <BackgroudImage
+          height={scale(220)}
+          image={dataTeam.background}
+          onPress={onPressPickImage}
+        />
         <View style={styles.body}>
+          <View style={styles.warpperAvatar}>
+            <Avatar
+              style={{marginTop: scale(-65)}}
+              image={dataTeam.avatar}
+              size={130}
+              iconEdit={true}
+              disabledImage={true}
+              onPress={onPressPickImage}
+              borderWidth={2}
+              borderColor={colors.black}
+            />
+          </View>
           <TitleTextInputField
             style={styles.inputField}
             lable="Tên đội bóng của bạn (*)"
@@ -208,11 +179,16 @@ const styles = StyleSheet.create({
     ...Styles.flex1,
     backgroundColor: colors.white,
   },
+  warpperAvatar: {
+    ...Styles.columnCenter,
+    width: '100%',
+    marginBottom: scale(20),
+  },
   body: {
     ...Styles.flex1,
     backgroundColor: colors.white,
     paddingHorizontal: spacing.medium,
-    paddingTop: scale(35),
+    // paddingTop: scale(35),
   },
   header: {
     width: '100%',
@@ -228,10 +204,6 @@ const styles = StyleSheet.create({
     padding: scale(5),
     backgroundColor: colors.grayOpacity,
     borderRadius: 5,
-  },
-  warpperAvatar: {
-    marginTop: scale(200),
-    zIndex: 2,
   },
   avatar: {
     ...Styles.borderRadiusCircle(120),

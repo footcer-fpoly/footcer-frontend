@@ -1,20 +1,13 @@
 import React from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, TouchableOpacity} from 'react-native';
 import {scale} from '../../helpers/size.helper';
 import colors from '../../theme/colors';
-import {headline5, Text} from './Text';
+import {body2, Text} from './Text';
 
-export default function PrimaryButton({
-  title,
-  onPress,
-  style,
-  textStyle,
-  left,
-}) {
+export default function SecondaryButton({title, onPress, style, textStyle}) {
   return (
     <TouchableOpacity style={[styles.container, style]} onPress={onPress}>
-      <View>{left}</View>
-      <Text type={headline5} style={[styles.titleStyle, textStyle]}>
+      <Text type={body2} style={[styles.titleStyle, textStyle]}>
         {title}
       </Text>
     </TouchableOpacity>
@@ -24,12 +17,10 @@ export default function PrimaryButton({
 const styles = StyleSheet.create({
   titleStyle: {color: colors.white},
   container: {
-    backgroundColor: colors.green,
-    width: '100%',
+    backgroundColor: colors.greenDark,
     justifyContent: 'center',
     alignItems: 'center',
-    height: scale(40),
+    height: scale(30),
     borderRadius: scale(5),
-    flexDirection: 'row',
   },
 });

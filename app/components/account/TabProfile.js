@@ -15,13 +15,18 @@ import PrimaryButton from '../common/PrimaryButton';
 import RowProflie from './RowProflie';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {formatCouponDateDisplay} from '../../helpers/format.helper';
+import {updateInfoUserService} from '../../api/user.api';
+import {StatusCode} from '../../api/status-code';
+import {showLoading, hideLoading} from '../../redux/actions/loading.action';
+import {updateInfoUser} from '../../redux/actions/auth.action';
 
-const TabProfile = ({profile}) => {
+const TabProfile = ({profile, showLoading, hideLoading, updateInfoUser}) => {
   const modalizeRef = useRef();
   const [editable, setEditable] = useState(false);
   const toogleEditable = () => {
     setEditable(!editable);
   };
+  const [visibleDatePicker, setVisibleDatePicker] = useState(false);
   const [data, setData] = useState({
     displayName: profile?.displayName,
     phone: profile?.phone,
@@ -48,7 +53,6 @@ const TabProfile = ({profile}) => {
       listItems: ListPosition,
     });
   };
-
   const showDialog = ({type, titleModal, listItems}) => {
     if (modalizeRef.current) {
       modalizeRef.current.setDataAndOpenModal({
@@ -78,7 +82,6 @@ const TabProfile = ({profile}) => {
       });
     }
   };
-  const [visibleDatePicker, setVisibleDatePicker] = useState(false);
 
   const handleConfirm = date => {
     setData({
@@ -90,6 +93,28 @@ const TabProfile = ({profile}) => {
   const toogleDatePicker = () => {
     setVisibleDatePicker(!visibleDatePicker);
   };
+  const updateUser = async () => {
+    try {
+      showLoading();
+      const res = await updateInfoUserService({
+        displayName: data.displayName,
+        position: data.position,
+        level: data.level,
+        birthday: data.birthday,
+        phone: data.phone,
+      });
+      if (!!res && res.code === StatusCode.SUCCESS) {
+        setEditable(false);
+        updateInfoUser(data);
+        alert('update user thành công');
+      } else {
+        alert('update user thất bại');
+      }
+      hideLoading();
+    } catch (error) {
+      console.log('updateUser -->err: ', error);
+    }
+  };
   return (
     <Host>
       <ScrollView style={styles.container}>
@@ -100,7 +125,7 @@ const TabProfile = ({profile}) => {
           onCancel={toogleDatePicker}
         />
         <View style={styles.section}>
-          <Text type={body2}>Thông tin</Text>
+          <Text type={body2}>Thông tin chi tiết</Text>
           <View style={styles.warpperInfo}>
             <RowProflie
               label="Họ và tên"
@@ -108,6 +133,7 @@ const TabProfile = ({profile}) => {
               iconType={IconType.MaterialIcons}
               iconName="account-circle"
               editable={editable}
+              onChangeText={value => setData({...data, displayName: value})}
             />
             <RowProflie
               label="Số điện thoai"
@@ -168,7 +194,7 @@ const TabProfile = ({profile}) => {
                 title="hủy"
               />
               <PrimaryButton
-                onPress={toogleEditable}
+                onPress={updateUser}
                 style={[styles.flex49, {backgroundColor: colors.green}]}
                 title="lưu"
               />
@@ -224,7 +250,11 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+  showLoading,
+  hideLoading,
+  updateInfoUser,
+};
 function mapStateToProps(state) {
   return {
     profile: state.authState.profile,

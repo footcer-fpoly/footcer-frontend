@@ -10,6 +10,7 @@ import {
 import {connect} from 'react-redux';
 import AccountBlock from '../../components/account/AccountBlock';
 import CardMyTeam from '../../components/account/CardMyTeam';
+import Avatar from '../../components/common/Avatar';
 import {IconType} from '../../components/common/IconMaterialOrSvg';
 import NoDataComponent from '../../components/common/NoDataComponent';
 import {headline4, headline5, Text} from '../../components/common/Text';
@@ -49,9 +50,14 @@ const AccountScreen = ({profile, logout}) => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContainer}>
         <View style={styles.warpperAvatar}>
-          <TouchableOpacity onPress={navigateToScreen(DETAIL_PROFILE_SCREEN)}>
+          {/* <TouchableOpacity onPress={navigateToScreen(DETAIL_PROFILE_SCREEN)}>
             <Image source={{uri: profile.avatar}} style={styles.avatar} />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
+          <Avatar
+            image={profile.avatar}
+            size={90}
+            onPress={navigateToScreen(DETAIL_PROFILE_SCREEN)}
+          />
           <Text
             type={headline4}
             style={styles.welcomeUserText}
@@ -138,7 +144,7 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   avatar: {
-    ...Styles.borderRadiusCircle(100),
+    ...Styles.borderRadiusCircle(90),
     borderWidth: 2,
     borderColor: colors.gray,
   },

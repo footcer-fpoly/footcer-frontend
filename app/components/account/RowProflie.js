@@ -1,12 +1,12 @@
 import React from 'react';
-import {View, TextInput, StyleSheet, TouchableOpacity} from 'react-native';
+import {StyleSheet, TextInput, TouchableOpacity, View} from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {scale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
 import colors from '../../theme/colors';
 import spacing from '../../theme/spacing';
 import IconMaterialOrSvg from '../common/IconMaterialOrSvg';
 import {body2, body3, Text} from '../common/Text';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export default function RowProflie({
   iconType,
@@ -17,6 +17,7 @@ export default function RowProflie({
   editable,
   onPress,
   stylesTxt,
+  onChangeText,
 }) {
   return (
     <View style={styles.container}>
@@ -54,6 +55,7 @@ export default function RowProflie({
         </TouchableOpacity>
       ) : (
         <TextInput
+          onChangeText={onChangeText}
           editable={editable}
           value={value}
           style={[

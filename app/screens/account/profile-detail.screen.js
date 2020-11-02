@@ -17,30 +17,23 @@ import Styles from '../../helpers/styles.helper';
 import ProfileTabView from '../../navigations/tab-view/profile-tab.navigation';
 import colors from '../../theme/colors';
 import spacing from '../../theme/spacing';
-import {updateUserService} from '../../api/user.api';
+import {updateAvatarUserService, updateUserService} from '../../api/user.api';
+import Avatar from '../../components/common/Avatar';
+import BackgroudImage from '../../components/common/BackgroudImage';
+import {scale} from '../../helpers/size.helper';
 
 const ProfileDetailScreen = ({profile}) => {
-  const [data, setData] = useState({...profile});
-
+  const [avatar, setAvatar] = useState(profile?.avatar);
   const onPressPickImage = () => async () => {
+    const image = await ImagePicker.openPicker({
+      multiple: false,
+      cropping: true,
+      width: 300,
+      height: 400,
+    });
+    setAvatar({imageType: 'local', ...image});
+    console.log('image onPressPickImage: ', image);
     try {
-      const image = await ImagePicker.openPicker({
-        multiple: false,
-        cropping: true,
-        width: 300,
-        height: 400,
-      });
-      // 4 000 000 == 4Mb
-      console.log('image onPressPickImage: ', image);
-      if (image?.size < 4000000) {
-        const res = await updateUserService({
-          ...data,
-          avatar: image,
-        });
-        console.log('updateUserService -->res: ', res);
-      } else {
-        alert('Ảnh quá lớn!');
-      }
     } catch (error) {
       console.log('onPressPickImage -> error', error);
     }
@@ -48,25 +41,23 @@ const ProfileDetailScreen = ({profile}) => {
   return (
     <View style={styles.container}>
       <BackIcon />
-      <ImageBackground source={yardImage} style={styles.background}>
-        <LinearGradient
-          colors={['#00000000', '#00000070', '#00000090']}
-          style={styles.center}>
-          <View style={styles.warpperAvatar}>
-            <View>
-              <Image source={{uri: data?.avatar}} style={styles.avatar} />
-              <TouchableOpacity
-                onPress={onPressPickImage()}
-                style={styles.iconEdit}>
-                <Icon style={styles.iconHeader} name="edit" size={13} />
-              </TouchableOpacity>
-            </View>
+      <BackgroudImage
+        height={scale(220)}
+        children={
+          <>
+            <Avatar
+              image={avatar}
+              size={90}
+              iconEdit={true}
+              disabledImage={true}
+              onPress={onPressPickImage()}
+            />
             <Text type={headline4} style={styles.txtName}>
-              {data?.displayName}
+              {profile?.displayName}
             </Text>
-          </View>
-        </LinearGradient>
-      </ImageBackground>
+          </>
+        }
+      />
       <View style={styles.body}>
         <ProfileTabView />
       </View>

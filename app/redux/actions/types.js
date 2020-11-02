@@ -1,6 +1,7 @@
 export const LOGOUT = 'LOGOUT';
 export const LOGIN = 'LOGIN';
 export const REGISTER = 'REGISTER';
+export const CHECK_LOGIN = 'SETISLOGIN';
 
 export const LOGIN_REQUESTED = 'LOGIN_REQUESTED';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
@@ -12,6 +13,8 @@ export const REGISTER_FAILED = 'REGISTER_FAILED';
 
 export const GET_USER_PROFILE = 'GET_USER_PROFILE ';
 export const GET_USER_PROFILE_SUCCESS = 'GET_USER_PROFILE_SUCCESS';
+export const UPDATE_INFO_USER = 'UPDATE_INFO_USER';
+export const UPDATE_AVATAR_USER = 'UPDATE_AVATAR_USER';
 
 export const SHOW_LOADING = 'SHOW_LOADING';
 export const HIDE_LOADING = 'HIDE_LOADING';

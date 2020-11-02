@@ -22,17 +22,17 @@ import {
 } from '../common/Text';
 import LinearGradient from 'react-native-linear-gradient';
 import Styles from '../../helpers/styles.helper';
+import rootNavigation from '../../navigations/root.navigator';
+import {TEAM_DETAIL_SCREEN} from '../../navigations/route-name';
 
 export default function CardMyTeam() {
   const [list, setlist] = useState([1, 2, 3, 4]);
+  const navigateToScreen = (routeName, params) => () => {
+    rootNavigation.navigate(routeName, params);
+  };
   const renderMember = () => {
     return (
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingLeft: spacing.small,
-        }}>
+      <View style={styles.warpperList}>
         {list.map(item => {
           return (
             <Image
@@ -48,7 +48,9 @@ export default function CardMyTeam() {
     );
   };
   return (
-    <TouchableHighlight onPress={() => alert('haha')} style={styles.container}>
+    <TouchableHighlight
+      onPress={navigateToScreen(TEAM_DETAIL_SCREEN)}
+      style={styles.container}>
       <ImageBackground source={yardImage} style={styles.background}>
         <LinearGradient
           colors={['#00000000', '#00000070', '#00000090']}
@@ -98,11 +100,10 @@ const styles = StyleSheet.create({
     bottom: 10,
     left: 10,
   },
-  listMember: {
-    // // height: scale(50),
-    // width: 2000,
-    // height: 100,
-    // backgroundColor: 'green',
+  warpperList: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingLeft: spacing.small,
   },
   imgMem: {
     ...Styles.borderRadiusCircle(50),

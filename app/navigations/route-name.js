@@ -17,3 +17,4 @@ export const UPDATE_PASS_SCREEN = 'update_pass_screen';
 
 //TEAM
 export const CREATE_TEAM_SCREEN = 'create_team_screen';
+export const TEAM_DETAIL_SCREEN = 'team_detail_screen';

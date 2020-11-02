@@ -9,6 +9,7 @@ import SignUpFbGgScreen from '../screens/auth/sign-up-fb-gg.screen';
 import SignUpPhoneScreen from '../screens/auth/sign-up-phone.screen';
 import SplashScreen from '../screens/auth/splash.screen';
 import CreateTeamScreen from '../screens/team/create-team.screen';
+import TeamDetailScreen from '../screens/team/team-detail.screen';
 import BottomTab from './bottom-tab.navigator';
 import {navigationRef} from './root.navigator';
 import {
@@ -20,6 +21,7 @@ import {
   SIGN_UP_FB_GG_SCREEN,
   SIGN_UP_SCREEN,
   SPLASH_SCREEN,
+  TEAM_DETAIL_SCREEN,
 } from './route-name';
 
 const Stack = createStackNavigator();
@@ -48,6 +50,7 @@ const MainRouter = ({isLogedIn}) => {
           component={ProfileDetailScreen}
         />
         <Stack.Screen name={CREATE_TEAM_SCREEN} component={CreateTeamScreen} />
+        <Stack.Screen name={TEAM_DETAIL_SCREEN} component={TeamDetailScreen} />
       </>
     );
   };
