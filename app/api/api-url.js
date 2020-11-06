@@ -17,3 +17,6 @@ export const UPDATE_USER = `${ROOT_API_URL}/users/update`;
 //API TEAM
 export const CREATE_TEAM = `${ROOT_API_URL}/team/add`;
 export const GET_LIST_TEAM_FOR_USER = `${ROOT_API_URL}/team/for-user`;
+export const UPDATE_TEAM = `${ROOT_API_URL}/team/update`;
+export const DELETE_TEAM = idTeam =>
+  `${ROOT_API_URL}/team/delete-team/${idTeam}`;

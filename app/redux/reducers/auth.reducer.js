@@ -67,7 +67,7 @@ export const authReducer = (state = authState, action) => {
         },
       };
     case GET_LIST_TEAM_SUCCESS:
-      const newList = action.data;
+      const newList = action.data.reverse();
       return {
         ...state,
         listTeam: newList,

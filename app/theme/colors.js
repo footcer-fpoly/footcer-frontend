@@ -20,5 +20,6 @@ const colors = {
   blackOpacity: 'rgba(0, 0, 0, 0.5)',
   white: '#ffffff',
   viewBackground: '#f1f2f6',
+  orange: '#d35400',
 };
 export default colors;

@@ -1,24 +1,24 @@
-import React, {useRef, useState, useEffect} from 'react';
+import React, {useRef, useState} from 'react';
 import {ScrollView, StyleSheet, TextInput, View} from 'react-native';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {Host} from 'react-native-portalize';
 import {connect} from 'react-redux';
+import {StatusCode} from '../../api/status-code';
+import {updateInfoUserService} from '../../api/user.api';
 import {body2, Text} from '../../components/common/Text';
 import {ListLevel, ListPosition} from '../../helpers/data-local.helper';
+import {formatCouponDateDisplay} from '../../helpers/format.helper';
 import {scale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
 import rootNavigator from '../../navigations/root.navigator';
+import {updateInfoUser} from '../../redux/actions/auth.action';
+import {hideLoading, showLoading} from '../../redux/actions/loading.action';
 import colors from '../../theme/colors';
 import spacing from '../../theme/spacing';
 import {IconType} from '../common/IconMaterialOrSvg';
 import ModalPicker from '../common/ModalPicker';
 import PrimaryButton from '../common/PrimaryButton';
 import RowProflie from './RowProflie';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import {formatCouponDateDisplay} from '../../helpers/format.helper';
-import {updateInfoUserService} from '../../api/user.api';
-import {StatusCode} from '../../api/status-code';
-import {showLoading, hideLoading} from '../../redux/actions/loading.action';
-import {updateInfoUser} from '../../redux/actions/auth.action';
 
 const TabProfile = ({profile, showLoading, hideLoading, updateInfoUser}) => {
   const modalizeRef = useRef();
@@ -169,7 +169,7 @@ const TabProfile = ({profile, showLoading, hideLoading, updateInfoUser}) => {
             />
             <RowProflie
               label="Trình độ"
-              value={data?.level ? data?.level : 'Chọn vị trí'}
+              value={data?.level ? data?.level : 'Chọn trình độ của bạn'}
               iconType={IconType.MaterialCommunityIcons}
               iconName="chess-queen"
               onPress={showLevel}

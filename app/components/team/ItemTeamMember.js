@@ -8,19 +8,41 @@ import Styles from '../../helpers/styles.helper';
 import spacing from '../../theme/spacing';
 import Avatar from '../common/Avatar';
 
-export default function ItemTeamMember({image, size, name, onPress}) {
+export default function ItemTeamMember({
+  image,
+  size,
+  name,
+  onPress,
+  status,
+  position,
+  onPressImage,
+  disabledImage,
+}) {
   return (
     <View style={styles.warpperItemMem}>
       <View>
-        <Avatar image={image} size={size} disabledImage={true} />
+        <Avatar
+          image={image}
+          size={size}
+          disabledImage={disabledImage}
+          borderWidth={2}
+          borderColor={colors.black}
+          onPress={onPressImage}
+        />
         {onPress && (
           <TouchableOpacity style={styles.iconRemoveMem}>
             <Icon name="close-circle" size={20} color={colors.gray} />
           </TouchableOpacity>
         )}
       </View>
-      <Text type={body3} style={styles.txtName}>
+      <Text type={headline5} numberOfLines={1} style={styles.txtName}>
         {name}
+      </Text>
+      <Text
+        type={body3}
+        numberOfLines={1}
+        style={styles.txtStatus(!status ? colors.orange : colors.black)}>
+        {status ? position : 'Chờ xác nhận'}
       </Text>
     </View>
   );
@@ -30,6 +52,7 @@ const styles = StyleSheet.create({
   warpperItemMem: {
     ...Styles.columnCenter,
     marginRight: spacing.large,
+    alignItems: 'center',
   },
   iconRemoveMem: {
     position: 'absolute',
@@ -37,6 +60,12 @@ const styles = StyleSheet.create({
     right: -8,
   },
   txtName: {
-    marginTop: spacing.large,
+    marginTop: spacing.small,
+    maxWidth: scale(100),
   },
+  txtStatus: (color = colors.black) => ({
+    marginTop: spacing.tiny,
+    maxWidth: scale(120),
+    color: color,
+  }),
 });

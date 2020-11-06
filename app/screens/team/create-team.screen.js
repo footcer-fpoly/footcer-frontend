@@ -5,13 +5,13 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
-  Animated,
 } from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
 import {Host} from 'react-native-portalize';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {connect} from 'react-redux';
-import AnimatedToolbar from '../../components/common/AnimatedToolbar';
+import {StatusCode} from '../../api/status-code';
+import {createTeamService} from '../../api/team.api';
 import Avatar from '../../components/common/Avatar';
 import BackgroudImage from '../../components/common/BackgroudImage';
 import BackIcon from '../../components/common/BackIcon';
@@ -19,18 +19,16 @@ import {IconType} from '../../components/common/IconMaterialOrSvg';
 import ModalPicker from '../../components/common/ModalPicker';
 import PrimaryButton from '../../components/common/PrimaryButton';
 import TitleTextInputField from '../../components/common/TitleTextInputField';
-import ModalAddMember from '../../components/team/ModalAddMember';
 import ItemTeamMember from '../../components/team/ItemTeamMember';
-import {ListProvince} from '../../helpers/data-local.helper';
+import ModalAddMember from '../../components/team/ModalAddMember';
+import {ListLevel, ListProvince} from '../../helpers/data-local.helper';
 import {scale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
+import rootNavigation from '../../navigations/root.navigator';
+import {getListTeam} from '../../redux/actions/auth.action';
+import {hideLoading, showLoading} from '../../redux/actions/loading.action';
 import colors from '../../theme/colors';
 import spacing from '../../theme/spacing';
-import {createTeamService} from '../../api/team.api';
-import {StatusCode} from '../../api/status-code';
-import rootNavigation from '../../navigations/root.navigator';
-import {showLoading, hideLoading} from '../../redux/actions/loading.action';
-import {getListTeam} from '../../redux/actions/auth.action';
 
 const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
   const modalizeRef = useRef();
@@ -43,6 +41,7 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
     description: '',
     place: '',
     member: '',
+    level: '',
   });
   const toggleModal = () => {
     setVisibleModal(!visibleModal);
@@ -52,6 +51,14 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
       type: 'place',
       titleModal: 'Chọn khu vực',
       listItems: ListProvince,
+    });
+  };
+
+  const showLevel = () => {
+    showDialog({
+      type: 'level',
+      titleModal: 'Chọn trình độ đội bóng',
+      listItems: ListLevel,
     });
   };
 
@@ -70,6 +77,9 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
     switch (itemData.type) {
       case 'place':
         keyState = 'place';
+        break;
+      case 'level':
+        keyState = 'level';
         break;
       default:
         break;
@@ -97,9 +107,12 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
     return (
       <ItemTeamMember
         image={item?.avatar}
-        size={50}
+        size={70}
         name={item?.displayName}
         onPress={index ? onSelectItem : undefined}
+        status={index ? false : true}
+        position={!index ? 'Đội trưởng' : null}
+        disabledImage={true}
       />
     );
   };
@@ -145,7 +158,10 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
   };
   return (
     <Host>
-      <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.contentContainer}
+        showsVerticalScrollIndicator={false}>
         <ModalAddMember dismiss={toggleModal} visible={visibleModal} />
         <BackIcon />
         <BackgroudImage
@@ -193,6 +209,20 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
           />
           <TitleTextInputField
             style={styles.inputField}
+            lable="Trình độ"
+            typeLeft={IconType.MaterialCommunityIcons}
+            iconNameLeft="chess-queen"
+            otherTextInputProps={{
+              placeholder: 'Chọn trình độ đội bóng',
+            }}
+            value={dataTeam.level}
+            typeRigth={IconType.MaterialIcons}
+            iconNameRigth="keyboard-arrow-down"
+            sizeIcon={scale(22)}
+            onPress={showLevel}
+          />
+          <TitleTextInputField
+            style={styles.inputField}
             lable="Mô tả đội bóng"
             sizeIcon={scale(22)}
             onChangeText={text => changeFormData('description', text)}
@@ -220,11 +250,12 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
 };
 
 const styles = StyleSheet.create({
-  center: {...Styles.columnCenter, ...Styles.flex1},
   container: {
     ...Styles.flex1,
     backgroundColor: colors.white,
-    paddingBottom: spacing.large,
+  },
+  contentContainer: {
+    paddingBottom: spacing.extraLarge,
   },
   warpperAvatar: {
     ...Styles.columnCenter,
@@ -235,25 +266,6 @@ const styles = StyleSheet.create({
     ...Styles.flex1,
     backgroundColor: colors.white,
     paddingHorizontal: spacing.medium,
-  },
-  header: {
-    width: '100%',
-    height: scale(220),
-    resizeMode: 'cover',
-    justifyContent: 'center',
-    zIndex: 2,
-  },
-  iconEditImgBg: {
-    position: 'absolute',
-    right: 10,
-    bottom: 10,
-    padding: scale(5),
-    backgroundColor: colors.grayOpacity,
-    borderRadius: 5,
-  },
-  avatar: {
-    ...Styles.borderRadiusCircle(120),
-    ...Styles.borderColor(colors.gray, 2),
   },
   inputField: {
     marginTop: spacing.large,
@@ -270,23 +282,10 @@ const styles = StyleSheet.create({
   listMember: {
     zIndex: 9,
   },
-  imgMember: {
-    ...Styles.borderRadiusCircle(50),
-    marginBottom: spacing.medium,
-  },
-  warpperItemMem: {
-    ...Styles.columnCenter,
-    marginRight: spacing.large,
-  },
   button: {
     backgroundColor: colors.green,
     marginTop: spacing.extraLarge,
     paddingVertical: scale(25),
-  },
-  iconRemoveMem: {
-    position: 'absolute',
-    top: 0,
-    right: -8,
   },
 });
 

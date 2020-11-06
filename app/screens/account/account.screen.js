@@ -1,19 +1,11 @@
-import React, {useEffect, useState} from 'react';
-import {
-  Image,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  FlatList,
-} from 'react-native';
+import React, {useEffect} from 'react';
+import {FlatList, ScrollView, StyleSheet, View} from 'react-native';
 import {connect} from 'react-redux';
 import AccountBlock from '../../components/account/AccountBlock';
 import CardMyTeam from '../../components/account/CardMyTeam';
 import Avatar from '../../components/common/Avatar';
 import {IconType} from '../../components/common/IconMaterialOrSvg';
 import ListLoadingComponent from '../../components/common/ListLoadingComponent';
-import NoDataComponent from '../../components/common/NoDataComponent';
 import {headline4, headline5, Text} from '../../components/common/Text';
 import ToolBar from '../../components/common/Toolbar';
 import {scale} from '../../helpers/size.helper';
@@ -25,7 +17,7 @@ import {
   DETAIL_PROFILE_SCREEN,
   TEST_SCREEN,
 } from '../../navigations/route-name';
-import {logout, getListTeam} from '../../redux/actions/auth.action';
+import {getListTeam, logout} from '../../redux/actions/auth.action';
 import colors from '../../theme/colors';
 import spacing from '../../theme/spacing';
 
@@ -126,9 +118,9 @@ const AccountScreen = ({profile, listTeam, logout, getListTeam}) => {
             ListEmptyComponent={
               <ListLoadingComponent
                 onReady={listTeam != null}
-                numberOfPlaceholder={2}
+                numberOfPlaceholder={1}
                 text={
-                  'Bạn chư tham gia đội bóng nào click vào tạo đội bóng để tạo đội ngay!'
+                  'Bạn chưa tham gia đội bóng nào click vào tạo đội bóng để tạo đội ngay!'
                 }
               />
             }
@@ -153,11 +145,6 @@ const styles = StyleSheet.create({
   titleContent: {
     color: colors.white,
     textTransform: 'uppercase',
-  },
-  avatar: {
-    ...Styles.borderRadiusCircle(90),
-    borderWidth: 2,
-    borderColor: colors.gray,
   },
   section: {
     marginTop: spacing.large,

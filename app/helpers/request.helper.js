@@ -140,6 +140,7 @@ export default class RequestHelper {
 
   static async delete(apiUrl, data) {
     const source = axios.CancelToken.source();
+    console.log('delete --> apiUrl: ', apiUrl);
     setTimeout(() => {
       source.cancel();
     }, configTimeOut);
