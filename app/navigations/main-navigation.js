@@ -1,31 +1,18 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {StatusBar, StyleSheet, View} from 'react-native';
 import RNBootSplash from 'react-native-bootsplash';
-import {set} from 'react-native-reanimated';
 import {connect} from 'react-redux';
 import Loading from '../components/common/loadings/Loading';
-import {getToken} from '../helpers/storage.helper';
-import MainRouter from './app-navigation';
 import {checkIsLogin} from '../redux/actions/auth.action';
+import MainRouter from './app-navigation';
 
-const MainNavigation = ({checkIsLogin}) => {
-  const [onReady, setOnReady] = useState(false);
-  const checkToken = async () => {
-    const token = await getToken();
-    RNBootSplash.hide({duration: 1000});
-    if (!!token) {
-      checkIsLogin();
-    }
-    setOnReady(true);
-  };
-  const init = async () => {
-    // …do multiple async tasks
-  };
+const MainNavigation = () => {
+  const init = async () => {};
   useEffect(() => {
-    // init().finally(() => {});
-    checkToken();
+    init().finally(() => {
+      RNBootSplash.hide({duration: 250});
+    });
   }, []);
-
   return (
     <View style={styles.container}>
       <StatusBar
@@ -33,7 +20,7 @@ const MainNavigation = ({checkIsLogin}) => {
         backgroundColor="transparent"
         translucent
       />
-      {onReady && <MainRouter />}
+      <MainRouter />
       <Loading />
     </View>
   );

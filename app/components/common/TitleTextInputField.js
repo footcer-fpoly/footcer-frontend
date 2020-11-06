@@ -22,6 +22,7 @@ const TitleTextInputField = ({
   value,
   style,
   customelement,
+  onChangeText,
 }) => {
   return (
     <View style={style}>
@@ -44,6 +45,7 @@ const TitleTextInputField = ({
               style={[styles.textInput, styleInput]}
               value={value}
               editable={!onPress}
+              onChangeText={onChangeText}
               {...otherTextInputProps}
             />
             {typeRigth && (

@@ -1,28 +1,21 @@
 import React, {useState} from 'react';
-import {
-  Image,
-  ImageBackground,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
-import LinearGradient from 'react-native-linear-gradient';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import {connect} from 'react-redux';
-import {yardImage} from '../../assets/Images';
-import BackIcon from '../../components/common/BackIcon';
-import {headline4, Text} from '../../components/common/Text';
-import Styles from '../../helpers/styles.helper';
-import ProfileTabView from '../../navigations/tab-view/profile-tab.navigation';
-import colors from '../../theme/colors';
-import spacing from '../../theme/spacing';
-import {updateAvatarUserService, updateUserService} from '../../api/user.api';
+import {StatusCode} from '../../api/status-code';
+import {updateAvatarUserService} from '../../api/user.api';
 import Avatar from '../../components/common/Avatar';
 import BackgroudImage from '../../components/common/BackgroudImage';
+import BackIcon from '../../components/common/BackIcon';
+import {headline4, Text} from '../../components/common/Text';
 import {scale} from '../../helpers/size.helper';
+import Styles from '../../helpers/styles.helper';
+import ProfileTabView from '../../navigations/tab-view/profile-tab.navigation';
+import {updateAvatarUser} from '../../redux/actions/auth.action';
+import colors from '../../theme/colors';
+import spacing from '../../theme/spacing';
 
-const ProfileDetailScreen = ({profile}) => {
+const ProfileDetailScreen = ({profile, updateAvatarUser}) => {
   const [avatar, setAvatar] = useState(profile?.avatar);
   const onPressPickImage = () => async () => {
     const image = await ImagePicker.openPicker({
@@ -31,8 +24,18 @@ const ProfileDetailScreen = ({profile}) => {
       width: 300,
       height: 400,
     });
-    setAvatar({imageType: 'local', ...image});
-    console.log('image onPressPickImage: ', image);
+    const res = await updateAvatarUserService({
+      avatar: image,
+      phone: profile.phone,
+    });
+    if (res && res.code === StatusCode.SUCCESS) {
+      setAvatar(res?.data?.avatar);
+      updateAvatarUser(res?.data?.avatar);
+      alert('Update avatar thành công');
+    } else {
+      alert('Update avatar failed');
+    }
+    console.log('res: ', res);
     try {
     } catch (error) {
       console.log('onPressPickImage -> error', error);
@@ -153,7 +156,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {updateAvatarUser};
 function mapStateToProps(state) {
   return {
     profile: state.authState.profile,

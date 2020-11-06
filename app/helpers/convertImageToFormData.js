@@ -1,23 +1,23 @@
 import {Platform} from 'react-native';
-import {domain} from '../configs/app.config';
+import {Image} from 'react-native';
 
 export const convertImageToFormData = (image, isLocalImage) => {
-  const uri = isLocalImage
+  let uri = isLocalImage
     ? Platform.OS === 'android'
       ? image.path
       : image.sourceURL.replace('file://', '')
-    : domain + image.url;
+    : Image.resolveAssetSource(image).uri;
   let imageName = '';
   if (isLocalImage) {
     const parts = image.path.split('/');
     imageName = parts[parts.length - 1];
   } else {
-    imageName = image.name + image.ext;
+    imageName = uri.slice(uri.lastIndexOf('/') + 1, uri.indexOf('?'));
+    uri = uri.slice(0, uri.indexOf('?'));
   }
   return {
     uri: uri,
-    type: image.mime,
+    type: 'image/jpeg',
     name: imageName,
-    length: image.size,
   };
 };

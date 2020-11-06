@@ -5,10 +5,13 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
+  Animated,
 } from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
 import {Host} from 'react-native-portalize';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {connect} from 'react-redux';
+import AnimatedToolbar from '../../components/common/AnimatedToolbar';
 import Avatar from '../../components/common/Avatar';
 import BackgroudImage from '../../components/common/BackgroudImage';
 import BackIcon from '../../components/common/BackIcon';
@@ -16,41 +19,37 @@ import {IconType} from '../../components/common/IconMaterialOrSvg';
 import ModalPicker from '../../components/common/ModalPicker';
 import PrimaryButton from '../../components/common/PrimaryButton';
 import TitleTextInputField from '../../components/common/TitleTextInputField';
-import ModalAddMember from '../../components/CreateTeam/ModalAddMember';
+import ModalAddMember from '../../components/team/ModalAddMember';
 import ItemTeamMember from '../../components/team/ItemTeamMember';
 import {ListProvince} from '../../helpers/data-local.helper';
 import {scale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
 import colors from '../../theme/colors';
 import spacing from '../../theme/spacing';
+import {createTeamService} from '../../api/team.api';
+import {StatusCode} from '../../api/status-code';
+import rootNavigation from '../../navigations/root.navigator';
+import {showLoading, hideLoading} from '../../redux/actions/loading.action';
+import {getListTeam} from '../../redux/actions/auth.action';
 
-const CreateTeamScreen = () => {
+const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
   const modalizeRef = useRef();
   const [visibleModal, setVisibleModal] = useState(false);
-  const [listMember, setListMember] = useState([1, 2, 3, 4, 5, 6]);
+  const [listMember, setListMember] = useState([profile]);
   const [dataTeam, setDataTeam] = useState({
-    background: '',
-    avatar: '',
+    background: null,
+    avatar: null,
+    name: '',
+    description: '',
+    place: '',
+    member: '',
   });
   const toggleModal = () => {
     setVisibleModal(!visibleModal);
   };
-  const onPressPickImage = async () => {
-    try {
-      const image = await ImagePicker.openPicker({
-        multiple: false,
-        cropping: true,
-        width: 300,
-        height: 400,
-      });
-      console.log('image onPressPickImage: ', image);
-    } catch (error) {
-      console.log('onPressPickImage -> error', error);
-    }
-  };
   const showProvince = () => {
     showDialog({
-      type: 'province',
+      type: 'place',
       titleModal: 'Chọn khu vực',
       listItems: ListProvince,
     });
@@ -65,25 +64,66 @@ const CreateTeamScreen = () => {
       });
     }
   };
+
   const onSelectItem = itemData => {
-    console.log('itemData: ', itemData);
     let keyState = null;
     switch (itemData.type) {
-      case 'province':
-        keyState = 'level';
+      case 'place':
+        keyState = 'place';
         break;
       default:
         break;
     }
-    // if (keyState) {
-    //   setData({
-    //     ...data,
-    //     [keyState]: itemData?.item?.name,
-    //   });
-    // }
+    if (keyState) {
+      setDataTeam({
+        ...dataTeam,
+        [keyState]: itemData?.item?.name,
+      });
+    }
   };
-  const renderItem = item => {
-    return <ItemTeamMember />;
+  const onPressPickImage = type => async () => {
+    try {
+      const image = await ImagePicker.openPicker({
+        multiple: false,
+      });
+      const imageState = type === 'background' ? 'background' : 'avatar';
+      setDataTeam({...dataTeam, [imageState]: {...image, imageType: 'local'}});
+    } catch (error) {}
+  };
+  const changeFormData = (key, value) => {
+    setDataTeam({...dataTeam, [key]: value});
+  };
+  const renderItem = ({item, index}) => {
+    return (
+      <ItemTeamMember
+        image={item?.avatar}
+        size={50}
+        name={item?.displayName}
+        onPress={index ? onSelectItem : undefined}
+      />
+    );
+  };
+
+  const createTeam = async () => {
+    try {
+      showLoading();
+      const res = await createTeamService({
+        avatar: dataTeam.avatar,
+        background: dataTeam.background,
+        data: dataTeam,
+      });
+      console.log('createTeamService --> res: ', res);
+      if (res && res.code === StatusCode.SUCCESS) {
+        getListTeam();
+        rootNavigation.back();
+      } else {
+        alert('Tạo đội thất bại');
+      }
+      hideLoading();
+    } catch (error) {
+      console.log('createTeamService -->error: ', error);
+      hideLoading();
+    }
   };
 
   const renderCreateMember = () => {
@@ -97,7 +137,7 @@ const CreateTeamScreen = () => {
           showsHorizontalScrollIndicator={false}
           horizontal
           contentContainerStyle={styles.listMember}
-          keyExtractor={item => item}
+          keyExtractor={index => index + ''}
           renderItem={renderItem}
         />
       </View>
@@ -105,13 +145,13 @@ const CreateTeamScreen = () => {
   };
   return (
     <Host>
-      <ScrollView style={styles.container}>
-        <ModalAddMember visible={visibleModal} />
+      <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+        <ModalAddMember dismiss={toggleModal} visible={visibleModal} />
         <BackIcon />
         <BackgroudImage
           height={scale(220)}
           image={dataTeam.background}
-          onPress={onPressPickImage}
+          onPress={onPressPickImage('background')}
         />
         <View style={styles.body}>
           <View style={styles.warpperAvatar}>
@@ -121,7 +161,7 @@ const CreateTeamScreen = () => {
               size={130}
               iconEdit={true}
               disabledImage={true}
-              onPress={onPressPickImage}
+              onPress={onPressPickImage('avatar')}
               borderWidth={2}
               borderColor={colors.black}
             />
@@ -131,6 +171,7 @@ const CreateTeamScreen = () => {
             lable="Tên đội bóng của bạn (*)"
             typeLeft={IconType.MaterialCommunityIcons}
             iconNameLeft="account-group"
+            onChangeText={value => changeFormData('name', value)}
             otherTextInputProps={{
               placeholder: 'Nhập tên đội bóng của bạn',
             }}
@@ -144,7 +185,7 @@ const CreateTeamScreen = () => {
             otherTextInputProps={{
               placeholder: 'Chọn khu vưc thi đấu',
             }}
-            value=""
+            value={dataTeam.place}
             typeRigth={IconType.MaterialIcons}
             iconNameRigth="keyboard-arrow-down"
             sizeIcon={scale(22)}
@@ -154,6 +195,7 @@ const CreateTeamScreen = () => {
             style={styles.inputField}
             lable="Mô tả đội bóng"
             sizeIcon={scale(22)}
+            onChangeText={text => changeFormData('description', text)}
             otherTextInputProps={{
               multiline: true,
               placeholder: 'Mô tả',
@@ -165,7 +207,11 @@ const CreateTeamScreen = () => {
             sizeIcon={scale(22)}
             customelement={renderCreateMember()}
           />
-          <PrimaryButton style={styles.button} title="Tạo đội" />
+          <PrimaryButton
+            onPress={createTeam}
+            style={styles.button}
+            title="Tạo đội"
+          />
         </View>
         <ModalPicker ref={modalizeRef} onSelectItem={onSelectItem} />
       </ScrollView>
@@ -178,17 +224,17 @@ const styles = StyleSheet.create({
   container: {
     ...Styles.flex1,
     backgroundColor: colors.white,
+    paddingBottom: spacing.large,
   },
   warpperAvatar: {
     ...Styles.columnCenter,
     width: '100%',
-    marginBottom: scale(20),
+    // marginBottom: scale(10),
   },
   body: {
     ...Styles.flex1,
     backgroundColor: colors.white,
     paddingHorizontal: spacing.medium,
-    // paddingTop: scale(35),
   },
   header: {
     width: '100%',
@@ -244,4 +290,14 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CreateTeamScreen;
+const mapDispatchToProps = {showLoading, hideLoading, getListTeam};
+function mapStateToProps(state) {
+  return {
+    profile: state.authState.profile,
+  };
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(CreateTeamScreen);

@@ -135,7 +135,7 @@ const ModalAddMember = ({visible, dismiss, member}) => {
   const addMember = () => {};
 
   return (
-    <Modal isVisible={visible}>
+    <Modal onBackdropPress={dismiss} isVisible={visible} style={{flex: 1}}>
       <View
         style={{
           backgroundColor: '#fff',

@@ -6,6 +6,8 @@ import {
   CHECK_LOGIN,
   UPDATE_AVATAR_USER,
   UPDATE_INFO_USER,
+  GET_LIST_TEAM,
+  GET_LIST_TEAM_SUCCESS,
 } from './types';
 
 export const logout = () => {
@@ -37,6 +39,19 @@ export const updateAvatarUser = avatar => {
 export const updateInfoUser = data => {
   return {
     type: UPDATE_INFO_USER,
+    data,
+  };
+};
+
+export const getListTeam = () => {
+  return {
+    type: GET_LIST_TEAM,
+  };
+};
+
+export const getListTeamSuccess = data => {
+  return {
+    type: GET_LIST_TEAM_SUCCESS,
     data,
   };
 };

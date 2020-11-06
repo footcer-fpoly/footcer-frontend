@@ -6,10 +6,13 @@ import {
   CHECK_LOGIN,
   UPDATE_INFO_USER,
   UPDATE_AVATAR_USER,
+  GET_LIST_TEAM,
+  GET_LIST_TEAM_SUCCESS,
 } from '../actions/types';
 
 const authState = {
   isLogedIn: false,
+  listTeam: null,
   profile: {
     userId: null,
     phone: '',
@@ -62,6 +65,12 @@ export const authReducer = (state = authState, action) => {
           ...state.profile,
           avatar: action.avatar,
         },
+      };
+    case GET_LIST_TEAM_SUCCESS:
+      const newList = action.data;
+      return {
+        ...state,
+        listTeam: newList,
       };
     default:
       return state;

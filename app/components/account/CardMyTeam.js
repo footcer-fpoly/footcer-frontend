@@ -25,21 +25,21 @@ import Styles from '../../helpers/styles.helper';
 import rootNavigation from '../../navigations/root.navigator';
 import {TEAM_DETAIL_SCREEN} from '../../navigations/route-name';
 
-export default function CardMyTeam() {
-  const [list, setlist] = useState([1, 2, 3, 4]);
+export default function CardMyTeam({item}) {
+  console.log('item: ', item);
   const navigateToScreen = (routeName, params) => () => {
     rootNavigation.navigate(routeName, params);
   };
   const renderMember = () => {
     return (
       <View style={styles.warpperList}>
-        {list.map(item => {
+        {item?.member?.map(item => {
           return (
             <Image
               style={styles.imgMem}
+              key={item.user.userId}
               source={{
-                uri:
-                  'https://i.pinimg.com/originals/2d/91/01/2d9101ca4d2c0259f39f60ec2ea2be56.png',
+                uri: item.user.avatar,
               }}
             />
           );
@@ -49,20 +49,21 @@ export default function CardMyTeam() {
   };
   return (
     <TouchableHighlight
-      onPress={navigateToScreen(TEAM_DETAIL_SCREEN)}
+      onPress={navigateToScreen(TEAM_DETAIL_SCREEN, {teamDetail: item})}
       style={styles.container}>
-      <ImageBackground source={yardImage} style={styles.background}>
+      <ImageBackground
+        source={{uri: item?.background}}
+        style={styles.background}>
         <LinearGradient
           colors={['#00000000', '#00000070', '#00000090']}
           style={styles.gradient}>
           <Text type={headline3} style={styles.txtTeamName}>
-            HIHI
+            {item?.name}
           </Text>
           <Image
             style={styles.imgBgTeam}
             source={{
-              uri:
-                'https://i.pinimg.com/originals/2d/91/01/2d9101ca4d2c0259f39f60ec2ea2be56.png',
+              uri: item?.avatar,
             }}
           />
           <View style={styles.warpperListMem}>

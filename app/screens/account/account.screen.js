@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Image,
   ScrollView,
@@ -12,6 +12,7 @@ import AccountBlock from '../../components/account/AccountBlock';
 import CardMyTeam from '../../components/account/CardMyTeam';
 import Avatar from '../../components/common/Avatar';
 import {IconType} from '../../components/common/IconMaterialOrSvg';
+import ListLoadingComponent from '../../components/common/ListLoadingComponent';
 import NoDataComponent from '../../components/common/NoDataComponent';
 import {headline4, headline5, Text} from '../../components/common/Text';
 import ToolBar from '../../components/common/Toolbar';
@@ -22,18 +23,22 @@ import rootNavigation from '../../navigations/root.navigator';
 import {
   CREATE_TEAM_SCREEN,
   DETAIL_PROFILE_SCREEN,
+  TEST_SCREEN,
 } from '../../navigations/route-name';
-import {logout} from '../../redux/actions/auth.action';
+import {logout, getListTeam} from '../../redux/actions/auth.action';
 import colors from '../../theme/colors';
 import spacing from '../../theme/spacing';
 
-const AccountScreen = ({profile, logout}) => {
-  const [listMyTeam, setListMyTeam] = useState([1, 2, 3, 4, 5]);
+const AccountScreen = ({profile, listTeam, logout, getListTeam}) => {
+  useEffect(() => {
+    getListTeam();
+  }, []);
   const navigateToScreen = (routeName, params) => () => {
     rootNavigation.navigate(routeName, params);
   };
-  const renderItem = item => {
-    return <CardMyTeam />;
+  const keyExtractor = (item, index) => index.toString();
+  const renderItem = ({item}) => {
+    return <CardMyTeam item={item} />;
   };
   return (
     <View style={styles.container}>
@@ -50,9 +55,6 @@ const AccountScreen = ({profile, logout}) => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContainer}>
         <View style={styles.warpperAvatar}>
-          {/* <TouchableOpacity onPress={navigateToScreen(DETAIL_PROFILE_SCREEN)}>
-            <Image source={{uri: profile.avatar}} style={styles.avatar} />
-          </TouchableOpacity> */}
           <Avatar
             image={profile.avatar}
             size={90}
@@ -72,6 +74,7 @@ const AccountScreen = ({profile, logout}) => {
               iconName="person-search"
               text="Tìm đội bóng"
               style={styles.flex47}
+              onPress={navigateToScreen(TEST_SCREEN)}
             />
             <AccountBlock
               type={IconType.MaterialIcons}
@@ -114,14 +117,22 @@ const AccountScreen = ({profile, logout}) => {
             Đội bóng của bạn
           </Text>
           <FlatList
-            data={listMyTeam}
+            data={listTeam}
             showsHorizontalScrollIndicator={false}
             horizontal
             contentContainerStyle={styles.listMember}
-            keyExtractor={item => item}
+            keyExtractor={keyExtractor}
             renderItem={renderItem}
+            ListEmptyComponent={
+              <ListLoadingComponent
+                onReady={listTeam != null}
+                numberOfPlaceholder={2}
+                text={
+                  'Bạn chư tham gia đội bóng nào click vào tạo đội bóng để tạo đội ngay!'
+                }
+              />
+            }
           />
-          {/* <NoDataComponent text="Bạn chư tham gia đội bóng nào click vào tạo đội bóng để tạo đội ngay!" /> */}
         </View>
       </ScrollView>
     </View>
@@ -170,10 +181,12 @@ const styles = StyleSheet.create({
 });
 const mapDispatchToProps = {
   logout,
+  getListTeam,
 };
 function mapStateToProps(state) {
   return {
     profile: state.authState.profile,
+    listTeam: state.authState.listTeam,
   };
 }
 

@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     paddingVertical: scale(10),
-    borderRadius: scale(10),
+    borderRadius: scale(5),
     shadowColor: colors.grayLight,
     shadowOffset: {
       width: 5,
