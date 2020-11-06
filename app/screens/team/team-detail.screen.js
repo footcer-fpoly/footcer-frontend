@@ -5,11 +5,13 @@ import {Host} from 'react-native-portalize';
 import {connect} from 'react-redux';
 import {StatusCode} from '../../api/status-code';
 import {
+  addMemberTeamService,
   deleteTeamService,
   updateAvatarTeamService,
   updateBackgroundTeamService,
   updateInfoTeamService,
 } from '../../api/team.api';
+import {searchPhoneUserService} from '../../api/user.api';
 import imageDelete from '../../assets/svg/img_delete.svg';
 import RowProflie from '../../components/account/RowProflie';
 import Avatar from '../../components/common/Avatar';
@@ -22,6 +24,7 @@ import PrimaryButton from '../../components/common/PrimaryButton';
 import SecondaryButton from '../../components/common/SecondaryButton';
 import {headline4, headline5, Text} from '../../components/common/Text';
 import ItemTeamMember from '../../components/team/ItemTeamMember';
+import ModalAddMember from '../../components/team/ModalAddMember';
 import {ListLevel, ListProvince} from '../../helpers/data-local.helper';
 import {scale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
@@ -34,7 +37,6 @@ import spacing from '../../theme/spacing';
 
 const TeamDetailScreen = ({route, showLoading, hideLoading, getListTeam}) => {
   const {teamDetail} = route.params;
-  console.log('teamDetail: ', teamDetail);
   const modalizeRef = useRef();
   const [data, setData] = useState({
     teamId: teamDetail.teamId,
@@ -48,12 +50,68 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, getListTeam}) => {
   });
   const [editable, setEditable] = useState(false);
   const [visibleModalDele, setVisibleModalDele] = useState(false);
+  const [visibleModal, setVisibleModal] = useState(false);
+  const [member, setMember] = useState({
+    phone: '',
+    status: 0,
+  });
   const toogleEditable = () => {
     setEditable(!editable);
   };
 
   const toggleModalDelete = () => {
     setVisibleModalDele(!visibleModalDele);
+  };
+
+  const toggleModalAddMember = () => {
+    setVisibleModal(!visibleModal);
+    setMember({...member, status: 0});
+  };
+  const searchPhone = async () => {
+    try {
+      const checkPhone = data?.member.find(
+        item => item?.user?.phone === member.phone,
+      );
+      if (!checkPhone) {
+        const res = await searchPhoneUserService(member.phone);
+        if (res && res.code === StatusCode.SUCCESS) {
+          setMember({
+            ...res.data,
+            status: 1,
+          });
+        } else {
+          setMember({
+            ...member,
+            status: 2,
+          });
+        }
+      } else {
+        alert('Đã có trong team');
+      }
+    } catch (error) {
+      console.log('searchPhoneUserService -->err: ', error);
+    }
+  };
+
+  const addMember = async () => {
+    try {
+      const res = await addMemberTeamService({
+        userId: member.userId,
+        teamId: data.teamId,
+      });
+      console.log('addMemberTeamService -->res: ', res);
+      if (res && res.code === StatusCode.SUCCESS) {
+        console.log('member: ', member);
+        const newListMemBer = data.member.concat(member);
+        setData({
+          ...data,
+          member: newListMemBer,
+        });
+        setMember({...member, status: 0});
+        getListTeam();
+        alert('Gữi lời mời thành công');
+      }
+    } catch (error) {}
   };
 
   const showLevel = () => {
@@ -199,12 +257,12 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, getListTeam}) => {
   const renderItemMember = ({item, index}) => {
     return (
       <ItemTeamMember
-        image={item?.user?.avatar}
-        size={80}
-        name={item?.user?.displayName}
+        image={item?.user?.avatar || item?.avatar}
+        size={scale(80)}
+        name={item?.user?.displayName || item?.displayName}
         onPressImage={() => alert('item')}
         status={item?.accept}
-        position={item?.user?.position}
+        position={item?.user?.position || item?.position}
       />
     );
   };
@@ -238,6 +296,7 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, getListTeam}) => {
               <SecondaryButton
                 title="Thêm thành viên"
                 style={{width: scale(160)}}
+                onPress={toggleModalAddMember}
               />
             </View>
             <FlatList
@@ -336,12 +395,24 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, getListTeam}) => {
           onCancelClick={toggleModalDelete}
           onConfirmClick={deleteTeam}
         />
+        <ModalAddMember
+          dismiss={toggleModalAddMember}
+          visible={visibleModal}
+          status={member.status}
+          onChangeText={text => setMember({...member, phone: text})}
+          member={member}
+          onPressSearchPhone={searchPhone}
+          onPresSendInvitation={addMember}
+          onPressInvitationToJoin={toggleModalAddMember}
+          onPressChangePhone={() => setMember({...member, status: 0})}
+          phone={member.phone}
+        />
       </ScrollView>
     </Host>
   );
 };
 const styles = StyleSheet.create({
-  listMember: {flex: 1, marginTop: spacing.medium},
+  listMember: {marginTop: spacing.medium},
   txtName: {
     color: colors.white,
     marginTop: spacing.small,

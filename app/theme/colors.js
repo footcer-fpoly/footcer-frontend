@@ -12,6 +12,7 @@ const colors = {
   blueDark: '#2c3e50',
   green: '#27ae60',
   greenDark: '#009432',
+  greenLight: '#27ae60',
   red: '#e74c3c',
   captionText: '#000000',
   placeHolder: '#95a5a6',

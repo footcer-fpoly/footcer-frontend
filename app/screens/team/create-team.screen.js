@@ -12,6 +12,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {connect} from 'react-redux';
 import {StatusCode} from '../../api/status-code';
 import {createTeamService} from '../../api/team.api';
+import {searchPhoneUserService} from '../../api/user.api';
 import Avatar from '../../components/common/Avatar';
 import BackgroudImage from '../../components/common/BackgroudImage';
 import BackIcon from '../../components/common/BackIcon';
@@ -34,6 +35,10 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
   const modalizeRef = useRef();
   const [visibleModal, setVisibleModal] = useState(false);
   const [listMember, setListMember] = useState([profile]);
+  const [member, setMember] = useState({
+    phone: '',
+    status: 0,
+  });
   const [dataTeam, setDataTeam] = useState({
     background: null,
     avatar: null,
@@ -45,6 +50,7 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
   });
   const toggleModal = () => {
     setVisibleModal(!visibleModal);
+    setMember({...member, status: 0});
   };
   const showProvince = () => {
     showDialog({
@@ -100,9 +106,44 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
       setDataTeam({...dataTeam, [imageState]: {...image, imageType: 'local'}});
     } catch (error) {}
   };
+
   const changeFormData = (key, value) => {
     setDataTeam({...dataTeam, [key]: value});
   };
+
+  const searchPhone = async () => {
+    try {
+      const checkPhone = listMember.find(item => item.phone === member.phone);
+      if (!checkPhone) {
+        const res = await searchPhoneUserService(member.phone);
+        if (res && res.code === StatusCode.SUCCESS) {
+          setMember({
+            ...res.data,
+            status: 1,
+          });
+        } else {
+          setMember({
+            ...member,
+            status: 2,
+          });
+        }
+      } else {
+        alert('Đã có trong team');
+      }
+    } catch (error) {}
+  };
+
+  const addMember = () => {
+    const newListmember = listMember.concat(member);
+    alert('Gữi lời mời thành công!');
+    setListMember(newListmember);
+    setMember({...member, status: 0});
+    let strMember = '';
+    strMember += member.userId + ',';
+    setDataTeam({...dataTeam, member: strMember});
+  };
+
+  const keyExtractor = (item, index) => index.toString();
   const renderItem = ({item, index}) => {
     return (
       <ItemTeamMember
@@ -150,7 +191,7 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
           showsHorizontalScrollIndicator={false}
           horizontal
           contentContainerStyle={styles.listMember}
-          keyExtractor={index => index + ''}
+          keyExtractor={keyExtractor}
           renderItem={renderItem}
         />
       </View>
@@ -162,7 +203,6 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
         style={styles.container}
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}>
-        <ModalAddMember dismiss={toggleModal} visible={visibleModal} />
         <BackIcon />
         <BackgroudImage
           height={scale(220)}
@@ -244,6 +284,18 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
           />
         </View>
         <ModalPicker ref={modalizeRef} onSelectItem={onSelectItem} />
+        <ModalAddMember
+          dismiss={toggleModal}
+          visible={visibleModal}
+          status={member.status}
+          onChangeText={text => setMember({...member, phone: text})}
+          member={member}
+          onPressSearchPhone={searchPhone}
+          onPresSendInvitation={addMember}
+          onPressInvitationToJoin={toggleModal}
+          onPressChangePhone={() => setMember({...member, status: 0})}
+          phone={member.phone}
+        />
       </ScrollView>
     </Host>
   );
@@ -260,7 +312,6 @@ const styles = StyleSheet.create({
   warpperAvatar: {
     ...Styles.columnCenter,
     width: '100%',
-    // marginBottom: scale(10),
   },
   body: {
     ...Styles.flex1,

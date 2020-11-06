@@ -26,7 +26,7 @@ export default function ConfirmDialog({
     <Modal
       onBackButtonPress={onCancelClick}
       statusBarTranslucent={true}
-      useNativeDriver={false}
+      useNativeDriver={true}
       isVisible={visible}>
       <View style={styles.container}>
         <IconMaterialOrSvg

@@ -1,149 +1,118 @@
-import AsyncStorage from '@react-native-community/async-storage';
-import {Avatar} from '@ui-kitten/components';
-import React, {useEffect, useState} from 'react';
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  ToastAndroid,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React from 'react';
+import {StyleSheet, TextInput, View, TouchableOpacity} from 'react-native';
 import Modal from 'react-native-modal';
-import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import {searchPhoneUser} from '../../server/User/server';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {scale} from '../../helpers/size.helper';
+import Styles from '../../helpers/styles.helper';
+import colors from '../../theme/colors';
+import Avatar from '../common/Avatar';
+import PrimaryButton from '../common/PrimaryButton';
+import {body2, headline4, headline5, Text} from '../common/Text';
 
-const ModalAddMember = ({visible, dismiss, member}) => {
-  const [phone, setPhone] = useState('');
-  const [user, setUser] = useState(null);
-  const [status, setStatus] = useState(null);
-  const [token, setToken] = useState(null);
-  const getToken = async () => {
-    const token = await AsyncStorage.getItem('userToken');
-    return setToken(token);
-  };
-  useEffect(() => {
-    getToken();
-  });
-
-  const searchPhone = async (phone, token) => {
-    const res = await searchPhoneUser(token, phone);
-    console.log(res);
-    if (res) {
-      if (res.code === 200) {
-        setUser(res.data);
-        return setStatus(1);
-      } else if (res.code === 409) {
-        return setStatus(0);
-      }
-    } else {
-      ToastAndroid.showWithGravity(
-        'Lỗi',
-        ToastAndroid.SHORT,
-        ToastAndroid.CENTER,
-      );
-      return setStatus(0);
-    }
-  };
-
-  function checkLayout() {
-    if (status === null) {
-      return next();
-    } else if (status === 1) {
-      return haveUser();
-    } else return noneUser();
-  }
-
-  function next() {
+const ModalAddMember = ({
+  visible,
+  dismiss,
+  status,
+  onChangeText,
+  member,
+  onPressSearchPhone,
+  onPresSendInvitation,
+  onPressInvitationToJoin,
+  onPressChangePhone,
+  phone,
+}) => {
+  const searchPhone = () => {
     return (
-      <View>
+      <>
         <TextInput
           style={styles.input}
           placeholder="Số điện thoại ..."
-          onChangeText={val => setPhone(val)}
+          onChangeText={onChangeText}
           keyboardType="numeric"
-          value={phone}
         />
         <Text style={styles.subText}>
           Nhập số điện thoại của cầu thủ bạn muốn mời vào đội bóng
         </Text>
-        <TouchableOpacity
+        <PrimaryButton
+          title="Tiếp tục"
+          onPress={onPressSearchPhone}
+          textStyle={styles.txtBtn}
           style={styles.btn}
-          onPress={() => searchPhone(phone, token)}>
-          <Text style={styles.txtBtn}>TIẾP TỤC</Text>
-        </TouchableOpacity>
-      </View>
+        />
+      </>
     );
-  }
-  function haveUser() {
+  };
+  const sendInvitation = () => {
     return (
-      <View style={styles.warpper}>
-        <TouchableOpacity onPress={() => setStatus(null)}>
-          <SimpleLineIcons
-            name="screen-smartphone"
-            color={'#27ae60'}
-            size={50}
-          />
-        </TouchableOpacity>
-        <Avatar style={{width: 120, height: 120}} source={{uri: user.avatar}} />
+      <>
+        <Avatar image={member?.avatar} size={scale(120)} disabledImage={true} />
         <Text style={styles.subText}>Lời mời gia nhập đội của bạn tới</Text>
-        <Text style={{fontWeight: 'bold', fontSize: 18}}>
-          {user.displayName}
-        </Text>
-        <TouchableOpacity
+        <Text type={headline4}>{member?.displayName}</Text>
+        <PrimaryButton
+          title="Gữi lời mời"
+          onPress={onPresSendInvitation}
+          textStyle={styles.txtBtn}
           style={styles.btn}
-          // onPress={() => searchPhone(txtInput, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI3NzVkN2FhNS1lNjg4LTExZWEtYjRmYi0wMjQyYWMxMjAwMDIiLCJSb2xlIjowLCJleHAiOjE2MTEyODkxMzF9.Z0fQGLafgBHASwM8j5WLOg9wtxJx5pZkaSEvurkjS6U')}
-        >
-          <Text style={styles.txtBtn}>GỬI LỜI MỜI</Text>
-        </TouchableOpacity>
-      </View>
+        />
+      </>
     );
-  }
-  function noneUser() {
+  };
+  function joinApp() {
     return (
-      <View style={styles.warpper}>
-        <View
-          style={{
-            borderColor: '#27ae60',
-            width: 90,
-            height: 90,
-            borderRadius: 45,
-            borderWidth: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <SimpleLineIcons
-            name="screen-smartphone"
-            color={'#27ae60'}
-            size={50}
+      <>
+        <View style={styles.warpperIcon}>
+          <Icon
+            name="cellphone-sound"
+            color={colors.greenLight}
+            size={scale(50)}
           />
         </View>
-        <Text style={[styles.subText, {maxWidth: 280}]}>
-          Số điện thoại <Text style={{fontWeight: 'bold'}}>09036363</Text> chưa
-          có tài khoản trên Footcer
+        <Text type={body2} style={[styles.subText, styles.maxWidth]}>
+          Số điện thoại <Text type={headline5}>{phone}</Text> chưa có tài khoản
+          trên Footcer
         </Text>
-        <TouchableOpacity
+        <PrimaryButton
+          title="Mời tham gia"
+          onPress={onPressInvitationToJoin}
+          textStyle={styles.txtBtn}
           style={styles.btn}
-          // onPress={() => searchPhone(txtInput, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI3NzVkN2FhNS1lNjg4LTExZWEtYjRmYi0wMjQyYWMxMjAwMDIiLCJSb2xlIjowLCJleHAiOjE2MTEyODkxMzF9.Z0fQGLafgBHASwM8j5WLOg9wtxJx5pZkaSEvurkjS6U')}
-        >
-          <Text style={styles.txtBtn}>MỜI THAM GIA</Text>
-        </TouchableOpacity>
-      </View>
+        />
+      </>
     );
   }
-
-  const addMember = () => {};
+  function renderContent(status) {
+    switch (status) {
+      case 1:
+        return sendInvitation();
+      case 2:
+        return joinApp();
+      default:
+        return searchPhone();
+    }
+  }
 
   return (
-    <Modal onBackdropPress={dismiss} isVisible={visible} style={{flex: 1}}>
-      <View
-        style={{
-          backgroundColor: '#fff',
-          borderRadius: 5,
-          paddingHorizontal: 20,
-          paddingVertical: 30,
-        }}>
-        {checkLayout()}
+    <Modal
+      onBackButtonPress={dismiss}
+      statusBarTranslucent={true}
+      useNativeDriver={true}
+      isVisible={visible}>
+      <View style={styles.container}>
+        {!!status && (
+          <TouchableOpacity
+            onPress={onPressChangePhone}
+            style={styles.iconBack}>
+            <Icon
+              color={colors.grayDark}
+              name="keyboard-backspace"
+              size={scale(30)}
+            />
+          </TouchableOpacity>
+        )}
+        <TouchableOpacity onPress={dismiss} style={styles.iconClose}>
+          <Icon name="close-circle" size={scale(30)} />
+        </TouchableOpacity>
+        {renderContent(status)}
       </View>
     </Modal>
   );
@@ -152,35 +121,52 @@ const ModalAddMember = ({visible, dismiss, member}) => {
 export default ModalAddMember;
 
 const styles = StyleSheet.create({
+  maxWidth: {
+    maxWidth: scale(280),
+  },
+  container: {
+    ...Styles.columnCenter,
+    backgroundColor: colors.white,
+    borderRadius: scale(5),
+    paddingHorizontal: scale(20),
+    paddingVertical: scale(30),
+  },
+  warpperIcon: {
+    ...Styles.borderRadiusCircle(90),
+    ...Styles.columnCenter,
+    borderWidth: scale(1),
+    borderColor: colors.main,
+  },
   btn: {
     marginTop: 25,
-    backgroundColor: '#27ae60',
-    width: '100%',
-    alignItems: 'center',
-    paddingVertical: 12,
-    borderRadius: 5,
-    marginTop: 30,
+    backgroundColor: colors.greenLight,
   },
   txtBtn: {
-    fontSize: 16,
-    color: '#fff',
+    color: colors.white,
+    textTransform: 'uppercase',
+    fontWeight: 'normal',
   },
   input: {
-    backgroundColor: 'white',
+    backgroundColor: colors.white,
     textAlign: 'center',
     borderBottomWidth: 2,
     width: '100%',
-    borderBottomColor: '#27ae60',
+    borderBottomColor: colors.greenLight,
     fontSize: 18,
   },
   subText: {
-    color: '#95a5a6',
-    marginTop: 10,
+    color: colors.placeHolder,
     textAlign: 'center',
     marginTop: 20,
   },
-  warpper: {
-    alignItems: 'center',
-    justifyContent: 'center',
+  iconClose: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+  },
+  iconBack: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
   },
 });

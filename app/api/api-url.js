@@ -20,3 +20,4 @@ export const GET_LIST_TEAM_FOR_USER = `${ROOT_API_URL}/team/for-user`;
 export const UPDATE_TEAM = `${ROOT_API_URL}/team/update`;
 export const DELETE_TEAM = idTeam =>
   `${ROOT_API_URL}/team/delete-team/${idTeam}`;
+export const ADD_MEMBER_TEAM = `${ROOT_API_URL}/team/add-member`;

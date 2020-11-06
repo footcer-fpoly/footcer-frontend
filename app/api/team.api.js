@@ -1,11 +1,11 @@
 import {convertImageToFormData} from '../helpers/convertImageToFormData';
 import RequestHelper from '../helpers/request.helper';
 import {
+  ADD_MEMBER_TEAM,
   CREATE_TEAM,
   DELETE_TEAM,
   GET_LIST_TEAM_FOR_USER,
   UPDATE_TEAM,
-  UPDATE_BACKGROUND_TEAM,
 } from './api-url';
 
 export const createTeamService = ({avatar, background, data}) => {
@@ -61,4 +61,8 @@ export const updateInfoTeamService = data => {
   formData.append('level', data.level);
   formData.append('name', data.name);
   return RequestHelper.put(UPDATE_TEAM, formData);
+};
+
+export const addMemberTeamService = ({userId, teamId}) => {
+  return RequestHelper.post(ADD_MEMBER_TEAM, {userId, teamId});
 };
