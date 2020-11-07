@@ -27,6 +27,7 @@ import {ListLevel, ListProvince} from '../../helpers/data-local.helper';
 import {regexpPhoneVn} from '../../helpers/format.helper';
 import {scale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
+import {ToastHelper} from '../../helpers/ToastHelper';
 import {validatePhoneNumber} from '../../helpers/validate.helper';
 import rootNavigation from '../../navigations/root.navigator';
 import {getListTeam} from '../../redux/actions/auth.action';
@@ -155,7 +156,7 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
 
   const addMember = () => {
     const newListmember = listMember.concat(member);
-    alert('Gữi lời mời thành công!');
+    ToastHelper.showToast('Gữi lời mời thành công!');
     setListMember(newListmember);
     setMember({...member, status: 0});
     let strMember = '';

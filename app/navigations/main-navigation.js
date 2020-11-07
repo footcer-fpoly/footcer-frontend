@@ -3,6 +3,7 @@ import {StatusBar, StyleSheet, View} from 'react-native';
 import RNBootSplash from 'react-native-bootsplash';
 import {connect} from 'react-redux';
 import Loading from '../components/common/loadings/Loading';
+import {ToastHelper} from '../helpers/ToastHelper';
 import {checkIsLogin} from '../redux/actions/auth.action';
 import MainRouter from './app-navigation';
 
@@ -22,6 +23,7 @@ const MainNavigation = () => {
       />
       <MainRouter />
       <Loading />
+      <ToastHelper.ToastContainer />
     </View>
   );
 };

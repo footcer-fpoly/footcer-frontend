@@ -10,6 +10,7 @@ import {headline4, headline5, Text} from '../../components/common/Text';
 import ToolBar from '../../components/common/Toolbar';
 import {scale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
+import {ToastHelper} from '../../helpers/ToastHelper';
 // import Avatar from '../../components/account/avatar';
 import rootNavigation from '../../navigations/root.navigator';
 import {
@@ -80,6 +81,7 @@ const AccountScreen = ({profile, listTeam, logout, getListTeam}) => {
               iconName="share"
               text="Mời bạn bè"
               style={styles.flex47}
+              onPress={() => ToastHelper.showToast('haha')}
             />
           </View>
           <View style={[styles.block, {marginTop: spacing.small}]}>

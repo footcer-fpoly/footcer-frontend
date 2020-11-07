@@ -11,6 +11,7 @@ import {ListLevel, ListPosition} from '../../helpers/data-local.helper';
 import {formatCouponDateDisplay} from '../../helpers/format.helper';
 import {scale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
+import {ToastHelper} from '../../helpers/ToastHelper';
 import rootNavigator from '../../navigations/root.navigator';
 import {updateInfoUser} from '../../redux/actions/auth.action';
 import {hideLoading, showLoading} from '../../redux/actions/loading.action';
@@ -142,7 +143,7 @@ const TabProfile = ({profile, showLoading, hideLoading, updateInfoUser}) => {
         if (!!res && res.code === StatusCode.SUCCESS) {
           setEditable(false);
           updateInfoUser(data);
-          alert('update user thành công');
+          ToastHelper.showToast('Cập nhật thành công');
         } else {
           alert('update user thất bại');
         }
