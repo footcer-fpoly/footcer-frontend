@@ -46,13 +46,13 @@ const ProfileDetailScreen = ({profile, updateAvatarUser}) => {
       <BackIcon />
       <BackgroudImage
         height={scale(220)}
+        disabledImage={true}
         children={
           <>
             <Avatar
               image={avatar}
               size={90}
               iconEdit={true}
-              disabledImage={true}
               onPress={onPressPickImage()}
             />
             <Text type={headline4} style={styles.txtName}>

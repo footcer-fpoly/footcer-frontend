@@ -20,51 +20,54 @@ export default function RowProflie({
   onChangeText,
 }) {
   return (
-    <View style={styles.container}>
-      <IconMaterialOrSvg
-        type={iconType}
-        name={iconName}
-        size={scale(20)}
-        SVGIcon={SVGIcon}
-        style={styles.icon}
-      />
-      <Text type={body3} style={styles.label}>
-        {label}
-      </Text>
-      {onPress ? (
-        <TouchableOpacity
-          disabled={!editable}
-          onPress={onPress}
-          style={styles.btn}>
-          <Text
-            type={body2}
-            style={[
-              styles.txtBtn,
-              editable ? {color: colors.black} : {color: colors.grayDark},
-              stylesTxt,
-            ]}>
-            {value}
-          </Text>
-          {!stylesTxt && (
-            <Icon
-              name="menu-down"
-              size={21}
-              color={editable ? colors.black : colors.grayDark}
-            />
-          )}
-        </TouchableOpacity>
-      ) : (
-        <TextInput
-          onChangeText={onChangeText}
-          editable={editable}
-          value={value}
-          style={[
-            styles.input,
-            editable ? {color: colors.black} : {color: colors.grayDark},
-          ]}
+    <>
+      <View style={styles.container}>
+        <IconMaterialOrSvg
+          type={iconType}
+          name={iconName}
+          size={scale(20)}
+          SVGIcon={SVGIcon}
+          style={styles.icon}
         />
-      )}
-    </View>
+        <Text type={body3} style={styles.label}>
+          {label}
+        </Text>
+        {onPress ? (
+          <TouchableOpacity
+            disabled={!editable}
+            onPress={onPress}
+            style={styles.btn}>
+            <Text
+              type={body2}
+              style={[
+                styles.txtBtn,
+                editable ? {color: colors.black} : {color: colors.grayDark},
+                stylesTxt,
+              ]}>
+              {value}
+            </Text>
+            {!stylesTxt && (
+              <Icon
+                name="menu-down"
+                size={21}
+                color={editable ? colors.black : colors.grayDark}
+              />
+            )}
+          </TouchableOpacity>
+        ) : (
+          <TextInput
+            onChangeText={onChangeText}
+            editable={editable}
+            value={value}
+            style={[
+              styles.input,
+              editable ? {color: colors.black} : {color: colors.grayDark},
+            ]}
+          />
+        )}
+      </View>
+      {/* <Text>Lỗi</Text> */}
+    </>
   );
 }
 const styles = StyleSheet.create({

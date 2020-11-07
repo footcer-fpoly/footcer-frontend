@@ -27,7 +27,7 @@ export default function ItemTeamMember({
           disabledImage={disabledImage}
           borderWidth={2}
           borderColor={colors.black}
-          onPress={onPressImage}
+          onPressImage={onPressImage}
         />
         {onPress && (
           <TouchableOpacity style={styles.iconRemoveMem}>

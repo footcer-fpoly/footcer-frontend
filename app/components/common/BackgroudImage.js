@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {ImageBackground, StyleSheet, TouchableOpacity} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -6,6 +6,7 @@ import {yardImage} from '../../assets/Images';
 import {scale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
 import colors from '../../theme/colors';
+import ModalImageViewer from './ModalImageViewer';
 
 export default function BackgroudImage({
   image,
@@ -13,23 +14,41 @@ export default function BackgroudImage({
   height,
   children,
   style,
+  disabledImage,
 }) {
   const uri = image?.imageType === 'local' ? image.path : image;
+  const [modalViewImg, setmodalViewImg] = useState({
+    image: [{url: uri}],
+    visible: false,
+  });
+  const toggleModal = () => {
+    setmodalViewImg({
+      ...modalViewImg,
+      visible: !modalViewImg.visible,
+    });
+  };
   return (
-    <ImageBackground
-      source={image ? {uri} : yardImage}
-      style={[styles.header(height), style]}>
-      <LinearGradient
-        colors={['#00000000', '#00000070', '#00000090']}
-        style={styles.center}>
-        {children}
-        {onPress && (
-          <TouchableOpacity onPress={onPress} style={styles.iconEdit}>
-            <Icon name="edit" size={18} color={colors.white} />
-          </TouchableOpacity>
-        )}
-      </LinearGradient>
-    </ImageBackground>
+    <TouchableOpacity disabled={disabledImage} onPress={toggleModal}>
+      <ImageBackground
+        source={image ? {uri} : yardImage}
+        style={[styles.header(height), style]}>
+        <LinearGradient
+          colors={['#00000000', '#00000070', '#00000090']}
+          style={styles.center}>
+          {children}
+          {onPress && (
+            <TouchableOpacity onPress={onPress} style={styles.iconEdit}>
+              <Icon name="edit" size={18} color={colors.white} />
+            </TouchableOpacity>
+          )}
+        </LinearGradient>
+        <ModalImageViewer
+          onDismiss={toggleModal}
+          visible={modalViewImg.visible}
+          images={modalViewImg.image}
+        />
+      </ImageBackground>
+    </TouchableOpacity>
   );
 }
 

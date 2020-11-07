@@ -50,7 +50,7 @@ const AccountScreen = ({profile, listTeam, logout, getListTeam}) => {
           <Avatar
             image={profile.avatar}
             size={90}
-            onPress={navigateToScreen(DETAIL_PROFILE_SCREEN)}
+            onPressImage={navigateToScreen(DETAIL_PROFILE_SCREEN)}
           />
           <Text
             type={headline4}

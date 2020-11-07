@@ -25,6 +25,7 @@ import SecondaryButton from '../../components/common/SecondaryButton';
 import {headline4, headline5, Text} from '../../components/common/Text';
 import ItemTeamMember from '../../components/team/ItemTeamMember';
 import ModalAddMember from '../../components/team/ModalAddMember';
+import ModalShowInfoMember from '../../components/team/ModalShowInfoMember';
 import {ListLevel, ListProvince} from '../../helpers/data-local.helper';
 import {scale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
@@ -55,6 +56,23 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, getListTeam}) => {
     phone: '',
     status: 0,
   });
+  const [modalInfoMember, setModalInfoMember] = useState({
+    visible: false,
+    data: null,
+  });
+
+  const showModalInfoMember = data => () => {
+    setModalInfoMember({
+      visible: true,
+      data,
+    });
+  };
+  const hideModalInfoMember = () => {
+    setModalInfoMember({
+      visible: false,
+      data: null,
+    });
+  };
   const toogleEditable = () => {
     setEditable(!editable);
   };
@@ -260,9 +278,9 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, getListTeam}) => {
         image={item?.user?.avatar || item?.avatar}
         size={scale(80)}
         name={item?.user?.displayName || item?.displayName}
-        onPressImage={() => alert('item')}
         status={item?.accept}
         position={item?.user?.position || item?.position}
+        onPressImage={showModalInfoMember(item)}
       />
     );
   };
@@ -280,7 +298,6 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, getListTeam}) => {
                 image={data?.avatar}
                 size={90}
                 iconEdit={true}
-                disabledImage={true}
                 onPress={onPressPickImage('avatar')}
               />
               <Text type={headline4} style={styles.txtName}>
@@ -406,6 +423,11 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, getListTeam}) => {
           onPressInvitationToJoin={toggleModalAddMember}
           onPressChangePhone={() => setMember({...member, status: 0})}
           phone={member.phone}
+        />
+        <ModalShowInfoMember
+          dismiss={hideModalInfoMember}
+          visible={modalInfoMember.visible}
+          data={modalInfoMember.data}
         />
       </ScrollView>
     </Host>

@@ -208,6 +208,7 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
           height={scale(220)}
           image={dataTeam.background}
           onPress={onPressPickImage('background')}
+          disabledImage={true}
         />
         <View style={styles.body}>
           <View style={styles.warpperAvatar}>

@@ -1,12 +1,14 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {logoTeamImage} from '../../assets/Images';
 import Styles from '../../helpers/styles.helper';
 import colors from '../../theme/colors';
+import ModalImageViewer from './ModalImageViewer';
 
 export default function Avatar({
   image,
+  onPressImage,
   onPress,
   size,
   borderWidth,
@@ -16,9 +18,21 @@ export default function Avatar({
   disabledImage,
 }) {
   const uri = image?.imageType === 'local' ? image.path : image;
+  const [modalViewImg, setmodalViewImg] = useState({
+    image: [{url: uri}],
+    visible: false,
+  });
+  const toggleModal = () => {
+    setmodalViewImg({
+      ...modalViewImg,
+      visible: !modalViewImg.visible,
+    });
+  };
   return (
     <View style={[styles.avatar(size), style]}>
-      <TouchableOpacity onPress={onPress} disabled={disabledImage}>
+      <TouchableOpacity
+        onPress={onPressImage ? onPressImage : toggleModal}
+        disabled={disabledImage}>
         <Image
           source={image ? {uri} : logoTeamImage}
           style={[
@@ -28,10 +42,18 @@ export default function Avatar({
         />
       </TouchableOpacity>
       {iconEdit && (
-        <TouchableOpacity onPress={onPress} style={styles.iconEdit}>
+        <TouchableOpacity
+          hitSlop={styles.hitSlop}
+          onPress={onPress}
+          style={styles.iconEdit}>
           <Icon style={styles.iconHeader} name="edit" size={13} />
         </TouchableOpacity>
       )}
+      <ModalImageViewer
+        onDismiss={toggleModal}
+        visible={modalViewImg.visible}
+        images={modalViewImg.image}
+      />
     </View>
   );
 }
@@ -40,6 +62,7 @@ const styles = StyleSheet.create({
   avatar: size => ({
     ...Styles.borderRadiusCircle(size),
   }),
+  hitSlop: {top: 10, left: 10, right: 10, bottom: 10},
   iconEdit: {
     position: 'absolute',
     bottom: 0,
