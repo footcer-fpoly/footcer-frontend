@@ -5,7 +5,8 @@ import Styles from '../../helpers/styles.helper';
 import colors from '../../theme/colors';
 import spacing from '../../theme/spacing';
 import IconMaterialOrSvg from './IconMaterialOrSvg';
-import {body2, Text} from './Text';
+import {body2, body3, Text} from './Text';
+import * as Animatable from 'react-native-animatable';
 
 const TitleTextInputField = ({
   nameSvgLeft,
@@ -23,13 +24,15 @@ const TitleTextInputField = ({
   style,
   customelement,
   onChangeText,
+  textErrorStyle,
+  textError,
 }) => {
   return (
     <View style={style}>
       <Text type={body2} style={styles.lable}>
         {lable}
       </Text>
-      <View style={styles.content}>
+      <View style={styles.content(textError && colors.red)}>
         {!customelement ? (
           <View style={styles.warpperInput}>
             {typeLeft && (
@@ -64,15 +67,23 @@ const TitleTextInputField = ({
           <View>{customelement}</View>
         )}
       </View>
+      {!!textError && (
+        <Animatable.Text
+          animation="fadeInLeft"
+          type={body3}
+          style={[styles.textError, textErrorStyle]}>
+          {textError}
+        </Animatable.Text>
+      )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  content: {
-    ...Styles.borderColor(colors.grayOpacity, 1),
+  content: (color = colors.grayOpacity) => ({
+    ...Styles.borderColor(color, 1),
     borderRadius: 5,
-  },
+  }),
   warpperInput: {
     ...Styles.rowAlignCenter,
     paddingVertical: scale(10),
@@ -91,6 +102,10 @@ const styles = StyleSheet.create({
   lable: {
     color: colors.gray,
     marginBottom: spacing.tiny,
+  },
+  textError: {
+    paddingLeft: scale(15),
+    color: colors.red,
   },
 });
 export default TitleTextInputField;

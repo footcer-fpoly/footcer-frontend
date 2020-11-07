@@ -10,6 +10,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 import {Host} from 'react-native-portalize';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {connect} from 'react-redux';
+import * as Yup from 'yup';
 import {StatusCode} from '../../api/status-code';
 import {createTeamService} from '../../api/team.api';
 import {searchPhoneUserService} from '../../api/user.api';
@@ -23,8 +24,10 @@ import TitleTextInputField from '../../components/common/TitleTextInputField';
 import ItemTeamMember from '../../components/team/ItemTeamMember';
 import ModalAddMember from '../../components/team/ModalAddMember';
 import {ListLevel, ListProvince} from '../../helpers/data-local.helper';
+import {regexpPhoneVn} from '../../helpers/format.helper';
 import {scale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
+import {validatePhoneNumber} from '../../helpers/validate.helper';
 import rootNavigation from '../../navigations/root.navigator';
 import {getListTeam} from '../../redux/actions/auth.action';
 import {hideLoading, showLoading} from '../../redux/actions/loading.action';
@@ -38,6 +41,7 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
   const [member, setMember] = useState({
     phone: '',
     status: 0,
+    phoneError: null,
   });
   const [dataTeam, setDataTeam] = useState({
     background: null,
@@ -47,8 +51,10 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
     place: '',
     member: '',
     level: '',
+    errorYup: null,
   });
   const toggleModal = () => {
+    clearError();
     setVisibleModal(!visibleModal);
     setMember({...member, status: 0});
   };
@@ -69,6 +75,7 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
   };
 
   const showDialog = ({type, titleModal, listItems}) => {
+    clearError();
     if (modalizeRef.current) {
       modalizeRef.current.setDataAndOpenModal({
         type,
@@ -98,6 +105,7 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
     }
   };
   const onPressPickImage = type => async () => {
+    clearError();
     try {
       const image = await ImagePicker.openPicker({
         multiple: false,
@@ -109,26 +117,38 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
 
   const changeFormData = (key, value) => {
     setDataTeam({...dataTeam, [key]: value});
+    clearError();
   };
 
   const searchPhone = async () => {
     try {
-      const checkPhone = listMember.find(item => item.phone === member.phone);
-      if (!checkPhone) {
-        const res = await searchPhoneUserService(member.phone);
-        if (res && res.code === StatusCode.SUCCESS) {
-          setMember({
-            ...res.data,
-            status: 1,
-          });
+      const err = validatePhoneNumber(member.phone);
+      if (err) {
+        setMember({
+          ...member,
+          phoneError: err,
+        });
+      } else {
+        const checkPhone = listMember.find(item => item.phone === member.phone);
+        if (!checkPhone) {
+          const res = await searchPhoneUserService(member.phone);
+          if (res && res.code === StatusCode.SUCCESS) {
+            setMember({
+              ...res.data,
+              status: 1,
+            });
+          } else {
+            setMember({
+              ...member,
+              status: 2,
+            });
+          }
         } else {
           setMember({
             ...member,
-            status: 2,
+            phoneError: 'Số điện thoại đã có trong team',
           });
         }
-      } else {
-        alert('Đã có trong team');
       }
     } catch (error) {}
   };
@@ -143,6 +163,60 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
     setDataTeam({...dataTeam, member: strMember});
   };
 
+  const clearError = () => {
+    if (dataTeam.errorYup) {
+      setDataTeam({...dataTeam, errorYup: null});
+    }
+  };
+
+  const validationSchema = Yup.object().shape({
+    name: Yup.string().required('Họ và tên không được để trống'),
+    place: Yup.string().required('Vui lòng chọn khu vực thi đấu'),
+  });
+  const generatorMessageError = async data => {
+    try {
+      await validationSchema.validate(data, {abortEarly: false});
+    } catch (error) {
+      return error.inner.reduce((obj, item) => {
+        obj[item.path] = item.message;
+        return obj;
+      }, {});
+    }
+  };
+  const getValue = () => {
+    return {
+      name: dataTeam.name,
+      place: dataTeam.place,
+    };
+  };
+  const createTeam = async () => {
+    try {
+      clearError();
+      const value = getValue();
+      const errorValidate = await generatorMessageError(value);
+      if (!!errorValidate) {
+        setDataTeam({...dataTeam, errorYup: errorValidate});
+      } else {
+        showLoading();
+        const res = await createTeamService({
+          avatar: dataTeam.avatar,
+          background: dataTeam.background,
+          data: dataTeam,
+        });
+        console.log('createTeamService --> res: ', res);
+        if (res && res.code === StatusCode.SUCCESS) {
+          getListTeam();
+          rootNavigation.back();
+        } else {
+          alert('Tạo đội thất bại');
+        }
+      }
+      hideLoading();
+    } catch (error) {
+      console.log('createTeamService -->error: ', error);
+      hideLoading();
+    }
+  };
   const keyExtractor = (item, index) => index.toString();
   const renderItem = ({item, index}) => {
     return (
@@ -157,29 +231,6 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
       />
     );
   };
-
-  const createTeam = async () => {
-    try {
-      showLoading();
-      const res = await createTeamService({
-        avatar: dataTeam.avatar,
-        background: dataTeam.background,
-        data: dataTeam,
-      });
-      console.log('createTeamService --> res: ', res);
-      if (res && res.code === StatusCode.SUCCESS) {
-        getListTeam();
-        rootNavigation.back();
-      } else {
-        alert('Tạo đội thất bại');
-      }
-      hideLoading();
-    } catch (error) {
-      console.log('createTeamService -->error: ', error);
-      hideLoading();
-    }
-  };
-
   const renderCreateMember = () => {
     return (
       <View style={styles.warpperCreateMember}>
@@ -233,6 +284,7 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
               placeholder: 'Nhập tên đội bóng của bạn',
             }}
             sizeIcon={scale(22)}
+            textError={dataTeam.errorYup?.name}
           />
           <TitleTextInputField
             style={styles.inputField}
@@ -247,6 +299,7 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
             iconNameRigth="keyboard-arrow-down"
             sizeIcon={scale(22)}
             onPress={showProvince}
+            textError={dataTeam.errorYup?.place}
           />
           <TitleTextInputField
             style={styles.inputField}
@@ -289,13 +342,16 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
           dismiss={toggleModal}
           visible={visibleModal}
           status={member.status}
-          onChangeText={text => setMember({...member, phone: text})}
+          onChangeText={text => {
+            setMember({...member, phone: text, phoneError: null});
+          }}
           member={member}
           onPressSearchPhone={searchPhone}
           onPresSendInvitation={addMember}
           onPressInvitationToJoin={toggleModal}
           onPressChangePhone={() => setMember({...member, status: 0})}
           phone={member.phone}
+          phoneError={member.phoneError}
         />
       </ScrollView>
     </Host>

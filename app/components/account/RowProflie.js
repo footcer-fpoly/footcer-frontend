@@ -7,6 +7,7 @@ import colors from '../../theme/colors';
 import spacing from '../../theme/spacing';
 import IconMaterialOrSvg from '../common/IconMaterialOrSvg';
 import {body2, body3, Text} from '../common/Text';
+import * as Animatable from 'react-native-animatable';
 
 export default function RowProflie({
   iconType,
@@ -18,10 +19,12 @@ export default function RowProflie({
   onPress,
   stylesTxt,
   onChangeText,
+  textError,
+  textErrorStyle,
 }) {
   return (
     <>
-      <View style={styles.container}>
+      <View style={styles.container(textError && colors.red)}>
         <IconMaterialOrSvg
           type={iconType}
           name={iconName}
@@ -66,18 +69,25 @@ export default function RowProflie({
           />
         )}
       </View>
-      {/* <Text>Lỗi</Text> */}
+      {textError && (
+        <Animatable.Text
+          animation="fadeInLeft"
+          type={body3}
+          style={[styles.textError, textErrorStyle]}>
+          {textError}
+        </Animatable.Text>
+      )}
     </>
   );
 }
 const styles = StyleSheet.create({
-  container: {
+  container: (color = colors.placeHolder) => ({
     paddingVertical: spacing.tiny,
     borderBottomWidth: 0.2,
-    borderBottomColor: colors.placeHolder,
+    borderBottomColor: color,
     ...Styles.rowCenter,
     height: scale(40),
-  },
+  }),
   label: {
     marginLeft: spacing.large,
     marginRight: spacing.small,
@@ -99,4 +109,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   txtBtn: {textAlign: 'right', fontSize: scale(13)},
+  textError: {
+    paddingLeft: scale(15),
+    color: colors.red,
+  },
 });

@@ -3,6 +3,7 @@ import {ScrollView, StyleSheet, TextInput, View} from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {Host} from 'react-native-portalize';
 import {connect} from 'react-redux';
+import * as Yup from 'yup';
 import {StatusCode} from '../../api/status-code';
 import {updateInfoUserService} from '../../api/user.api';
 import {body2, Text} from '../../components/common/Text';
@@ -33,6 +34,7 @@ const TabProfile = ({profile, showLoading, hideLoading, updateInfoUser}) => {
     birthday: profile?.birthday,
     level: profile?.level,
     position: profile?.position,
+    errorYup: null,
   });
 
   const goback = () => {
@@ -62,6 +64,7 @@ const TabProfile = ({profile, showLoading, hideLoading, updateInfoUser}) => {
       });
     }
   };
+
   const onSelectItem = itemData => {
     console.log('itemData: ', itemData);
     let keyState = null;
@@ -93,25 +96,60 @@ const TabProfile = ({profile, showLoading, hideLoading, updateInfoUser}) => {
   const toogleDatePicker = () => {
     setVisibleDatePicker(!visibleDatePicker);
   };
+  const clearError = () => {
+    if (data.errorYup) {
+      setData({...data, errorYup: null});
+    }
+  };
+  const changeFormData = (key, value) => {
+    setData({...data, [key]: value});
+    clearError();
+  };
+  const validationSchema = Yup.object().shape({
+    displayName: Yup.string().required('Họ và tên không được để trống'),
+  });
+  const generatorMessageError = async data => {
+    try {
+      await validationSchema.validate(data, {abortEarly: false});
+    } catch (error) {
+      return error.inner.reduce((obj, item) => {
+        obj[item.path] = item.message;
+        return obj;
+      }, {});
+    }
+  };
+  const getValue = () => {
+    return {
+      displayName: data.displayName,
+    };
+  };
   const updateUser = async () => {
     try {
-      showLoading();
-      const res = await updateInfoUserService({
-        displayName: data.displayName,
-        position: data.position,
-        level: data.level,
-        birthday: data.birthday,
-        phone: data.phone,
-      });
-      if (!!res && res.code === StatusCode.SUCCESS) {
-        setEditable(false);
-        updateInfoUser(data);
-        alert('update user thành công');
+      clearError();
+      const value = getValue();
+      const errorValidate = await generatorMessageError(value);
+      if (!!errorValidate) {
+        setData({...data, errorYup: errorValidate});
       } else {
-        alert('update user thất bại');
+        showLoading();
+        const res = await updateInfoUserService({
+          displayName: data.displayName,
+          position: data.position,
+          level: data.level,
+          birthday: data.birthday,
+          phone: data.phone,
+        });
+        if (!!res && res.code === StatusCode.SUCCESS) {
+          setEditable(false);
+          updateInfoUser(data);
+          alert('update user thành công');
+        } else {
+          alert('update user thất bại');
+        }
       }
       hideLoading();
     } catch (error) {
+      hideLoading();
       console.log('updateUser -->err: ', error);
     }
   };
@@ -133,7 +171,8 @@ const TabProfile = ({profile, showLoading, hideLoading, updateInfoUser}) => {
               iconType={IconType.MaterialIcons}
               iconName="account-circle"
               editable={editable}
-              onChangeText={value => setData({...data, displayName: value})}
+              onChangeText={value => changeFormData('displayName', value)}
+              textError={data.errorYup?.displayName}
             />
             <RowProflie
               label="Số điện thoai"

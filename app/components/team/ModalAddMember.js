@@ -1,5 +1,6 @@
 import React from 'react';
-import {StyleSheet, TextInput, View, TouchableOpacity} from 'react-native';
+import {StyleSheet, TextInput, TouchableOpacity, View} from 'react-native';
+import * as Animatable from 'react-native-animatable';
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {scale} from '../../helpers/size.helper';
@@ -7,7 +8,7 @@ import Styles from '../../helpers/styles.helper';
 import colors from '../../theme/colors';
 import Avatar from '../common/Avatar';
 import PrimaryButton from '../common/PrimaryButton';
-import {body2, headline4, headline5, Text} from '../common/Text';
+import {body2, body3, headline4, headline5, Text} from '../common/Text';
 
 const ModalAddMember = ({
   visible,
@@ -20,16 +21,27 @@ const ModalAddMember = ({
   onPressInvitationToJoin,
   onPressChangePhone,
   phone,
+  phoneError,
+  errorStyle,
 }) => {
   const searchPhone = () => {
     return (
       <>
         <TextInput
-          style={styles.input}
+          style={styles.input(phoneError ? colors.red : colors.greenLight)}
           placeholder="Số điện thoại ..."
           onChangeText={onChangeText}
           keyboardType="numeric"
+          maxLength={10}
         />
+        {phoneError && (
+          <Animatable.Text
+            animation="fadeInLeft"
+            type={body3}
+            style={[styles.txtErr, errorStyle]}>
+            {phoneError}
+          </Animatable.Text>
+        )}
         <Text style={styles.subText}>
           Nhập số điện thoại của cầu thủ bạn muốn mời vào đội bóng
         </Text>
@@ -146,14 +158,14 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     fontWeight: 'normal',
   },
-  input: {
+  input: color => ({
     backgroundColor: colors.white,
     textAlign: 'center',
     borderBottomWidth: 2,
     width: '100%',
-    borderBottomColor: colors.greenLight,
+    borderBottomColor: color,
     fontSize: 18,
-  },
+  }),
   subText: {
     color: colors.placeHolder,
     textAlign: 'center',
@@ -168,5 +180,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     left: 0,
+  },
+  txtErr: {
+    paddingLeft: scale(15),
+    color: colors.red,
   },
 });

@@ -3,6 +3,7 @@ import {FlatList, ScrollView, StyleSheet, TextInput, View} from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
 import {Host} from 'react-native-portalize';
 import {connect} from 'react-redux';
+import * as Yup from 'yup';
 import {StatusCode} from '../../api/status-code';
 import {
   addMemberTeamService,
@@ -29,11 +30,11 @@ import ModalShowInfoMember from '../../components/team/ModalShowInfoMember';
 import {ListLevel, ListProvince} from '../../helpers/data-local.helper';
 import {scale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
+import {validatePhoneNumber} from '../../helpers/validate.helper';
 import rootNavigator from '../../navigations/root.navigator';
 import {getListTeam} from '../../redux/actions/auth.action';
 import {hideLoading, showLoading} from '../../redux/actions/loading.action';
 import colors from '../../theme/colors';
-import dimens from '../../theme/dimens';
 import spacing from '../../theme/spacing';
 
 const TeamDetailScreen = ({route, showLoading, hideLoading, getListTeam}) => {
@@ -48,6 +49,7 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, getListTeam}) => {
     level: teamDetail.level,
     member: teamDetail.member,
     name: teamDetail.name,
+    errorYup: null,
   });
   const [editable, setEditable] = useState(false);
   const [visibleModalDele, setVisibleModalDele] = useState(false);
@@ -55,6 +57,7 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, getListTeam}) => {
   const [member, setMember] = useState({
     phone: '',
     status: 0,
+    phoneError: null,
   });
   const [modalInfoMember, setModalInfoMember] = useState({
     visible: false,
@@ -87,24 +90,35 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, getListTeam}) => {
   };
   const searchPhone = async () => {
     try {
-      const checkPhone = data?.member.find(
-        item => item?.user?.phone === member.phone,
-      );
-      if (!checkPhone) {
-        const res = await searchPhoneUserService(member.phone);
-        if (res && res.code === StatusCode.SUCCESS) {
-          setMember({
-            ...res.data,
-            status: 1,
-          });
+      const err = validatePhoneNumber(member.phone);
+      if (err) {
+        setMember({
+          ...member,
+          phoneError: err,
+        });
+      } else {
+        const checkPhone = data?.member.find(
+          item => item?.user?.phone === member.phone,
+        );
+        if (!checkPhone) {
+          const res = await searchPhoneUserService(member.phone);
+          if (res && res.code === StatusCode.SUCCESS) {
+            setMember({
+              ...res.data,
+              status: 1,
+            });
+          } else {
+            setMember({
+              ...member,
+              status: 2,
+            });
+          }
         } else {
           setMember({
             ...member,
-            status: 2,
+            phoneError: 'Số điện thoại đã có trong team',
           });
         }
-      } else {
-        alert('Đã có trong team');
       }
     } catch (error) {
       console.log('searchPhoneUserService -->err: ', error);
@@ -223,6 +237,7 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, getListTeam}) => {
   };
   const changeFormData = (key, value) => {
     setData({...data, [key]: value});
+    clearError();
   };
   const cancelUpdate = () => {
     setEditable(false);
@@ -234,16 +249,47 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, getListTeam}) => {
       description: teamDetail?.description,
     });
   };
+  const clearError = () => {
+    if (data.errorYup) {
+      setData({...data, errorYup: null});
+    }
+  };
+
+  const validationSchema = Yup.object().shape({
+    name: Yup.string().required('Tên đội bóng không được để trống'),
+  });
+  const generatorMessageError = async data => {
+    try {
+      await validationSchema.validate(data, {abortEarly: false});
+    } catch (error) {
+      return error.inner.reduce((obj, item) => {
+        obj[item.path] = item.message;
+        return obj;
+      }, {});
+    }
+  };
+  const getValue = () => {
+    return {
+      name: data.name,
+    };
+  };
   const updateInfo = async () => {
     try {
-      showLoading();
-      const res = await updateInfoTeamService(data);
-      console.log('updateInfoTeamService -->res:', res);
-      if (res && res.code === StatusCode.SUCCESS) {
-        getListTeam();
-        rootNavigator.back();
+      clearError();
+      const value = getValue();
+      const errorValidate = await generatorMessageError(value);
+      if (!!errorValidate) {
+        setData({...data, errorYup: errorValidate});
       } else {
-        alert('thất bại');
+        showLoading();
+        const res = await updateInfoTeamService(data);
+        console.log('updateInfoTeamService -->res:', res);
+        if (res && res.code === StatusCode.SUCCESS) {
+          getListTeam();
+          rootNavigator.back();
+        } else {
+          alert('thất bại');
+        }
       }
       hideLoading();
     } catch (error) {
@@ -333,6 +379,7 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, getListTeam}) => {
               iconName="account-group"
               editable={editable}
               onChangeText={text => changeFormData('name', text)}
+              textError={data.errorYup?.name}
             />
             <RowProflie
               label="Đội trưởng"
@@ -423,6 +470,7 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, getListTeam}) => {
           onPressInvitationToJoin={toggleModalAddMember}
           onPressChangePhone={() => setMember({...member, status: 0})}
           phone={member.phone}
+          phoneError={member.phoneError}
         />
         <ModalShowInfoMember
           dismiss={hideModalInfoMember}
