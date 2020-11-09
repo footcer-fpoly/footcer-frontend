@@ -1,13 +1,11 @@
 import {removeToken, saveToken} from '../../helpers/storage.helper';
 import {
+  CHECK_LOGIN,
   LOGIN,
   LOGOUT,
   REGISTER,
-  CHECK_LOGIN,
-  UPDATE_INFO_USER,
   UPDATE_AVATAR_USER,
-  GET_LIST_TEAM,
-  GET_LIST_TEAM_SUCCESS,
+  UPDATE_INFO_USER,
 } from '../actions/types';
 
 const authState = {
@@ -65,12 +63,6 @@ export const authReducer = (state = authState, action) => {
           ...state.profile,
           avatar: action.avatar,
         },
-      };
-    case GET_LIST_TEAM_SUCCESS:
-      const newList = action.data.reverse();
-      return {
-        ...state,
-        listTeam: newList,
       };
     default:
       return state;

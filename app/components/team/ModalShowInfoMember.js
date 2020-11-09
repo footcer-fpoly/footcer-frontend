@@ -12,8 +12,7 @@ import {IconType} from '../common/IconMaterialOrSvg';
 import PrimaryButton from '../common/PrimaryButton';
 import {body1, body3, headline4, Text} from '../common/Text';
 
-const ModalShowInfoMember = ({visible, dismiss, data}) => {
-  console.log('data: ', data);
+const ModalShowInfoMember = ({visible, dismiss, data, isLeader}) => {
   return (
     <Modal
       onBackButtonPress={dismiss}
@@ -31,50 +30,69 @@ const ModalShowInfoMember = ({visible, dismiss, data}) => {
               size={scale(70)}
               borderWidth={2}
               borderColor={colors.black}
+              image={data?.user?.avatar}
             />
             <View style={styles.warpperName}>
-              <Text type={headline4}>Duong Quoc Hai</Text>
+              <Text type={headline4}>{data?.user?.displayName}</Text>
               <View style={[styles.flexRow, styles.mrTopTiny]}>
-                <Icon name={'phone'} size={22} />
+                <Icon name={'phone'} size={22} color={colors.gray} />
                 <Text type={body3} style={styles.txtPhone}>
-                  0903585173
+                  {data?.user?.phone}
                 </Text>
               </View>
             </View>
           </View>
           <RowProflie
             label="Trạng thái"
-            value={'Chờ xác nhận'}
+            value={data?.accept == 1 ? 'Thành viên' : 'Chờ xác nhận'}
             iconType={IconType.MaterialCommunityIcons}
             iconName="bell"
             editable={false}
+            stylesTxt={
+              data?.accept == 1
+                ? {color: colors.greenDark}
+                : {color: colors.orange}
+            }
           />
           <RowProflie
             label="Ngày sinh"
-            value={'Ngày sinh'}
+            value={
+              data?.user?.birthday
+                ? data?.user?.birthday
+                : 'Chưa cập nhật ngày sinh'
+            }
             iconType={IconType.MaterialCommunityIcons}
             iconName="calendar-month-outline"
             editable={false}
           />
           <RowProflie
             label="Ví trí"
-            value={'Chọn vị trí'}
+            value={
+              data?.user?.position
+                ? data?.user?.position
+                : 'Chưa cập nhật vị trí'
+            }
             iconType={IconType.MaterialCommunityIcons}
             iconName="checkerboard"
             editable={false}
           />
           <RowProflie
             label="Trình độ"
-            value={'Chọn trình độ của bạn'}
+            value={
+              data?.user?.level ? data?.user?.level : 'Chưa cập nhật trình độ'
+            }
             iconType={IconType.MaterialCommunityIcons}
             iconName="chess-queen"
             editable={false}
           />
-          <PrimaryButton
-            style={styles.btn}
-            title="Loại khỏi đội"
-            textStyle={styles.txtBtn}
-          />
+          {data?.role != 1 ||
+            (isLeader && (
+              <PrimaryButton
+                style={styles.btn}
+                title="Loại khỏi đội"
+                textStyle={styles.txtBtn}
+              />
+            ))}
         </View>
       </View>
     </Modal>

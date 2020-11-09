@@ -17,6 +17,7 @@ import {searchPhoneUserService} from '../../api/user.api';
 import Avatar from '../../components/common/Avatar';
 import BackgroudImage from '../../components/common/BackgroudImage';
 import BackIcon from '../../components/common/BackIcon';
+import ConfirmDialog from '../../components/common/dialog/ConfirmDialog';
 import {IconType} from '../../components/common/IconMaterialOrSvg';
 import ModalPicker from '../../components/common/ModalPicker';
 import PrimaryButton from '../../components/common/PrimaryButton';
@@ -24,14 +25,13 @@ import TitleTextInputField from '../../components/common/TitleTextInputField';
 import ItemTeamMember from '../../components/team/ItemTeamMember';
 import ModalAddMember from '../../components/team/ModalAddMember';
 import {ListLevel, ListProvince} from '../../helpers/data-local.helper';
-import {regexpPhoneVn} from '../../helpers/format.helper';
 import {scale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
 import {ToastHelper} from '../../helpers/ToastHelper';
 import {validatePhoneNumber} from '../../helpers/validate.helper';
 import rootNavigation from '../../navigations/root.navigator';
-import {getListTeam} from '../../redux/actions/auth.action';
 import {hideLoading, showLoading} from '../../redux/actions/loading.action';
+import {getListTeam} from '../../redux/actions/teams.action';
 import colors from '../../theme/colors';
 import spacing from '../../theme/spacing';
 
@@ -43,6 +43,7 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
     phone: '',
     status: 0,
     phoneError: null,
+    onReady: true,
   });
   const [dataTeam, setDataTeam] = useState({
     background: null,
@@ -54,6 +55,23 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
     level: '',
     errorYup: null,
   });
+  const [modalDeleteMember, setModalDeleteMember] = useState({
+    visible: false,
+    member: {},
+  });
+  const showModalDeleteMember = member => () => {
+    clearError();
+    setModalDeleteMember({
+      visible: true,
+      member: member,
+    });
+  };
+  const hideModalDeleteMember = () => {
+    setModalDeleteMember({
+      visible: false,
+      member: {},
+    });
+  };
   const toggleModal = () => {
     clearError();
     setVisibleModal(!visibleModal);
@@ -132,16 +150,22 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
       } else {
         const checkPhone = listMember.find(item => item.phone === member.phone);
         if (!checkPhone) {
+          setMember({
+            ...member,
+            onReady: false,
+          });
           const res = await searchPhoneUserService(member.phone);
           if (res && res.code === StatusCode.SUCCESS) {
             setMember({
               ...res.data,
               status: 1,
+              onReady: true,
             });
           } else {
             setMember({
               ...member,
               status: 2,
+              onReady: true,
             });
           }
         } else {
@@ -199,15 +223,22 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
         setDataTeam({...dataTeam, errorYup: errorValidate});
       } else {
         showLoading();
+        let str = '';
+        listMember.slice(1).map(item => {
+          return (str += item.userId + ',');
+        });
+        const members = str.slice(0, str.lastIndexOf(','));
         const res = await createTeamService({
           avatar: dataTeam.avatar,
           background: dataTeam.background,
+          members: members,
           data: dataTeam,
         });
         console.log('createTeamService --> res: ', res);
         if (res && res.code === StatusCode.SUCCESS) {
           getListTeam();
           rootNavigation.back();
+          ToastHelper.showToast('Tạo đội bóng thành công');
         } else {
           alert('Tạo đội thất bại');
         }
@@ -218,6 +249,12 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
       hideLoading();
     }
   };
+  const removeMember = id => () => {
+    const newList = listMember.filter(item => item.userId !== id);
+    setListMember(newList);
+    hideModalDeleteMember();
+  };
+
   const keyExtractor = (item, index) => index.toString();
   const renderItem = ({item, index}) => {
     return (
@@ -225,7 +262,7 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
         image={item?.avatar}
         size={70}
         name={item?.displayName}
-        onPress={index ? onSelectItem : undefined}
+        onPress={index ? showModalDeleteMember(item) : false}
         status={index ? false : true}
         position={!index ? 'Đội trưởng' : null}
         disabledImage={true}
@@ -350,9 +387,23 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
           onPressSearchPhone={searchPhone}
           onPresSendInvitation={addMember}
           onPressInvitationToJoin={toggleModal}
-          onPressChangePhone={() => setMember({...member, status: 0})}
+          onPressChangePhone={() =>
+            setMember({...member, phoneError: null, status: 0})
+          }
           phone={member.phone}
           phoneError={member.phoneError}
+          onReady={member?.onReady}
+        />
+        <ConfirmDialog
+          visible={modalDeleteMember.visible}
+          confirmText="Xác nhận"
+          cancelText="Hủy"
+          colorsCancel={colors.grayDark}
+          colorsConfirm={colors.red}
+          title="Bạn muốn xóa:"
+          subTitle={modalDeleteMember.member?.displayName}
+          onCancelClick={hideModalDeleteMember}
+          onConfirmClick={removeMember(modalDeleteMember.member?.userId)}
         />
       </ScrollView>
     </Host>

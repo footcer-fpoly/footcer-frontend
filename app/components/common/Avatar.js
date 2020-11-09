@@ -14,7 +14,6 @@ export default function Avatar({
   borderWidth,
   borderColor,
   style,
-  iconEdit,
   disabledImage,
 }) {
   const uri = image?.imageType === 'local' ? image.path : image;
@@ -41,7 +40,7 @@ export default function Avatar({
           ]}
         />
       </TouchableOpacity>
-      {iconEdit && (
+      {onPress && (
         <TouchableOpacity
           hitSlop={styles.hitSlop}
           onPress={onPress}

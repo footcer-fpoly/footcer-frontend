@@ -16,16 +16,23 @@ import * as Animatable from 'react-native-animatable';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
 import {connect} from 'react-redux';
-import {signInPhoneService} from '../../api/auth.api';
+import {signUpPhoneService} from '../../api/auth.api';
 import {backgroundImage, userImage} from '../../assets/Images';
 import Loading from '../../components/common/loadings/Loading';
 import {confirmPassword, validatePassword} from '../../helpers/validate.helper';
+import {register} from '../../redux/actions/auth.action';
 import {hideLoading, showLoading} from '../../redux/actions/loading.action';
 import styles from '../../theme/StylesAuth';
 import AlertError from '../../utils/alerts/AlertError';
 import AlertSuccessful from '../../utils/alerts/AlertSuccessful';
 
-const SignUpPhoneScreen = ({navigation, route, showLoading, hideLoading}) => {
+const SignUpPhoneScreen = ({
+  navigation,
+  route,
+  showLoading,
+  hideLoading,
+  register,
+}) => {
   const [data, setData] = useState({
     phone: route.params.phone,
     name: '',
@@ -113,12 +120,12 @@ const SignUpPhoneScreen = ({navigation, route, showLoading, hideLoading}) => {
     try {
       if (checkValidName() && checkValidPass() && checkValidRePass()) {
         showLoading();
-        const res = await signInPhoneService(data);
+        const res = await signUpPhoneService(data);
         if (res.code === 200) {
           hideLoading();
           setAlertSuccess({visible: true, text: 'Đăng kí thành công'});
           setTimeout(() => {
-            // signUp(res.data);
+            register(res.data);
           }, 2000);
         } else {
           hideLoading();
@@ -269,6 +276,7 @@ const SignUpPhoneScreen = ({navigation, route, showLoading, hideLoading}) => {
 const mapDispatchToProps = {
   showLoading,
   hideLoading,
+  register,
 };
 
 export default connect(

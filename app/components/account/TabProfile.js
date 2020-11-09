@@ -67,7 +67,6 @@ const TabProfile = ({profile, showLoading, hideLoading, updateInfoUser}) => {
   };
 
   const onSelectItem = itemData => {
-    console.log('itemData: ', itemData);
     let keyState = null;
     switch (itemData.type) {
       case 'level':

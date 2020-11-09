@@ -1,5 +1,11 @@
 import React from 'react';
-import {StyleSheet, TextInput, TouchableOpacity, View} from 'react-native';
+import {
+  ActivityIndicator,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -23,17 +29,22 @@ const ModalAddMember = ({
   phone,
   phoneError,
   errorStyle,
+  onReady,
 }) => {
   const searchPhone = () => {
     return (
       <>
-        <TextInput
-          style={styles.input(phoneError ? colors.red : colors.greenLight)}
-          placeholder="Số điện thoại ..."
-          onChangeText={onChangeText}
-          keyboardType="numeric"
-          maxLength={10}
-        />
+        {!onReady ? (
+          <ActivityIndicator size="large" color={colors.main} />
+        ) : (
+          <TextInput
+            style={styles.input(phoneError ? colors.red : colors.greenLight)}
+            placeholder="Số điện thoại ..."
+            onChangeText={onChangeText}
+            keyboardType="numeric"
+            maxLength={10}
+          />
+        )}
         {phoneError && (
           <Animatable.Text
             animation="fadeInLeft"

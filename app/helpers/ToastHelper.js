@@ -32,7 +32,7 @@ export class ToastHelper {
 
 const styles = StyleSheet.create({
   toast: {
-    backgroundColor: colors.green + 'B3',
+    backgroundColor: colors.green,
   },
   toastText: {color: colors.white},
 });

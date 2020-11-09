@@ -1,5 +1,6 @@
 import React, {useEffect} from 'react';
 import {FlatList, ScrollView, StyleSheet, View} from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {connect} from 'react-redux';
 import AccountBlock from '../../components/account/AccountBlock';
 import CardMyTeam from '../../components/account/CardMyTeam';
@@ -11,14 +12,14 @@ import ToolBar from '../../components/common/Toolbar';
 import {scale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
 import {ToastHelper} from '../../helpers/ToastHelper';
-// import Avatar from '../../components/account/avatar';
 import rootNavigation from '../../navigations/root.navigator';
 import {
   CREATE_TEAM_SCREEN,
   DETAIL_PROFILE_SCREEN,
   TEST_SCREEN,
 } from '../../navigations/route-name';
-import {getListTeam, logout} from '../../redux/actions/auth.action';
+import {logout} from '../../redux/actions/auth.action';
+import {getListTeam} from '../../redux/actions/teams.action';
 import colors from '../../theme/colors';
 import spacing from '../../theme/spacing';
 
@@ -107,9 +108,21 @@ const AccountScreen = ({profile, listTeam, logout, getListTeam}) => {
           </View>
         </View>
         <View style={styles.section}>
-          <Text type={headline5} style={styles.txtMyTeam}>
-            Đội bóng của bạn
-          </Text>
+          <View style={styles.warpperTeam}>
+            <Text type={headline5} style={styles.txtMyTeam}>
+              Danh sách đội bóng của bạn
+            </Text>
+            <View style={styles.warpperTeam}>
+              <Text type={headline5} style={styles.txtCountTeam}>
+                {listTeam?.length}
+              </Text>
+              <Icon
+                size={scale(20)}
+                color={colors.green}
+                name="account-group"
+              />
+            </View>
+          </View>
           <FlatList
             data={listTeam}
             showsHorizontalScrollIndicator={false}
@@ -119,7 +132,7 @@ const AccountScreen = ({profile, listTeam, logout, getListTeam}) => {
             renderItem={renderItem}
             ListEmptyComponent={
               <ListLoadingComponent
-                onReady={listTeam != null}
+                onReady={listTeam !== null}
                 numberOfPlaceholder={1}
                 text={
                   'Bạn chưa tham gia đội bóng nào click vào tạo đội bóng để tạo đội ngay!'
@@ -167,6 +180,13 @@ const styles = StyleSheet.create({
     color: colors.blueDark,
     marginBottom: spacing.medium,
   },
+  warpperTeam: {
+    ...Styles.rowBetween,
+  },
+  txtCountTeam: {
+    color: colors.green,
+    marginRight: spacing.tiny,
+  },
 });
 const mapDispatchToProps = {
   logout,
@@ -175,7 +195,7 @@ const mapDispatchToProps = {
 function mapStateToProps(state) {
   return {
     profile: state.authState.profile,
-    listTeam: state.authState.listTeam,
+    listTeam: state.teamsState.listTeam,
   };
 }
 

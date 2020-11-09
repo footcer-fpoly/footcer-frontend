@@ -34,8 +34,8 @@ const SignInScreen = ({navigation, showLoading, hideLoading, login}) => {
   const [data, setData] = useState({
     // phone: '',
     // password: '',
-    phone: '0903585177',
-    password: '123456',
+    phone: '',
+    password: '',
   });
   const [validError, setValidError] = useState({
     visible: false,

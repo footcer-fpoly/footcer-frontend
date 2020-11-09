@@ -65,6 +65,7 @@ export default function RowProflie({
             style={[
               styles.input,
               editable ? {color: colors.black} : {color: colors.grayDark},
+              stylesTxt,
             ]}
           />
         )}

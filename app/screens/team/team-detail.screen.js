@@ -30,15 +30,28 @@ import ModalShowInfoMember from '../../components/team/ModalShowInfoMember';
 import {ListLevel, ListProvince} from '../../helpers/data-local.helper';
 import {scale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
+import {ToastHelper} from '../../helpers/ToastHelper';
 import {validatePhoneNumber} from '../../helpers/validate.helper';
 import rootNavigator from '../../navigations/root.navigator';
-import {getListTeam} from '../../redux/actions/auth.action';
+import {getListTeam} from '../../redux/actions/teams.action';
 import {hideLoading, showLoading} from '../../redux/actions/loading.action';
 import colors from '../../theme/colors';
 import spacing from '../../theme/spacing';
 
-const TeamDetailScreen = ({route, showLoading, hideLoading, getListTeam}) => {
+const TeamDetailScreen = ({
+  route,
+  showLoading,
+  hideLoading,
+  getListTeam,
+  profile,
+}) => {
   const {teamDetail} = route.params;
+  const listMember = [...teamDetail?.member];
+  const leader = listMember.shift();
+  const isLeader = leader?.user.userId === profile.userId;
+  console.log('isLeader: ', isLeader);
+  console.log('profile: ', profile);
+  console.log('teamDetail: ', teamDetail);
   const modalizeRef = useRef();
   const [data, setData] = useState({
     teamId: teamDetail.teamId,
@@ -58,6 +71,7 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, getListTeam}) => {
     phone: '',
     status: 0,
     phoneError: null,
+    onReady: true,
   });
   const [modalInfoMember, setModalInfoMember] = useState({
     visible: false,
@@ -101,22 +115,30 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, getListTeam}) => {
           item => item?.user?.phone === member.phone,
         );
         if (!checkPhone) {
+          setMember({
+            ...member,
+            phoneError: null,
+            onReady: false,
+          });
           const res = await searchPhoneUserService(member.phone);
           if (res && res.code === StatusCode.SUCCESS) {
             setMember({
               ...res.data,
               status: 1,
+              onReady: true,
             });
           } else {
             setMember({
               ...member,
               status: 2,
+              onReady: true,
             });
           }
         } else {
           setMember({
             ...member,
             phoneError: 'Số điện thoại đã có trong team',
+            onReady: true,
           });
         }
       }
@@ -141,7 +163,7 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, getListTeam}) => {
         });
         setMember({...member, status: 0});
         getListTeam();
-        alert('Gữi lời mời thành công');
+        ToastHelper.showToast('Gữi lời mời thành công');
       }
     } catch (error) {}
   };
@@ -170,7 +192,6 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, getListTeam}) => {
     }
   };
   const onSelectItem = itemData => {
-    console.log('itemData: ', itemData);
     let keyState = null;
     switch (itemData.type) {
       case 'level':
@@ -287,8 +308,9 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, getListTeam}) => {
         if (res && res.code === StatusCode.SUCCESS) {
           getListTeam();
           rootNavigator.back();
+          ToastHelper.showToast('Cập nhật thông tin đội bóng thành công');
         } else {
-          alert('thất bại');
+          alert('Cập nhât đội bống thất bại');
         }
       }
       hideLoading();
@@ -307,6 +329,7 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, getListTeam}) => {
       if (res && res.code === StatusCode.SUCCESS) {
         getListTeam();
         rootNavigator.back();
+        ToastHelper.showToast('Xóa đội bóng thành công');
       } else {
         alert('Xóa đội thất bại');
       }
@@ -325,7 +348,9 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, getListTeam}) => {
         size={scale(80)}
         name={item?.user?.displayName || item?.displayName}
         status={item?.accept}
-        position={item?.user?.position || item?.position}
+        position={
+          !index ? 'Đội trưởng' : item?.user?.position || item?.position
+        }
         onPressImage={showModalInfoMember(item)}
       />
     );
@@ -337,14 +362,13 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, getListTeam}) => {
         <BackgroudImage
           height={scale(220)}
           image={data?.background}
-          onPress={onPressPickImage('background')}
+          onPress={isLeader ? onPressPickImage('background') : false}
           children={
             <>
               <Avatar
                 image={data?.avatar}
                 size={90}
-                iconEdit={true}
-                onPress={onPressPickImage('avatar')}
+                onPress={isLeader ? onPressPickImage('avatar') : false}
               />
               <Text type={headline4} style={styles.txtName}>
                 {data?.name}
@@ -356,11 +380,13 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, getListTeam}) => {
           <View style={styles.section}>
             <View style={styles.rowBetween}>
               <Text type={headline5}>Thành viên</Text>
-              <SecondaryButton
-                title="Thêm thành viên"
-                style={{width: scale(160)}}
-                onPress={toggleModalAddMember}
-              />
+              {isLeader && (
+                <SecondaryButton
+                  title="Thêm thành viên"
+                  style={{width: scale(160)}}
+                  onPress={toggleModalAddMember}
+                />
+              )}
             </View>
             <FlatList
               data={data?.member}
@@ -415,35 +441,37 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, getListTeam}) => {
               onChangeText={text => changeFormData('description', text)}
             />
           </View>
-          <View style={styles.section}>
-            {editable ? (
-              <View style={styles.warpperButtonEdit}>
-                <PrimaryButton
-                  style={[styles.flex49, {backgroundColor: colors.grayDark}]}
-                  title="hủy"
-                  onPress={cancelUpdate}
-                />
-                <PrimaryButton
-                  onPress={updateInfo}
-                  style={[styles.flex49, {backgroundColor: colors.green}]}
-                  title="lưu"
-                />
-              </View>
-            ) : (
-              <View style={styles.warpperButtonEdit}>
-                <PrimaryButton
-                  style={[styles.flex49, {backgroundColor: colors.red}]}
-                  title="Xóa đội"
-                  onPress={toggleModalDelete}
-                />
-                <PrimaryButton
-                  onPress={toogleEditable}
-                  style={[styles.flex49, {backgroundColor: colors.greenDark}]}
-                  title="chỉnh sửa"
-                />
-              </View>
-            )}
-          </View>
+          {isLeader && (
+            <View style={styles.section}>
+              {editable ? (
+                <View style={styles.warpperButtonEdit}>
+                  <PrimaryButton
+                    style={[styles.flex49, {backgroundColor: colors.grayDark}]}
+                    title="hủy"
+                    onPress={cancelUpdate}
+                  />
+                  <PrimaryButton
+                    onPress={updateInfo}
+                    style={[styles.flex49, {backgroundColor: colors.green}]}
+                    title="lưu"
+                  />
+                </View>
+              ) : (
+                <View style={styles.warpperButtonEdit}>
+                  <PrimaryButton
+                    style={[styles.flex49, {backgroundColor: colors.red}]}
+                    title="Xóa đội"
+                    onPress={toggleModalDelete}
+                  />
+                  <PrimaryButton
+                    onPress={toogleEditable}
+                    style={[styles.flex49, {backgroundColor: colors.greenDark}]}
+                    title="chỉnh sửa"
+                  />
+                </View>
+              )}
+            </View>
+          )}
         </View>
         <ModalPicker ref={modalizeRef} onSelectItem={onSelectItem} />
         <ConfirmDialog
@@ -468,14 +496,18 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, getListTeam}) => {
           onPressSearchPhone={searchPhone}
           onPresSendInvitation={addMember}
           onPressInvitationToJoin={toggleModalAddMember}
-          onPressChangePhone={() => setMember({...member, status: 0})}
+          onPressChangePhone={() =>
+            setMember({...member, phoneError: null, status: 0})
+          }
           phone={member.phone}
           phoneError={member.phoneError}
+          onReady={member.onReady}
         />
         <ModalShowInfoMember
           dismiss={hideModalInfoMember}
           visible={modalInfoMember.visible}
           data={modalInfoMember.data}
+          isLeader={isLeader}
         />
       </ScrollView>
     </Host>
@@ -510,8 +542,12 @@ const styles = StyleSheet.create({
 });
 
 const mapDispatchToProps = {showLoading, hideLoading, getListTeam};
-
+function mapStateToProps(state) {
+  return {
+    profile: state.authState.profile,
+  };
+}
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps,
 )(TeamDetailScreen);

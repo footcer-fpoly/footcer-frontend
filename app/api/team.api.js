@@ -8,7 +8,7 @@ import {
   UPDATE_TEAM,
 } from './api-url';
 
-export const createTeamService = ({avatar, background, data}) => {
+export const createTeamService = ({avatar, background, members, data}) => {
   const formData = new FormData();
   const imageAvatar = avatar ? convertImageToFormData(avatar, true) : null;
   const imageBackground = background
@@ -19,7 +19,9 @@ export const createTeamService = ({avatar, background, data}) => {
   formData.append('name', data?.name);
   formData.append('place', data?.place);
   formData.append('description', data?.description);
-  formData.append('member', data?.member);
+  {
+    members.trim().length && formData.append('memberList', members);
+  }
   formData.append('level', data?.level);
   formData.append('folder', 'team');
   return RequestHelper.post(CREATE_TEAM, formData);

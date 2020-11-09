@@ -30,7 +30,7 @@ export default function ItemTeamMember({
           onPressImage={onPressImage}
         />
         {onPress && (
-          <TouchableOpacity style={styles.iconRemoveMem}>
+          <TouchableOpacity onPress={onPress} style={styles.iconRemoveMem}>
             <Icon name="close-circle" size={20} color={colors.gray} />
           </TouchableOpacity>
         )}
@@ -41,8 +41,8 @@ export default function ItemTeamMember({
       <Text
         type={body3}
         numberOfLines={1}
-        style={styles.txtStatus(!status ? colors.orange : colors.black)}>
-        {status ? position : 'Chờ xác nhận'}
+        style={styles.txtStatus(status == 1 ? colors.black : colors.orange)}>
+        {status == 1 ? position : 'Chờ xác nhận'}
       </Text>
     </View>
   );

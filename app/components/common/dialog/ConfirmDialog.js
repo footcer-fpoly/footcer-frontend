@@ -29,12 +29,14 @@ export default function ConfirmDialog({
       useNativeDriver={true}
       isVisible={visible}>
       <View style={styles.container}>
-        <IconMaterialOrSvg
-          type={IconType.Svg}
-          size={sizeImage}
-          SVGIcon={imageSVG}
-          style={styles.redColor}
-        />
+        {imageSVG && (
+          <IconMaterialOrSvg
+            type={IconType.Svg}
+            size={sizeImage}
+            SVGIcon={imageSVG}
+            style={styles.redColor}
+          />
+        )}
         <Text type={headline3}>{title}</Text>
         {subTitle && (
           <Text type={body2} style={styles.subTitle}>

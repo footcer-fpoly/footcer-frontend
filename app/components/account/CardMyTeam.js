@@ -1,32 +1,22 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
+  Image,
+  ImageBackground,
   StyleSheet,
   TouchableHighlight,
   View,
-  ImageBackground,
-  FlatList,
-  Image,
 } from 'react-native';
-import {yardImage} from '../../assets/Images';
-import {scale} from '../../helpers/size.helper';
-import colors from '../../theme/colors';
-import spacing from '../../theme/spacing';
-import IconMaterialOrSvg from '../common/IconMaterialOrSvg';
-import {
-  body2,
-  body3,
-  headline3,
-  headline4,
-  headline5,
-  Text,
-} from '../common/Text';
 import LinearGradient from 'react-native-linear-gradient';
+import {scale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
 import rootNavigation from '../../navigations/root.navigator';
 import {TEAM_DETAIL_SCREEN} from '../../navigations/route-name';
+import colors from '../../theme/colors';
+import spacing from '../../theme/spacing';
+import {headline3, headline5, Text} from '../common/Text';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 export default function CardMyTeam({item}) {
-  console.log('item: ', item);
   const navigateToScreen = (routeName, params) => () => {
     rootNavigation.navigate(routeName, params);
   };
@@ -68,9 +58,13 @@ export default function CardMyTeam({item}) {
           />
           <View style={styles.warpperListMem}>
             <Text type={headline5} style={styles.txtMem}>
-              Thành viên
+              {item?.member?.length === 1 ? 'Thêm thành viên' : 'Thành viên'}
             </Text>
-            {renderMember()}
+            {item?.member?.length === 1 ? (
+              <Icon name="add-circle" size={50} color={colors.greenLight} />
+            ) : (
+              renderMember()
+            )}
           </View>
         </LinearGradient>
       </ImageBackground>
