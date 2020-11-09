@@ -1,5 +1,4 @@
 import firebase from '@react-native-firebase/app';
-import {Text} from '@ui-kitten/components';
 import React, {useEffect, useRef, useState} from 'react';
 import {
   Image,
@@ -18,23 +17,23 @@ import auth from '@react-native-firebase/auth'; //don't remove
 import {connect} from 'react-redux';
 import {signUpFbGgService} from '../../api/auth.api';
 import {backgroundImage, iPhoneImage} from '../../assets/Images';
-import Loading from '../../components/common/loadings/Loading';
 import {hideLoading, showLoading} from '../../redux/actions/loading.action';
 import styles from '../../theme/StylesAuth';
 import AlertError from '../../utils/alerts/AlertError';
 import AlertSuccessful from '../../utils/alerts/AlertSuccessful';
 import {login, register} from '../../redux/actions/auth.action';
 import StatusCode from '../../api/status-code';
-import {SIGN_UP_PHONE} from '../../api/api-url';
 import {SIGN_UP_SCREEN, UPDATE_PASS_SCREEN} from '../../navigations/route-name';
-const OTPScreen = ({
-  route,
-  navigation,
-  showLoading,
-  hideLoading,
-  login,
-  register,
-}) => {
+import {
+  body1,
+  body2,
+  headline2,
+  headline3,
+  headline4,
+  Text,
+} from '../../components/common/Text';
+import colors from '../../theme/colors';
+const OTPScreen = ({route, navigation, showLoading, hideLoading, register}) => {
   var countDownTime;
   const {phone, data, flag} = route.params;
   const [pin1, setPin1] = useState('');
@@ -75,25 +74,27 @@ const OTPScreen = ({
   };
   const sendOTP = (phone, timer) => {
     const phone84 = '+84' + phone;
-    console.log('phone: ', phone);
     try {
+      showLoading();
       firebase
         .auth()
         .signInWithPhoneNumber(phone84)
         .then(confirmResult => {
           setConfirmResult(confirmResult);
-          console.log('OTP Sending...');
           countDownTime = setInterval(() => {
             setTimer(--timer);
             if (timer === 0) {
               clearInterval(countDownTime);
             }
           }, 1000);
+          hideLoading();
         })
         .catch(error => {
+          hideLoading();
           console.log(error);
         });
     } catch (err) {
+      hideLoading();
       console.log(err);
     }
   };
@@ -188,13 +189,11 @@ const OTPScreen = ({
                 source={iPhoneImage}
                 style={{width: 100, height: 120, marginBottom: 10}}
               />
-              <Text
-                category="h4"
-                style={{color: 'white', fontWeight: 'bold', marginBottom: 20}}>
+              <Text type={headline2} style={{color: 'white', marginBottom: 20}}>
                 Xác thực OTP
               </Text>
-              <Text category="h6" style={{color: 'white', textAlign: 'center'}}>
-                Một mã xác thực đã được gữi đến {'\n'} {phone}
+              <Text type={body1} style={{color: 'white', textAlign: 'center'}}>
+                Một mã xác thực đã được gữi đến số {'\n'} {phone}
               </Text>
             </View>
             <View style={styles.footer}>
@@ -202,7 +201,7 @@ const OTPScreen = ({
                 <TextInput
                   ref={pin1ref}
                   keyboardType="numeric"
-                  maxLength={2}
+                  maxLength={1}
                   onChangeText={val =>
                     focusInput(setPin1(val), pin1, pin2ref, null)
                   }
@@ -272,10 +271,9 @@ const OTPScreen = ({
                     onPress={() => sendOTP(phone, 60)}
                     style={{justifyContent: 'center'}}>
                     <Text
+                      type={headline3}
                       style={{
-                        fontWeight: 'bold',
-                        fontSize: 18,
-                        color: '#2c3e50',
+                        color: colors.gray,
                       }}>
                       Gữi lại mã xác thực
                     </Text>
@@ -286,11 +284,10 @@ const OTPScreen = ({
                 onPress={() => handleVerifyCode(confirmResult)}
                 style={styles.button}>
                 <Text
-                  category="h6"
+                  type={headline4}
                   style={{
                     flex: 1,
                     color: '#fff',
-                    fontWeight: 'bold',
                     textAlign: 'center',
                   }}>
                   Tiếp theo

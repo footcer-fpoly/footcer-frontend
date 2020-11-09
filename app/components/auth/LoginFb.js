@@ -1,6 +1,5 @@
-import {Spinner} from '@ui-kitten/components';
 import React, {useState} from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {ActivityIndicator, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {Button} from 'react-native-elements';
 import {
   AccessToken,
@@ -95,7 +94,7 @@ const LoginFb = ({navigation, login, showLoading, hideLoading}) => {
           !loading ? (
             <FontAwesome name="facebook" size={30} color="white" />
           ) : (
-            <Spinner status="basic" size="large" />
+            <ActivityIndicator color="white" size="large" />
           )
         }
         iconLeft
@@ -103,7 +102,7 @@ const LoginFb = ({navigation, login, showLoading, hideLoading}) => {
         titleStyle={{marginLeft: 15}}
         buttonStyle={styles.button}
         TouchableComponent={TouchableOpacity}
-        onPress={() => loginFb()}
+        onPress={loginFb}
       />
     </View>
   );

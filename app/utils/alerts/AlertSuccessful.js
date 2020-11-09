@@ -1,38 +1,35 @@
-//src/Utils/UI/Alert/Alert.js
-import React, {useEffect} from 'react';
-import {StyleSheet, View, ActivityIndicator, Text} from 'react-native';
-import {Button, Card, Modal} from '@ui-kitten/components';
+import React from 'react';
+import {StyleSheet, Text, View} from 'react-native';
+import Modal from 'react-native-modal';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import * as Animatable from 'react-native-animatable';
-export default ({visible, text}) => {
+import {scale} from '../../helpers/size.helper';
+import Styles from '../../helpers/styles.helper';
+import colors from '../../theme/colors';
+
+export default function AlertSuccessful({visible, text}) {
   return (
-    <View View style={styles.container}>
-      <Modal visible={visible} backdropStyle={styles.backdrop}>
-        <Card disabled={true} style={styles.container}>
-          <View style={styles.content}>
-            <Animatable.View animation="zoomIn">
-              <AntDesign name="checkcircle" color={'#00C27F'} size={50} />
-            </Animatable.View>
-            <Text style={styles.text}>{text}</Text>
-          </View>
-        </Card>
-      </Modal>
-    </View>
+    <Modal
+      statusBarTranslucent={true}
+      useNativeDriver={true}
+      isVisible={visible}>
+      <View style={styles.container}>
+        <AntDesign name="checkcircle" color={colors.main} size={scale(40)} />
+        <Text style={styles.text}>{text}</Text>
+      </View>
+    </Modal>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
-    padding: 10,
-    maxWidth: 300,
-    borderRadius: 10,
+    ...Styles.columnCenter,
+    backgroundColor: colors.white,
+    borderRadius: scale(5),
+    paddingHorizontal: scale(20),
+    paddingVertical: scale(30),
+    marginHorizontal: scale(30),
   },
-  backdrop: {
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  content: {
-    alignItems: 'center',
-  },
+
   text: {
     marginTop: 20,
     color: '#05375a',

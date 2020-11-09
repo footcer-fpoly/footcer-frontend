@@ -1,15 +1,14 @@
 import {GoogleSignin, statusCodes} from '@react-native-community/google-signin';
-import {Spinner} from '@ui-kitten/components';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, TouchableOpacity} from 'react-native';
+import {ActivityIndicator, StyleSheet, TouchableOpacity} from 'react-native';
 import {Button} from 'react-native-elements';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {connect} from 'react-redux';
 import {checkUUIDService} from '../../api/auth.api';
 import {AppConfig} from '../../configs/app.config';
 import {SIGN_UP_FB_GG_SCREEN} from '../../navigations/route-name';
-import {showLoading, hideLoading} from '../../redux/actions/loading.action';
 import {login} from '../../redux/actions/auth.action';
+import {hideLoading, showLoading} from '../../redux/actions/loading.action';
 
 const LoginGg = ({navigation, login, showLoading, hideLoading}) => {
   const [loading, setLoading] = useState(false);
@@ -70,7 +69,7 @@ const LoginGg = ({navigation, login, showLoading, hideLoading}) => {
         !loading ? (
           <AntDesign name="google" size={30} color="white" />
         ) : (
-          <Spinner status="basic" size="large" />
+          <ActivityIndicator color="white" size="large" />
         )
       }
       iconLeft

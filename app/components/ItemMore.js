@@ -3,7 +3,7 @@ import {Text, View, StyleSheet} from 'react-native';
 
 export default class ItemMore extends Component {
   render() {
-      const {title} = this.props;
+    const {title} = this.props;
     return (
       <View style={styles.headerFieldContainer}>
         <Text style={styles.fieldTitle}>{title}</Text>

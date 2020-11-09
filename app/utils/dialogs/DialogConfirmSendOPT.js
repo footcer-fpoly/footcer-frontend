@@ -1,8 +1,20 @@
 import React from 'react';
-import {View} from 'react-native';
-import {StyleSheet} from 'react-native';
-import {Button, Card, Text, Modal} from '@ui-kitten/components';
+import {StyleSheet, View} from 'react-native';
+import Modal from 'react-native-modal';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import PrimaryButton from '../../components/common/PrimaryButton';
+import {
+  body2,
+  headline3,
+  headline4,
+  headline5,
+  Text,
+} from '../../components/common/Text';
+import {scale} from '../../helpers/size.helper';
+import Styles from '../../helpers/styles.helper';
 import {OTP_SCREEN} from '../../navigations/route-name';
+import colors from '../../theme/colors';
+import spacing from '../../theme/spacing';
 
 const DialogConfirmSendOPT = ({
   phone,
@@ -11,88 +23,70 @@ const DialogConfirmSendOPT = ({
   visible,
   dismiss,
   data,
+  title,
 }) => {
-  const _gotoOTPScreen = (phone, flag, dismiss, data) => {
+  const _gotoOTPScreen = (phone, flag, dismiss, data) => () => {
     dismiss();
     navigation.navigate(OTP_SCREEN, {phone, flag, data});
   };
   return (
     <Modal
-      style={styles.container}
-      backdropStyle={styles.backdrop}
-      onRequestClose={dismiss}
-      visible={visible}>
-      <Card>
-        <View>
-          <Text category="h5">Xác thực số điện thoại</Text>
-          <Text
-            style={{
-              fontWeight: 'bold',
-              fontSize: 18,
-              marginTop: 5,
-              color: '#16a085',
-            }}>
-            {phone}
-          </Text>
-        </View>
-        <Text style={{marginVertical: 10}}>
+      statusBarTranslucent={true}
+      useNativeDriver={true}
+      isVisible={visible}>
+      <View style={styles.container}>
+        <Text type={headline3} style={styles.txtTitle}>
+          Xác thực số điện thoại
+        </Text>
+        <Text type={headline3} style={styles.txtPhone}>
+          {phone}
+        </Text>
+        <Text type={body2}>
           Chúng tôi sẻ gữi một mã xác thực đến {phone}. Bạn có muốn tiếp tục?
         </Text>
-        <View style={styles.footerContainer}>
-          <Button
+        <View style={styles.footer}>
+          <PrimaryButton
             onPress={dismiss}
-            style={styles.footerControl}
-            size="small"
-            status="basic">
-            HỦY
-          </Button>
-          <Button
-            onPress={() => _gotoOTPScreen(phone, flag, dismiss, data)}
-            style={[
-              styles.footerControl,
-              {marginLeft: 10, backgroundColor: '#27ae60'},
-            ]}
-            size="small">
-            TIẾP TỤC
-          </Button>
+            title="HỦY"
+            style={[styles.flex49, styles.colorGray]}
+          />
+          <PrimaryButton
+            onPress={_gotoOTPScreen(phone, flag, dismiss, data)}
+            title="TIẾP TỤC"
+            style={styles.flex49}
+          />
         </View>
-      </Card>
+      </View>
     </Modal>
-
-    // <Modal
-    //     style={styles.container}
-    //     backdropStyle={styles.backdrop}
-    //     onRequestClose={dismiss}
-    //     visible={visible}
-    //     animationIn='slideInUp'
-    // >
-
-    // </Modal >
   );
 };
 
 export default DialogConfirmSendOPT;
 
 const styles = StyleSheet.create({
+  flex49: {
+    flex: 0.49,
+  },
+  colorGray: {
+    backgroundColor: colors.grayDark,
+  },
   container: {
-    maxWidth: 350,
+    backgroundColor: colors.white,
+    borderRadius: scale(5),
+    paddingHorizontal: scale(20),
+    paddingVertical: scale(30),
   },
-  backdrop: {
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  txtTitle: {
+    color: colors.gray,
   },
-  topContainer: {
+  txtPhone: {
+    color: colors.greenDark,
+    marginTop: spacing.large,
+    marginBottom: spacing.small,
+  },
+  footer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-  },
-
-  footerContainer: {
-    marginTop: 15,
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-  },
-  footerControl: {
-    width: 100,
-    paddingVertical: 12,
-    borderWidth: 0,
+    marginTop: spacing.extraLarge,
   },
 });
