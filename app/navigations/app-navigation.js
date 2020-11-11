@@ -3,6 +3,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import React from 'react';
 import {connect} from 'react-redux';
 import ProfileDetailScreen from '../screens/account/profile-detail.screen';
+import updatePassScreen from '../screens/account/update-pass.screen';
 import OTPScreen from '../screens/auth/otp.screen';
 import SignInScreen from '../screens/auth/sign-in.screen';
 import SignUpFbGgScreen from '../screens/auth/sign-up-fb-gg.screen';
@@ -24,6 +25,7 @@ import {
   SPLASH_SCREEN,
   TEAM_DETAIL_SCREEN,
   TEST_SCREEN,
+  UPDATE_PASS_SCREEN,
 } from './route-name';
 
 const Stack = createStackNavigator();
@@ -42,6 +44,10 @@ const MainRouter = ({isLogedIn}) => {
             component={SignUpFbGgScreen}
           />
           <Stack.Screen name={OTP_SCREEN} component={OTPScreen} />
+          <Stack.Screen
+            name={UPDATE_PASS_SCREEN}
+            component={updatePassScreen}
+          />
         </>
       );
     }

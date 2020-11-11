@@ -23,8 +23,15 @@ import {hideLoading, showLoading} from '../../redux/actions/loading.action';
 import colors from '../../theme/colors';
 import styles from '../../theme/StylesAuth';
 import AlertSuccessful from '../../utils/alerts/AlertSuccessful';
+import {logout} from '../../redux/actions/auth.action';
 
-const UpdatePassScreen = ({navigation, route, showLoading, hideLoading}) => {
+const UpdatePassScreen = ({
+  navigation,
+  route,
+  showLoading,
+  hideLoading,
+  logout,
+}) => {
   const {phone} = route.params;
   const [user, setUser] = useState({
     phone: '',
@@ -124,7 +131,7 @@ const UpdatePassScreen = ({navigation, route, showLoading, hideLoading}) => {
             text: 'Cập nhật mật khẩu thành công',
           });
           setTimeout(() => {
-            navigation.goBack();
+            logout();
           }, 2000);
         } else {
           console.log('updatePass => res.code: ', res.code);
@@ -253,6 +260,7 @@ const UpdatePassScreen = ({navigation, route, showLoading, hideLoading}) => {
 const mapDispatchToProps = {
   showLoading,
   hideLoading,
+  logout,
 };
 
 export default connect(

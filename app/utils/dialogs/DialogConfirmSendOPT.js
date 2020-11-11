@@ -1,17 +1,9 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import Modal from 'react-native-modal';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 import PrimaryButton from '../../components/common/PrimaryButton';
-import {
-  body2,
-  headline3,
-  headline4,
-  headline5,
-  Text,
-} from '../../components/common/Text';
+import {body2, headline3, Text} from '../../components/common/Text';
 import {scale} from '../../helpers/size.helper';
-import Styles from '../../helpers/styles.helper';
 import {OTP_SCREEN} from '../../navigations/route-name';
 import colors from '../../theme/colors';
 import spacing from '../../theme/spacing';

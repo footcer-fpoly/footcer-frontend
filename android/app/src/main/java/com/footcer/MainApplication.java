@@ -3,6 +3,7 @@ package com.footcer;
 import android.app.Application;
 import android.content.Context;
 
+import com.airbnb.android.react.maps.BuildConfig;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactInstanceManager;
@@ -28,6 +29,7 @@ import com.reactnativecommunity.viewpager.RNCViewPagerPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.swmansion.reanimated.ReanimatedPackage;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
+import com.airbnb.android.react.maps.MapsPackage;
 
 
 public class MainApplication extends Application implements ReactApplication {
