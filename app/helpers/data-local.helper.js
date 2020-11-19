@@ -79,3 +79,26 @@ export const ListProvince = [
   {name: 'Vĩnh Phúc'},
   {name: 'Yên Bái'},
 ];
+
+export const listSeviceStadium = [
+  {
+    imgService: require('../assets/icons/energy_drink.png'),
+    txtService: 'Nước uống',
+  },
+  {
+    imgService: require('../assets/icons/jersey.png'),
+    txtService: 'Áo thi đấu',
+  },
+  {
+    imgService: require('../assets/icons/cleats.png'),
+    txtService: 'Giày',
+  },
+  {
+    imgService: require('../assets/icons/soccer_ball.png'),
+    txtService: 'Bóng đá',
+  },
+  {
+    imgService: require('../assets/icons/energy_drink.png'),
+    txtService: 'Nước uống',
+  },
+];

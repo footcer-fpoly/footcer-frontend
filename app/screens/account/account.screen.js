@@ -39,7 +39,7 @@ const AccountScreen = ({profile, listTeam, logout, getListTeam}) => {
       <ToolBar
         style={{backgroundColor: colors.main}}
         center={
-          <Text type={headline4} style={styles.titleContent}>
+          <Text type={headline5} style={styles.titleContent}>
             Tài khoản
           </Text>
         }

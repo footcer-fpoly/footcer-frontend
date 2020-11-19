@@ -1,4 +1,6 @@
 import moment from 'moment';
+var dayjs = require('dayjs');
+var locale_vi = require('dayjs/locale/vi');
 
 export const regexPhoneNumber = /^0[0-9]{9}$/;
 
@@ -48,4 +50,58 @@ export const validURL = str => {
     'i',
   ); // fragment locator
   return !!pattern.test(str);
+};
+
+export const converSecondsToTime = seconds => {
+  if (seconds) {
+    return new Date(Number(seconds)).toUTCString().substring(16, 22);
+  }
+  return seconds;
+};
+
+export const detachedArray = (arr, size) => {
+  if (arr) {
+    var results = [];
+    while (arr.length) {
+      results.push(arr.splice(0, size));
+    }
+    return results;
+  }
+  return arr;
+};
+
+export const numberWithCommas = value => {
+  if (!!value) {
+    const str = value.toString();
+    return str.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+  }
+  return value;
+};
+
+export const renderNextDays = nextDays => {
+  let tempArr = [];
+  var day = new Date();
+  var nextDay = new Date(day);
+  for (var i = 0; i <= nextDays; i++) {
+    nextDay.setDate(day.getDate() + i);
+    tempArr.push(
+      dayjs(nextDay)
+        .locale(locale_vi)
+        .format('dddd, DD/MM/YYYY'),
+    );
+  }
+  return tempArr;
+};
+
+export const diffHours = hour => {
+  let date = new Date();
+  date.setHours(date.getHours() + 7);
+  date.toUTCString();
+  const nowHours = dayjs(date.toUTCString())
+    .locale(locale_vi)
+    .format('HH:mm');
+  const myHours = dayjs(hour)
+    .locale(locale_vi)
+    .format('HH:mm');
+  return parseInt(myHours) - parseInt(nowHours);
 };

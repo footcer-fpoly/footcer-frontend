@@ -43,6 +43,7 @@ export default class RequestHelper {
   static async get(url, params) {
     const header = await this.getHeader();
     const source = axios.CancelToken.source();
+    console.log('url -->get: ', url);
     setTimeout(() => {
       source.cancel();
     }, configTimeOut);

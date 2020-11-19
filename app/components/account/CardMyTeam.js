@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
   },
   imgMem: {
     ...Styles.borderRadiusCircle(50),
-    ...Styles.borderColor(colors.white, 2),
+    ...Styles.borderView(colors.white, 2, 0),
     marginLeft: -spacing.small,
   },
   imgBgTeam: {

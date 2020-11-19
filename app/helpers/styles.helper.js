@@ -54,10 +54,11 @@ const Styles = {
       borderRadius: diameter / 2,
     };
   },
-  borderColor: (color, width) => {
+  borderView: (color, width, radius) => {
     return {
       borderWidth: width,
       borderColor: color,
+      borderRadius: radius,
     };
   },
   txtErr: {

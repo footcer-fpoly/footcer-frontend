@@ -81,7 +81,7 @@ const TitleTextInputField = ({
 
 const styles = StyleSheet.create({
   content: (color = colors.grayOpacity) => ({
-    ...Styles.borderColor(color, 1),
+    ...Styles.borderView(color, 1, 0),
     borderRadius: 5,
   }),
   warpperInput: {

@@ -9,6 +9,9 @@ import SignInScreen from '../screens/auth/sign-in.screen';
 import SignUpFbGgScreen from '../screens/auth/sign-up-fb-gg.screen';
 import SignUpPhoneScreen from '../screens/auth/sign-up-phone.screen';
 import SplashScreen from '../screens/auth/splash.screen';
+import ReviewStadiumScreen from '../screens/review-stadium.screen';
+import StadiumCollageDetailScreen from '../screens/stadium/stadium-collage-detail.screen';
+import StadiumDetailScreen from '../screens/stadium/stadium-detail.screen';
 import CreateTeamScreen from '../screens/team/create-team.screen';
 import TeamDetailScreen from '../screens/team/team-detail.screen';
 import TestScreen from '../screens/test.screen';
@@ -19,10 +22,13 @@ import {
   CREATE_TEAM_SCREEN,
   DETAIL_PROFILE_SCREEN,
   OTP_SCREEN,
+  REVIEW_STADIUM_SCREEN,
   SIGN_IN_SCREEN,
   SIGN_UP_FB_GG_SCREEN,
   SIGN_UP_SCREEN,
   SPLASH_SCREEN,
+  STADIUM_COLLAGE_DETAIL_SCREEN,
+  STADIUM_DETAIL_SCREEN,
   TEAM_DETAIL_SCREEN,
   TEST_SCREEN,
   UPDATE_PASS_SCREEN,
@@ -60,7 +66,19 @@ const MainRouter = ({isLogedIn}) => {
         />
         <Stack.Screen name={CREATE_TEAM_SCREEN} component={CreateTeamScreen} />
         <Stack.Screen name={TEAM_DETAIL_SCREEN} component={TeamDetailScreen} />
+        <Stack.Screen
+          name={STADIUM_DETAIL_SCREEN}
+          component={StadiumDetailScreen}
+        />
+        <Stack.Screen
+          name={REVIEW_STADIUM_SCREEN}
+          component={ReviewStadiumScreen}
+        />
         <Stack.Screen name={TEST_SCREEN} component={TestScreen} />
+        <Stack.Screen
+          name={STADIUM_COLLAGE_DETAIL_SCREEN}
+          component={StadiumCollageDetailScreen}
+        />
       </>
     );
   };

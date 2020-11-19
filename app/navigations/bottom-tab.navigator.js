@@ -4,12 +4,12 @@ import React from 'react';
 import TabbarIcon from '../components/common/TabbarIcon';
 import HomeScreen from '../screens/home/home.screen';
 import FindOpponentScreen from '../screens/opponent/find-opponent.screen';
-import BookFieldScreen from '../screens/field/book-field.screen';
+import stadiumScreen from '../screens/stadium/stadium.screen';
 import AccountScreen from '../screens/account/account.screen';
 import {
   ACCOUNT_SCREEN,
   HOME_SCREEN,
-  BOOK_FIELD,
+  STADIUM_SCREEN,
   FIND_OPPONENT_SCREEN,
 } from './route-name';
 import TabbarComponent from '../components/common/TabbarComponent';
@@ -22,7 +22,7 @@ const BottomTab = ({profile}) => {
     switch (routeName) {
       case HOME_SCREEN:
         return {type: 'icon', name: 'home-outline'};
-      case BOOK_FIELD:
+      case STADIUM_SCREEN:
         return {type: 'icon', name: 'home-outline'};
       case FIND_OPPONENT_SCREEN:
         return {
@@ -58,8 +58,8 @@ const BottomTab = ({profile}) => {
         }}
       />
       <Tab.Screen
-        name={BOOK_FIELD}
-        component={BookFieldScreen}
+        name={STADIUM_SCREEN}
+        component={stadiumScreen}
         options={{
           tabBarLabel: 'Đặt sân',
         }}

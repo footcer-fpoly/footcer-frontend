@@ -13,6 +13,8 @@ import PrimaryButton from '../common/PrimaryButton';
 import {body1, body3, headline4, Text} from '../common/Text';
 
 const ModalShowInfoMember = ({visible, dismiss, data, isLeader}) => {
+  console.log('data :', data);
+  console.log('isLeader :', data);
   return (
     <Modal
       onBackButtonPress={dismiss}
@@ -86,7 +88,7 @@ const ModalShowInfoMember = ({visible, dismiss, data, isLeader}) => {
             editable={false}
           />
           {data?.role != 1 ||
-            (isLeader && (
+            (!isLeader && (
               <PrimaryButton
                 style={styles.btn}
                 title="Loại khỏi đội"
