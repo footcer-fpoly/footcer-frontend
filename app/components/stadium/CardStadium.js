@@ -1,5 +1,5 @@
 import React from 'react';
-import {Image, StyleSheet, View} from 'react-native';
+import {Image, StyleSheet, View, Dimensions} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {scale} from '../../helpers/size.helper';
 import rootNavigation from '../../navigations/root.navigator';
@@ -9,14 +9,13 @@ import dimens from '../../theme/dimens';
 import PrimaryButton from '../common/PrimaryButton';
 import {body3, headline5, headline6, Text} from '../common/Text';
 
-const SLIDER_WIDTH = dimens.WINDOW_WIDTH;
-const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.9);
-const ITEM_HEIGHT = Math.round((ITEM_WIDTH * 3) / 4.5);
-
-export default function CardStadium({item}) {
+const {width, height} = Dimensions.get('window');
+const CARD_HEIGHT = 220;
+const CARD_WIDTH = width * 0.9;
+export default function CardStadium({item, key}) {
   const rowItem = (iconName, text, style, subText) => {
     return (
-      <View style={[styles.flexRow, style]}>
+      <View key={key} style={[styles.flexRow, style]}>
         <Icon color={colors.gray} name={iconName} size={scale(20)} />
         <Text type={body3} style={styles.txtText}>
           {text}
@@ -70,15 +69,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   container: {
-    width: ITEM_WIDTH,
+    width: CARD_WIDTH,
     backgroundColor: colors.white + 'B3',
     borderTopRightRadius: scale(10),
     borderTopLeftRadius: scale(10),
     overflow: 'hidden',
+    marginRight: 20,
+    height: 220,
   },
   image: {
-    width: ITEM_WIDTH,
-    height: ITEM_HEIGHT / 2,
+    width: CARD_WIDTH,
+    height: CARD_HEIGHT,
   },
   txtName: {
     position: 'absolute',

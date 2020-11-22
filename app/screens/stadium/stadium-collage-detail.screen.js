@@ -4,9 +4,11 @@ import Carousel from 'react-native-snap-carousel';
 import {getStadiumCollageDetailService} from '../../api/stadium.api';
 import {StatusCode} from '../../api/status-code';
 import ListLoadingComponent from '../../components/common/ListLoadingComponent';
+import PrimaryButton from '../../components/common/PrimaryButton';
 import {headline5, Text} from '../../components/common/Text';
 import ToolBar from '../../components/common/Toolbar';
 import DateItem from '../../components/stadium/DateItem';
+import ModalCreateOrder from '../../components/stadium/ModalCreateOrder';
 import TimeItem from '../../components/stadium/TimeItem';
 import {
   detachedArray,
@@ -20,7 +22,7 @@ import dimens from '../../theme/dimens';
 import spacing from '../../theme/spacing';
 
 export default function StadiumCollageDetailScreen({route}) {
-  const listDate = renderNextDays(4).map(e => ({
+  const listDate = renderNextDays(14).map(e => ({
     choose: false,
     date: e,
   }));
@@ -33,12 +35,15 @@ export default function StadiumCollageDetailScreen({route}) {
     onReady: false,
   });
   const [order, setOrder] = useState({
+    nameSadium: '',
     timeOrder: '',
     dateOrder: '',
     price: 0,
     description: '',
     stadiumDetailsId: stadiumCollageId,
   });
+
+  const [visibleModal, setVisibleModal] = useState(false);
   const getData = async () => {
     try {
       const res = await getStadiumCollageDetailService(stadiumCollageId);
@@ -48,7 +53,7 @@ export default function StadiumCollageDetailScreen({route}) {
         setData({
           ...data,
           listTime: res.data.stadiumDetails.filter(
-            el => diffHours(el.startTimeDetail) >= 0,
+            el => diffHours(el.startTimeDetail) <= 0,
           ),
           onReady: true,
         });
@@ -63,6 +68,11 @@ export default function StadiumCollageDetailScreen({route}) {
   useEffect(() => {
     getData();
   }, []);
+
+  const toggleModalCreateOrder = () => {
+    setVisibleModal(!visibleModal);
+  };
+
   const onPressChooseDate = (item, index) => () => {
     item.choose = true;
     const newList = [...data.listDate];
@@ -75,7 +85,7 @@ export default function StadiumCollageDetailScreen({route}) {
       setData({...data, listDate: newList, listTime: initalListTime});
     } else {
       const newListTime = initalListTime.filter(
-        el => diffHours(el.startTimeDetail) >= 0,
+        el => diffHours(el.startTimeDetail) <= 0,
       );
       setData({...data, listDate: newList, listTime: newListTime});
     }
@@ -180,6 +190,13 @@ export default function StadiumCollageDetailScreen({route}) {
         {renderSectionDate()}
         {renderSectionTime()}
       </ScrollView>
+      <View style={styles.wrapperBtnOrder}>
+        <PrimaryButton onPress={toggleModalCreateOrder} title="Đặt sân" />
+      </View>
+      <ModalCreateOrder
+        dismiss={toggleModalCreateOrder}
+        visible={visibleModal}
+      />
     </View>
   );
 }
@@ -210,5 +227,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: scale(10),
     marginBottom: spacing.tiny,
     textTransform: 'uppercase',
+  },
+  wrapperBtnOrder: {
+    backgroundColor: colors.white,
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    left: 0,
+    paddingHorizontal: scale(10),
+    paddingTop: scale(10),
+    paddingBottom: scale(5),
+    borderTopRightRadius: scale(10),
+    borderTopLeftRadius: scale(10),
   },
 });

@@ -1,8 +1,10 @@
 import {removeToken, saveToken} from '../../helpers/storage.helper';
 import {
+  ACCEPT_PERMISSION_LOCATION,
   CHECK_LOGIN,
   LOGIN,
   LOGOUT,
+  REFUSE_PERMISSION_LOCATION,
   REGISTER,
   UPDATE_AVATAR_USER,
   UPDATE_INFO_USER,
@@ -20,6 +22,7 @@ const authState = {
     position: '',
     level: '',
   },
+  isPermissionsLocation: false,
 };
 
 export const authReducer = (state = authState, action) => {
@@ -63,6 +66,16 @@ export const authReducer = (state = authState, action) => {
           ...state.profile,
           avatar: action.avatar,
         },
+      };
+    case ACCEPT_PERMISSION_LOCATION:
+      return {
+        ...state,
+        isPermissionsLocation: true,
+      };
+    case REFUSE_PERMISSION_LOCATION:
+      return {
+        ...state,
+        isPermissionsLocation: false,
       };
     default:
       return state;

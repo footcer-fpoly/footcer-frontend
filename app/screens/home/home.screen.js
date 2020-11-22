@@ -1,16 +1,22 @@
 import React, {Component} from 'react';
-import {
-  View,
-  ScrollView,
-  Text,
-  StyleSheet,
-  KeyboardAvoidingView,
-} from 'react-native';
+import {View, ScrollView, StyleSheet, KeyboardAvoidingView} from 'react-native';
+import LottieView from 'lottie-react-native';
+import ToolBar from '../../components/common/Toolbar';
+import colors from '../../theme/colors';
+import {headline5, Text} from '../../components/common/Text';
 
 export default class HomeScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <ToolBar
+          style={{backgroundColor: colors.main}}
+          center={
+            <Text type={headline5} style={styles.titleToolbar}>
+              Trang chủ
+            </Text>
+          }
+        />
         <Text>haha</Text>
       </View>
     );
@@ -22,11 +28,8 @@ const styles = StyleSheet.create({
     zIndex: 10,
     backgroundColor: '#EDEDED',
   },
-  header: {
-    zIndex: 20,
-  },
-  body: {
-    zIndex: -1,
-    paddingHorizontal: 15,
+  titleToolbar: {
+    color: colors.white,
+    textTransform: 'uppercase',
   },
 });

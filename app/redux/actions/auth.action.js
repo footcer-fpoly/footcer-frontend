@@ -6,6 +6,9 @@ import {
   REGISTER,
   UPDATE_AVATAR_USER,
   UPDATE_INFO_USER,
+  ACCEPT_PERMISSION_LOCATION,
+  REFUSE_PERMISSION_LOCATION,
+  REQUESTED_PERMISSION_LOCATION,
 } from './types';
 
 export const logout = () => {
@@ -40,3 +43,15 @@ export const updateInfoUser = data => {
     data,
   };
 };
+export const requestPermissionLocation = () => {
+  return {
+    type: REQUESTED_PERMISSION_LOCATION,
+  };
+};
+export const acceptPermissionLocation = () => ({
+  type: ACCEPT_PERMISSION_LOCATION,
+});
+
+export const refusePermissionLocation = () => ({
+  type: REFUSE_PERMISSION_LOCATION,
+});

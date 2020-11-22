@@ -6,10 +6,12 @@ import Loading from '../components/common/loadings/Loading';
 import {ToastHelper} from '../helpers/ToastHelper';
 import {checkIsLogin} from '../redux/actions/auth.action';
 import MainRouter from './app-navigation';
+import {requestPermissionLocation} from '../redux/actions/auth.action';
 
-const MainNavigation = () => {
+const MainNavigation = ({requestPermissionLocation}) => {
   const init = async () => {};
   useEffect(() => {
+    requestPermissionLocation();
     init().finally(() => {
       RNBootSplash.hide({duration: 250});
     });
@@ -35,7 +37,7 @@ const styles = StyleSheet.create({
 });
 
 const mapDispatchToProps = {
-  checkIsLogin,
+  requestPermissionLocation,
 };
 
 export default connect(

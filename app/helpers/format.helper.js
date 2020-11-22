@@ -1,4 +1,3 @@
-import moment from 'moment';
 var dayjs = require('dayjs');
 var locale_vi = require('dayjs/locale/vi');
 
@@ -80,12 +79,11 @@ export const numberWithCommas = value => {
 
 export const renderNextDays = nextDays => {
   let tempArr = [];
-  var day = new Date();
-  var nextDay = new Date(day);
-  for (var i = 0; i <= nextDays; i++) {
-    nextDay.setDate(day.getDate() + i);
+  for (let i = 0; i <= nextDays; i++) {
+    const date = new Date();
+    date.setDate(date.getDate() + i);
     tempArr.push(
-      dayjs(nextDay)
+      dayjs(date)
         .locale(locale_vi)
         .format('dddd, DD/MM/YYYY'),
     );
@@ -94,14 +92,11 @@ export const renderNextDays = nextDays => {
 };
 
 export const diffHours = hour => {
+  console.log(hour);
   let date = new Date();
   date.setHours(date.getHours() + 7);
   date.toUTCString();
-  const nowHours = dayjs(date.toUTCString())
-    .locale(locale_vi)
-    .format('HH:mm');
-  const myHours = dayjs(hour)
-    .locale(locale_vi)
-    .format('HH:mm');
-  return parseInt(myHours) - parseInt(nowHours);
+  const nowHours = dayjs(date.toUTCString()).format('HH');
+  const myHours = dayjs(hour).format('HH');
+  return Number(myHours) - Number(nowHours);
 };

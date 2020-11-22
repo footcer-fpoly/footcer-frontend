@@ -23,11 +23,11 @@ const BottomTab = ({profile}) => {
       case HOME_SCREEN:
         return {type: 'icon', name: 'home-outline'};
       case STADIUM_SCREEN:
-        return {type: 'icon', name: 'home-outline'};
+        return {type: 'icon', name: 'book-open'};
       case FIND_OPPONENT_SCREEN:
         return {
           type: 'icon',
-          name: 'home-outline',
+          name: 'sword-cross',
         };
       case ACCOUNT_SCREEN:
         return {
@@ -68,7 +68,7 @@ const BottomTab = ({profile}) => {
         name={FIND_OPPONENT_SCREEN}
         component={FindOpponentScreen}
         options={{
-          tabBarLabel: 'Tìm đối',
+          tabBarLabel: 'Trận đấu',
         }}
       />
       <Tab.Screen

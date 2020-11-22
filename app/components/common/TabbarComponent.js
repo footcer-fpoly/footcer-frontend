@@ -53,7 +53,10 @@ const TabbarComponent = ({state, descriptors, navigation}) => {
           <Text
             type={overline}
             numberOfLines={1}
-            style={[styles.labelStyle, {color: color}]}>
+            style={[
+              styles.labelStyle,
+              {color: color, fontWeight: isFocused ? 'bold' : 'normal'},
+            ]}>
             {label}
           </Text>
         </TouchableOpacity>
@@ -81,7 +84,6 @@ const styles = StyleSheet.create({
   },
   labelStyle: {
     marginTop: moderateScale(3),
-    fontWeight: 'bold',
     fontSize: scale(11),
   },
 });
