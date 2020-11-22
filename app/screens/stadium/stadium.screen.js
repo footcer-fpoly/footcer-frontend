@@ -205,44 +205,45 @@ const StadiumScreen = ({isPermissionLocation}) => {
           />
         </Marker>
       </MapView>
-      <Animated.ScrollView
-        ref={_scrollView}
-        horizontal
-        pagingEnabled
-        scrollEventThrottle={1}
-        showsHorizontalScrollIndicator={false}
-        snapToInterval={CARD_WIDTH + 20}
-        snapToAlignment="center"
-        style={styles.footer}
-        contentContainerStyle={{
-          paddingHorizontal: SPACING_FOR_CARD_INSET,
-        }}
-        onScroll={Animated.event(
-          [
-            {
-              nativeEvent: {
-                contentOffset: {
-                  x: mapAnimation,
+      <View style={styles.footer}>
+        <Text type={headline4}>Danh sách sân quanh đây</Text>
+        <Animated.ScrollView
+          ref={_scrollView}
+          horizontal
+          pagingEnabled
+          scrollEventThrottle={1}
+          showsHorizontalScrollIndicator={false}
+          snapToInterval={CARD_WIDTH + 20}
+          snapToAlignment="center"
+          contentContainerStyle={{
+            paddingHorizontal: SPACING_FOR_CARD_INSET,
+          }}
+          onScroll={Animated.event(
+            [
+              {
+                nativeEvent: {
+                  contentOffset: {
+                    x: mapAnimation,
+                  },
                 },
               },
-            },
-          ],
-          {useNativeDriver: true},
-        )}>
-        <Text type={headline4}>Danh sách sân quanh đây</Text>
-        {state.listStadium.map((marker, index) => {
-          console.log('-----', marker);
-          return (
-            <View style={styles.card} key={index}>
-              <Image
-                source={{uri: marker.image}}
-                style={styles.cardImage}
-                resizeMode="cover"
-              />
-            </View>
-          );
-        })}
-      </Animated.ScrollView>
+            ],
+            {useNativeDriver: true},
+          )}>
+          {state.listStadium.map((marker, index) => {
+            console.log('-----', marker);
+            return (
+              <View style={styles.card} key={index}>
+                <Image
+                  source={{uri: marker.image}}
+                  style={styles.cardImage}
+                  resizeMode="cover"
+                />
+              </View>
+            );
+          })}
+        </Animated.ScrollView>
+      </View>
     </View>
   );
 };
