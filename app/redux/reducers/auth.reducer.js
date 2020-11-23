@@ -44,7 +44,18 @@ export const authReducer = (state = authState, action) => {
     case LOGOUT:
       removeToken();
       return {
-        ...authState,
+        ...state,
+        isLogedIn: false,
+        listTeam: null,
+        profile: {
+          userId: null,
+          phone: '',
+          avatar: null,
+          displayName: '',
+          birthday: '',
+          position: '',
+          level: '',
+        },
       };
 
     case UPDATE_INFO_USER:

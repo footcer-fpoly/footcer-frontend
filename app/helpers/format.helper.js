@@ -18,38 +18,6 @@ export const regexPhoneOrEmail = /^(?:0[0-9]{9}|(([^<>()\[\]\\.,;:\s@"]+(\.[^<>(
  * @param mixed   c: decimal delimiter
  */
 
-export const formatCurrency = (value, n, x, s, c, unit) => {
-  var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\D' : '$') + ')',
-    num = value.toFixed(Math.max(0, ~~n));
-
-  return (
-    (c ? num.replace('.', c) : num).replace(
-      new RegExp(re, 'g'),
-      '$&' + (s || ','),
-    ) + (unit || '')
-  );
-};
-
-export const formatDefaultVND = value => {
-  return formatCurrency(value, 0, 3, '.', ',', ' vnđ');
-};
-
-export const formatCouponDateDisplay = couponDate => {
-  return moment(couponDate, 'DD/MM/YYYY').format('DD/MM/YYYY');
-};
-
-export const validURL = str => {
-  var pattern = new RegExp(
-    '^(https?:\\/\\/)?' + // protocol
-    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
-    '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-    '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-      '(\\#[-a-z\\d_]*)?$',
-    'i',
-  ); // fragment locator
-  return !!pattern.test(str);
-};
 
 export const converSecondsToTime = seconds => {
   if (seconds) {
@@ -82,13 +50,23 @@ export const renderNextDays = nextDays => {
   for (let i = 0; i <= nextDays; i++) {
     const date = new Date();
     date.setDate(date.getDate() + i);
-    tempArr.push(
-      dayjs(date)
-        .locale(locale_vi)
-        .format('dddd, DD/MM/YYYY'),
-    );
+    tempArr.push(date.toString());
   }
   return tempArr;
+};
+export const formatDateTime = date => {
+  return dayjs(date)
+    .locale(locale_vi)
+    .format('dddd, DD/MM/YYYY');
+};
+export const formatToDate = date => {
+  return dayjs(date)
+    .locale(locale_vi)
+    .format('YYYY-MM-DD');
+};
+
+export const convertMilisecondsToMinutes = miliseconds => {
+  return Number(miliseconds) / 60000;
 };
 
 export const diffHours = hour => {

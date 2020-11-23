@@ -28,5 +28,5 @@ export const GET_LIST_STADIUM = ({latitude, longitude}) =>
   `${ROOT_API_URL}/stadium/search-location?latitude=${latitude}&longitude=${longitude}`;
 export const GET_STADIUM_DETAIL = stadiumId =>
   `${ROOT_API_URL}/stadium/info-id/${stadiumId}`;
-export const GET_STADIUM_COLLAGE_DETAIL = stadiumCollageId =>
-  `${ROOT_API_URL}/stadium/collage-details/${stadiumCollageId}`;
+export const GET_STADIUM_COLLAGE_DETAIL = ({stadiumCollageId, date}) =>
+  `${ROOT_API_URL}/stadium/collage-details/?stadiumCollageId=${stadiumCollageId}&date=${date}`;

@@ -1,23 +1,25 @@
 import React from 'react';
-import {Image, StyleSheet, View, Dimensions} from 'react-native';
+import {Dimensions, Image, StyleSheet, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {scale} from '../../helpers/size.helper';
+import Styles from '../../helpers/styles.helper';
 import rootNavigation from '../../navigations/root.navigator';
 import {STADIUM_DETAIL_SCREEN} from '../../navigations/route-name';
 import colors from '../../theme/colors';
-import dimens from '../../theme/dimens';
 import PrimaryButton from '../common/PrimaryButton';
 import {body3, headline5, headline6, Text} from '../common/Text';
 
-const {width, height} = Dimensions.get('window');
-const CARD_HEIGHT = 220;
-const CARD_WIDTH = width * 0.9;
-export default function CardStadium({item, key}) {
+const {width} = Dimensions.get('window');
+const CARD_WIDTH = width * 0.8;
+export default function CardStadium({item, keyExtractor}) {
+  console.log('sssss', keyExtractor);
+  console.log('xxxxx', item);
+
   const rowItem = (iconName, text, style, subText) => {
     return (
-      <View key={key} style={[styles.flexRow, style]}>
+      <View style={[styles.flexRow, style]}>
         <Icon color={colors.gray} name={iconName} size={scale(20)} />
-        <Text type={body3} style={styles.txtText}>
+        <Text numberOfLines={2} type={body3} style={styles.txtText}>
           {text}
           {subText}
         </Text>
@@ -25,7 +27,7 @@ export default function CardStadium({item, key}) {
     );
   };
   return (
-    <View style={styles.container}>
+    <View key={keyExtractor} style={styles.container}>
       <View>
         <Image source={{uri: item.image}} style={styles.image} />
         <Text type={headline5} style={styles.txtName}>
@@ -69,17 +71,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   container: {
-    width: CARD_WIDTH,
-    backgroundColor: colors.white + 'B3',
+    backgroundColor: colors.white,
     borderTopRightRadius: scale(10),
     borderTopLeftRadius: scale(10),
     overflow: 'hidden',
     marginRight: 20,
-    height: 220,
+    elevation: 2,
+    marginHorizontal: 10,
+    shadowColor: '#000',
+    shadowRadius: 5,
+    shadowOpacity: 0.3,
+    shadowOffset: {x: 2, y: -2},
+    width: CARD_WIDTH,
+    paddingBottom: scale(5),
+    borderWidth: 2,
+    ...Styles.borderView(colors.main, 1, 0),
   },
   image: {
     width: CARD_WIDTH,
-    height: CARD_HEIGHT,
+    height: 100,
   },
   txtName: {
     position: 'absolute',
@@ -102,5 +112,6 @@ const styles = StyleSheet.create({
   },
   txtText: {
     marginLeft: scale(5),
+    flex: 1,
   },
 });

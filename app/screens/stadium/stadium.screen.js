@@ -1,47 +1,25 @@
-import React, {useRef, useEffect, useState} from 'react';
-import {
-  View,
-  StyleSheet,
-  PermissionsAndroid,
-  Button,
-  Linking,
-  Dimensions,
-  Platform,
-  Animated,
-  Image,
-  TouchableOpacity,
-} from 'react-native';
-import MapView, {PROVIDER_GOOGLE, Marker, Callout} from 'react-native-maps';
-import {body3, headline4, headline5, Text} from '../../components/common/Text';
-import colors from '../../theme/colors';
+import LottieView from 'lottie-react-native';
+import React, {useEffect, useRef, useState} from 'react';
+import {Animated, Dimensions, Image, StyleSheet, View} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
+import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
+import {connect} from 'react-redux';
 import {getListStadiumService} from '../../api/stadium.api';
 import {StatusCode} from '../../api/status-code';
-import Carousel from 'react-native-snap-carousel';
-import CardStadium from '../../components/stadium/CardStadium';
-
-import {scale} from '../../helpers/size.helper';
-import dimens from '../../theme/dimens';
-import {
-  animatedStyles,
-  scrollInterpolator,
-} from '../../utils/animation/animationCarousel';
-import {userImage} from '../../assets/Images';
-import LottieView from 'lottie-react-native';
-import animationMap from '../../assets/lottie-animation/map-animation.json';
-import animationOnLocation from '../../assets/lottie-animation/on-location.json';
 import markerDefault from '../../assets/images/marker-default.png';
 import markerStadium from '../../assets/images/marker-stadium.png';
-import {connect} from 'react-redux';
-import {createIconSetFromFontello} from 'react-native-vector-icons';
-import Styles from '../../helpers/styles.helper';
-import PrimaryButton from '../../components/common/PrimaryButton';
-import spacing from '../../theme/spacing';
-import PermissionFail from '../../components/stadium/PermissionFail';
+import animationMap from '../../assets/lottie-animation/map-animation.json';
+import {headline4, headline5, Text} from '../../components/common/Text';
 import ToolBar from '../../components/common/Toolbar';
+import CardStadium from '../../components/stadium/CardStadium';
+import PermissionFail from '../../components/stadium/PermissionFail';
+import {scale} from '../../helpers/size.helper';
+import colors from '../../theme/colors';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Styles from '../../helpers/styles.helper';
+import spacing from '../../theme/spacing';
 
-const {width, height} = Dimensions.get('window');
-const CARD_HEIGHT = 220;
+const {width} = Dimensions.get('window');
 const CARD_WIDTH = width * 0.8;
 const SPACING_FOR_CARD_INSET = width * 0.1 - 10;
 const StadiumScreen = ({isPermissionLocation}) => {
@@ -143,19 +121,12 @@ const StadiumScreen = ({isPermissionLocation}) => {
   };
   const _map = useRef();
   const _scrollView = useRef();
-  const keyExtractor = (item, index) => index.toString();
   const renderItem = (item, index) => {
-    return <CardStadium key={index.toString()} item={item} />;
+    console.log(index);
+    return <CardStadium keyExtractor={index.toString()} item={item} />;
   };
-  if (!isPermissionLocation) {
-    return <PermissionFail />;
-  } else if (!state.onReady) {
+  const renderToolBar = () => {
     return (
-      <LottieView source={animationMap} style={styles.full} autoPlay loop />
-    );
-  }
-  return (
-    <View style={styles.container}>
       <ToolBar
         style={{backgroundColor: colors.main}}
         center={
@@ -164,6 +135,26 @@ const StadiumScreen = ({isPermissionLocation}) => {
           </Text>
         }
       />
+    );
+  };
+  if (!isPermissionLocation) {
+    return (
+      <>
+        {renderToolBar()}
+        <PermissionFail />
+      </>
+    );
+  } else if (!state.onReady) {
+    return (
+      <>
+        {renderToolBar()}
+        <LottieView source={animationMap} style={styles.full} autoPlay loop />
+      </>
+    );
+  }
+  return (
+    <View style={styles.container}>
+      {renderToolBar()}
       <MapView
         ref={_map}
         provider={PROVIDER_GOOGLE}
@@ -206,7 +197,17 @@ const StadiumScreen = ({isPermissionLocation}) => {
         </Marker>
       </MapView>
       <View style={styles.footer}>
-        <Text type={headline4}>Danh sách sân quanh đây</Text>
+        <View style={styles.warpperTitle}>
+          <Text type={headline4} style={styles.titleFooter}>
+            Danh sách cụm sân gần bạn
+          </Text>
+          <View style={styles.warpperTitle}>
+            <Text type={headline5} style={styles.txtCountListStadium}>
+              {state.listStadium?.length}
+            </Text>
+            <Icon size={scale(20)} color={colors.green} name="stadium" />
+          </View>
+        </View>
         <Animated.ScrollView
           ref={_scrollView}
           horizontal
@@ -230,25 +231,21 @@ const StadiumScreen = ({isPermissionLocation}) => {
             ],
             {useNativeDriver: true},
           )}>
-          {state.listStadium.map((marker, index) => {
-            console.log('-----', marker);
-            return (
-              <View style={styles.card} key={index}>
-                <Image
-                  source={{uri: marker.image}}
-                  style={styles.cardImage}
-                  resizeMode="cover"
-                />
-              </View>
-            );
-          })}
+          {state.listStadium.map((marker, index) => renderItem(marker, index))}
         </Animated.ScrollView>
       </View>
     </View>
   );
 };
 const styles = StyleSheet.create({
-  full: {position: 'absolute', top: -50, left: -50, right: -50, bottom: -50},
+  full: {
+    position: 'absolute',
+    top: -50,
+    left: -50,
+    right: -50,
+    bottom: -50,
+    zIndex: -1,
+  },
   marker: {width: scale(30), height: scale(30)},
   markerStadium: {width: scale(40), height: scale(40)},
   container: {
@@ -265,30 +262,20 @@ const styles = StyleSheet.create({
     borderTopRightRadius: scale(20),
     borderTopLeftRadius: scale(20),
   },
-  card: {
-    // padding: 10,
-    elevation: 2,
-    backgroundColor: '#FFF',
-    borderTopLeftRadius: 5,
-    borderTopRightRadius: 5,
-    marginHorizontal: 10,
-    shadowColor: '#000',
-    shadowRadius: 5,
-    shadowOpacity: 0.3,
-    shadowOffset: {x: 2, y: -2},
-    height: CARD_HEIGHT,
-    width: CARD_WIDTH,
-    overflow: 'hidden',
-  },
-  cardImage: {
-    flex: 3,
-    width: '100%',
-    height: '100%',
-    alignSelf: 'center',
+  titleFooter: {
+    marginBottom: scale(10),
   },
   titleToolbar: {
     color: colors.white,
     textTransform: 'uppercase',
+  },
+  warpperTitle: {
+    ...Styles.rowBetween,
+    paddingHorizontal: scale(10),
+  },
+  txtCountListStadium: {
+    color: colors.green,
+    marginRight: spacing.tiny,
   },
 });
 

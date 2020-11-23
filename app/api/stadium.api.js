@@ -12,6 +12,8 @@ export const getStadiumDetailService = stadiumId => {
   return RequestHelper.get(GET_STADIUM_DETAIL(stadiumId));
 };
 
-export const getStadiumCollageDetailService = stadiumCollageId => {
-  return RequestHelper.get(GET_STADIUM_COLLAGE_DETAIL(stadiumCollageId));
+export const getStadiumCollageDetailService = ({stadiumCollageId, date}) => {
+  return RequestHelper.get(
+    GET_STADIUM_COLLAGE_DETAIL({stadiumCollageId, date}),
+  );
 };
