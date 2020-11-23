@@ -16,6 +16,7 @@ import rootNavigation from '../../navigations/root.navigator';
 import {
   CREATE_TEAM_SCREEN,
   DETAIL_PROFILE_SCREEN,
+  LIST_ORDER_SCREEN,
   TEST_SCREEN,
 } from '../../navigations/route-name';
 import {logout} from '../../redux/actions/auth.action';
@@ -64,11 +65,11 @@ const AccountScreen = ({profile, listTeam, logout, getListTeam}) => {
         <View style={styles.section}>
           <View style={styles.block}>
             <AccountBlock
-              type={IconType.MaterialIcons}
-              iconName="person-search"
-              text="Tìm đội bóng"
+              type={IconType.MaterialCommunityIcons}
+              iconName="clipboard-list-outline"
+              text="Lịch đặt sân"
               style={styles.flex47}
-              onPress={navigateToScreen(TEST_SCREEN)}
+              onPress={navigateToScreen(LIST_ORDER_SCREEN)}
             />
             <AccountBlock
               type={IconType.MaterialIcons}

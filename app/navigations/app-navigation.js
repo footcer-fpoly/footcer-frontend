@@ -9,6 +9,7 @@ import SignInScreen from '../screens/auth/sign-in.screen';
 import SignUpFbGgScreen from '../screens/auth/sign-up-fb-gg.screen';
 import SignUpPhoneScreen from '../screens/auth/sign-up-phone.screen';
 import SplashScreen from '../screens/auth/splash.screen';
+import ListOrderScreen from '../screens/order/list-order.screen';
 import ReviewStadiumScreen from '../screens/review-stadium.screen';
 import StadiumCollageDetailScreen from '../screens/stadium/stadium-collage-detail.screen';
 import StadiumDetailScreen from '../screens/stadium/stadium-detail.screen';
@@ -18,6 +19,7 @@ import TestScreen from '../screens/test.screen';
 import BottomTab from './bottom-tab.navigator';
 import {navigationRef} from './root.navigator';
 import {
+  LIST_ORDER_SCREEN,
   BOTTOM_TAB,
   CREATE_TEAM_SCREEN,
   DETAIL_PROFILE_SCREEN,
@@ -79,6 +81,7 @@ const MainRouter = ({isLogedIn}) => {
           name={STADIUM_COLLAGE_DETAIL_SCREEN}
           component={StadiumCollageDetailScreen}
         />
+        <Stack.Screen name={LIST_ORDER_SCREEN} component={ListOrderScreen} />
       </>
     );
   };

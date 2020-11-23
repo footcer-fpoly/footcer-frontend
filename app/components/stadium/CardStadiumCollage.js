@@ -32,10 +32,10 @@ const styles = StyleSheet.create({
   container: {
     ...Styles.borderView(colors.white, 1, 5),
     ...Styles.columnCenter,
-    padding: scale(20),
+    padding: scale(10),
     marginRight: scale(10),
     backgroundColor: colors.white,
-    minWidth: scale(200),
+    minWidth: scale(150),
   },
   txtName: {
     color: colors.greenDark,

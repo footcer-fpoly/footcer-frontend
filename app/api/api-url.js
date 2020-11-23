@@ -30,3 +30,6 @@ export const GET_STADIUM_DETAIL = stadiumId =>
   `${ROOT_API_URL}/stadium/info-id/${stadiumId}`;
 export const GET_STADIUM_COLLAGE_DETAIL = ({stadiumCollageId, date}) =>
   `${ROOT_API_URL}/stadium/collage-details/?stadiumCollageId=${stadiumCollageId}&date=${date}`;
+
+//API ORDER
+export const ADD_ORDER = `${ROOT_API_URL}/order/add`;

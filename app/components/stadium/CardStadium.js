@@ -12,9 +12,6 @@ import {body3, headline5, headline6, Text} from '../common/Text';
 const {width} = Dimensions.get('window');
 const CARD_WIDTH = width * 0.8;
 export default function CardStadium({item, keyExtractor}) {
-  console.log('sssss', keyExtractor);
-  console.log('xxxxx', item);
-
   const rowItem = (iconName, text, style, subText) => {
     return (
       <View style={[styles.flexRow, style]}>

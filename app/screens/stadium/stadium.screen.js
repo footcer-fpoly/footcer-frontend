@@ -37,7 +37,7 @@ const StadiumScreen = ({isPermissionLocation}) => {
 
   useEffect(() => {
     if (isPermissionLocation) {
-      setTimeout(getData, 3000);
+      setTimeout(getData, 500);
     }
   }, []);
 

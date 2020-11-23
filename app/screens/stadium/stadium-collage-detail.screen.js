@@ -1,25 +1,22 @@
-import React, {useRef, useState, useEffect} from 'react';
-import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {ScrollView, StyleSheet, View, TouchableOpacity} from 'react-native';
 import Carousel from 'react-native-snap-carousel';
-import {createIconSetFromFontello} from 'react-native-vector-icons';
-import Icon from 'react-native-vector-icons/Octicons';
 import {getStadiumCollageDetailService} from '../../api/stadium.api';
 import {StatusCode} from '../../api/status-code';
-import BackIcon from '../../components/common/BackIcon';
 import ListLoadingComponent from '../../components/common/ListLoadingComponent';
 import PrimaryButton from '../../components/common/PrimaryButton';
 import {headline5, Text} from '../../components/common/Text';
 import ToolBar from '../../components/common/Toolbar';
 import DateItem from '../../components/stadium/DateItem';
 import ModalCreateOrder from '../../components/stadium/ModalCreateOrder';
-import SectionChooseDate from '../../components/stadium/SectionChooseDate';
-import SectionChooseTime from '../../components/stadium/SectionChooseTime';
 import TimeItem from '../../components/stadium/TimeItem';
+import Icon from 'react-native-vector-icons/Octicons';
 import {
+  converSecondsToTime,
   detachedArray,
   diffHours,
-  renderNextDays,
   formatToDate,
+  renderNextDays,
 } from '../../helpers/format.helper';
 import {scale} from '../../helpers/size.helper';
 import {ToastHelper} from '../../helpers/ToastHelper';
@@ -27,12 +24,16 @@ import rootNavigator from '../../navigations/root.navigator';
 import colors from '../../theme/colors';
 import dimens from '../../theme/dimens';
 import spacing from '../../theme/spacing';
+import {or} from 'react-native-reanimated';
 
-export default function StadiumCollageDetailScreen({route, navigation}) {
+export default function StadiumCollageDetailScreen({route}) {
+  const listDate = renderNextDays(14).map(e => ({
+    choose: false,
+    date: e,
+  }));
   const {stadiumCollageId} = route.params;
-  const chooseDateRef = useRef();
   const [data, setData] = useState({
-    date: null,
+    listDate,
     listTime: [],
     onReady: false,
   });
@@ -42,26 +43,55 @@ export default function StadiumCollageDetailScreen({route, navigation}) {
     dateOrder: '',
     price: 0,
     description: '',
-    stadiumDetailsId: stadiumCollageId,
+    stadiumDetailsId: null,
   });
 
   const [visibleModal, setVisibleModal] = useState(false);
 
-  useEffect(() => {
-    const date = chooseDateRef.current.getValue();
-    console.log(date);
-    if (date) {
-      getData(date);
-    }
-  });
-  const getData = async date => {
+  const handleOnPress = () => {
+    rootNavigator.back();
+  };
+
+  const toggleModalCreateOrder = () => {
+    setVisibleModal(!visibleModal);
+  };
+
+  const onPressChooseDate = (item, index) => async () => {
+    item.choose = true;
+    const newList = [...data.listDate];
+    newList.map(e => {
+      if (e.choose === true && e !== item) {
+        e.choose = false;
+      }
+    });
+    setData({
+      ...data,
+      listDate: newList,
+    });
+    setOrder({
+      ...order,
+      dateOrder: formatToDate(item.date),
+    });
     try {
       const res = await getStadiumCollageDetailService({
         stadiumCollageId,
-        date,
+        date: formatToDate(item.date),
       });
-      console.log('=====', res);
+      console.log('getStadiumCollageDetailService -->res: ', res);
       if (res && res.code === StatusCode.SUCCESS) {
+        if (!index) {
+          setData({
+            ...data,
+            listTime: res.data.stadiumDetails.filter(
+              el => diffHours(el.startTimeDetail) > 0,
+            ),
+          });
+        } else {
+          setData({
+            ...data,
+            listTime: res.data.stadiumDetails,
+          });
+        }
       } else {
         console.log('getStadiumCollageDetailService --> Failed');
         ToastHelper.showToast('Lỗi hệ thống');
@@ -71,12 +101,81 @@ export default function StadiumCollageDetailScreen({route, navigation}) {
     }
   };
 
-  const toggleModalCreateOrder = () => {
-    setVisibleModal(!visibleModal);
+  const onPressChooseTime = item => () => {
+    item.hasOrder = 'choose';
+    const newList = [...data.listTime];
+    newList.map(e => {
+      if (e.hasOrder === 'choose' && e !== item) {
+        e.hasOrder = false;
+      }
+    });
+    setData({...data, listTime: newList});
+    setOrder({
+      ...order,
+      price: item.price,
+      timeOrder:
+        converSecondsToTime(item.startTimeDetail) +
+        ' -' +
+        converSecondsToTime(item.endTimeDetail),
+      stadiumDetailsId: item.stadiumDetailsId,
+    });
   };
 
-  const handleOnPress = () => {
-    navigation.goBack();
+  const keyExtractor = (item, index) => index.toString();
+  const renderItemChooseDate = ({item, index}) => {
+    return <DateItem onPress={onPressChooseDate(item, index)} item={item} />;
+  };
+
+  const renderSectionDate = () => {
+    return (
+      <View style={[styles.section, styles.flex1]}>
+        <Text type={headline5} style={styles.txtTitle}>
+          1. Chọn ngày:
+        </Text>
+        <Carousel
+          data={data.listDate}
+          keyExtractor={keyExtractor}
+          renderItem={renderItemChooseDate}
+          sliderWidth={scale(dimens.WINDOW_WIDTH)}
+          itemWidth={scale(170)}
+          inactiveSlideScale={1}
+          inactiveSlideOpacity={1}
+          activeSlideAlignment={'start'}
+          containerCustomStyle={styles.paddingHor}
+        />
+      </View>
+    );
+  };
+
+  const render = arr => {
+    return arr.map((item, index) => (
+      <TimeItem
+        onPress={onPressChooseTime(item)}
+        item={item}
+        key={index.toString()}
+      />
+    ));
+  };
+  const renderSectionTime = () => {
+    const newList = [...data.listTime];
+    const subList = detachedArray(newList, 6);
+    return (
+      <View style={[styles.section, styles.mrTop]}>
+        <Text type={headline5} style={styles.txtTitle}>
+          2. Chọn giờ:
+        </Text>
+        <ScrollView
+          showsHorizontalScrollIndicator={false}
+          horizontal
+          style={styles.paddingHor}>
+          {subList.map((item, index) => (
+            <View key={index.toString()} style={{marginRight: scale(5)}}>
+              {render(item)}
+            </View>
+          ))}
+        </ScrollView>
+      </View>
+    );
   };
   const renderToolBar = () => {
     return (
@@ -109,8 +208,8 @@ export default function StadiumCollageDetailScreen({route, navigation}) {
     <View style={styles.container}>
       {renderToolBar()}
       <ScrollView style={styles.flex1}>
-        <SectionChooseDate ref={chooseDateRef} />
-        <SectionChooseTime />
+        {renderSectionDate()}
+        {renderSectionTime()}
       </ScrollView>
       <View style={styles.wrapperBtnOrder}>
         <PrimaryButton onPress={toggleModalCreateOrder} title="Đặt sân" />
@@ -118,12 +217,19 @@ export default function StadiumCollageDetailScreen({route, navigation}) {
       <ModalCreateOrder
         dismiss={toggleModalCreateOrder}
         visible={visibleModal}
+        data={order}
       />
     </View>
   );
 }
 const styles = StyleSheet.create({
   flex1: {flex: 1},
+  paddingHor: {
+    paddingHorizontal: scale(10),
+  },
+  mrTop: {
+    marginTop: spacing.tiny,
+  },
   btnBack: {
     height: '100%',
     alignItems: 'center',
@@ -138,6 +244,15 @@ const styles = StyleSheet.create({
   },
   titleContent: {
     color: colors.white,
+    textTransform: 'uppercase',
+  },
+  section: {
+    backgroundColor: colors.white,
+    paddingVertical: spacing.large,
+  },
+  txtTitle: {
+    paddingHorizontal: scale(10),
+    marginBottom: spacing.tiny,
     textTransform: 'uppercase',
   },
   wrapperBtnOrder: {

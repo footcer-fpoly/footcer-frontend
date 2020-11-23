@@ -1,5 +1,7 @@
 var dayjs = require('dayjs');
 var locale_vi = require('dayjs/locale/vi');
+var utc = require('dayjs/plugin/utc');
+dayjs.extend(utc);
 
 export const regexPhoneNumber = /^0[0-9]{9}$/;
 
@@ -17,7 +19,6 @@ export const regexPhoneOrEmail = /^(?:0[0-9]{9}|(([^<>()\[\]\\.,;:\s@"]+(\.[^<>(
  * @param mixed   s: sections delimiter
  * @param mixed   c: decimal delimiter
  */
-
 
 export const converSecondsToTime = seconds => {
   if (seconds) {
@@ -54,11 +55,13 @@ export const renderNextDays = nextDays => {
   }
   return tempArr;
 };
+
 export const formatDateTime = date => {
   return dayjs(date)
     .locale(locale_vi)
     .format('dddd, DD/MM/YYYY');
 };
+
 export const formatToDate = date => {
   return dayjs(date)
     .locale(locale_vi)
@@ -70,11 +73,8 @@ export const convertMilisecondsToMinutes = miliseconds => {
 };
 
 export const diffHours = hour => {
-  console.log(hour);
   let date = new Date();
-  date.setHours(date.getHours() + 7);
-  date.toUTCString();
-  const nowHours = dayjs(date.toUTCString()).format('HH');
-  const myHours = dayjs(hour).format('HH');
+  const nowHours = date.getHours();
+  const myHours = new Date(Number(hour)).toUTCString().substring(16, 19);
   return Number(myHours) - Number(nowHours);
 };
