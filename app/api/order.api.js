@@ -1,5 +1,5 @@
 import RequestHelper from '../helpers/request.helper';
-import {ADD_ORDER} from './api-url';
+import {ADD_ORDER, GET_LIST_ORDER} from './api-url';
 
 export const addOrderService = ({
   time,
@@ -13,4 +13,8 @@ export const addOrderService = ({
     description,
     stadiumDetailsId,
   });
+};
+
+export const getListOrderService = () => {
+  return RequestHelper.get(GET_LIST_ORDER);
 };

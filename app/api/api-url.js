@@ -33,3 +33,4 @@ export const GET_STADIUM_COLLAGE_DETAIL = ({stadiumCollageId, date}) =>
 
 //API ORDER
 export const ADD_ORDER = `${ROOT_API_URL}/order/add`;
+export const GET_LIST_ORDER = `${ROOT_API_URL}/order/user`;
