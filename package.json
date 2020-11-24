@@ -10,7 +10,8 @@
     "lint": "eslint .",
     "clean:android": "cd android && ./gradlew clean && cd ../",
     "r": "npx jetify && cd android && ./gradlew assembleRelease",
-    "adb": "adb reverse tcp:8081 tcp:8081"
+    "adb": "adb reverse tcp:8081 tcp:8081",
+    "postinstall": "npx patch-package"
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.12.0",
@@ -50,6 +51,7 @@
     "react-native-safe-area-context": "^3.1.1",
     "react-native-safe-area-view": "^1.1.1",
     "react-native-screens": "^2.9.0",
+    "react-native-scrollable-tab-view": "^1.0.0",
     "react-native-skeleton-placeholder": "^2.0.11",
     "react-native-snap-carousel": "^3.9.1",
     "react-native-spinkit": "^1.5.0",

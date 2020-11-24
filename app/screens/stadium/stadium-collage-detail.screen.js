@@ -24,7 +24,6 @@ import rootNavigator from '../../navigations/root.navigator';
 import colors from '../../theme/colors';
 import dimens from '../../theme/dimens';
 import spacing from '../../theme/spacing';
-import {or} from 'react-native-reanimated';
 
 export default function StadiumCollageDetailScreen({route}) {
   const listDate = renderNextDays(14).map(e => ({

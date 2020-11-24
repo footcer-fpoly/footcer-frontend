@@ -120,3 +120,11 @@ export const listImageBanner = [
     url: require('../assets/images/banner5.jpg'),
   },
 ];
+
+export const listStatusOrder = [
+  {key: 'ALL', name: 'Tất cả'},
+  {key: 'ACCEPT', name: 'Đã xác nhận'},
+  {key: 'WAITING', name: 'Chờ xác nhận'},
+  {key: 'FINISH', name: 'Hoàn thành'},
+  {key: 'REJECT', name: 'Đã hủy'},
+];

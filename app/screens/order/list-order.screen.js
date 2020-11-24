@@ -10,26 +10,46 @@ import {getListOrderService} from '../../api/order.api';
 import {StatusCode} from '../../api/status-code';
 import ListLoadingComponent from '../../components/common/ListLoadingComponent';
 import CardStatusOrder from '../../components/order/CardStatusOrder';
+import ScrollableTabView, {
+  ScrollableTabBar,
+} from 'react-native-scrollable-tab-view';
+import {listStatusOrder} from '../../helpers/data-local.helper';
 
+let initialListOrder = [];
 export default function ListOrderScreen() {
-  const [data, setdata] = useState(null);
+  const [data, setdata] = useState({
+    list: [],
+    onReady: false,
+  });
   const handleOnPress = () => {
     rootNavigator.back();
   };
   useEffect(() => {
     getData();
-  });
+  }, []);
   const getData = async () => {
     const res = await getListOrderService();
     if (res && res.code === StatusCode.SUCCESS) {
-      setdata(res.data);
+      initialListOrder = [...res.data];
+      setdata({...data, list: res.data, onReady: true});
     } else {
-      alert('nhu cc');
+      alert('Lỗi');
+    }
+  };
+  const onChangeTab = ({i}) => {
+    let newList = [...initialListOrder];
+    if (i) {
+      const matchedSatus = newList.filter(item => {
+        return item?.order_status?.status === listStatusOrder[i].key;
+      });
+      setdata({...data, list: matchedSatus});
+    } else {
+      setdata({...data, list: newList, onReady: true});
     }
   };
   const keyExtractor = (item, index) => index.toString();
   const renderItem = ({item}) => {
-    return <CardStatusOrder data={item} />;
+    return <CardStatusOrder item={item} />;
   };
   const renderToolBar = () => {
     return (
@@ -49,28 +69,39 @@ export default function ListOrderScreen() {
     );
   };
   return (
-    <View>
+    <View style={styles.container}>
       {renderToolBar()}
-      <FlatList
-        data={data}
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.list}
-        keyExtractor={keyExtractor}
-        renderItem={renderItem}
-        ListEmptyComponent={
-          <ListLoadingComponent
-            onReady={data !== null}
-            numberOfPlaceholder={3}
-            text={
-              'Bạn chưa tham gia đội bóng nào click vào tạo đội bóng để tạo đội ngay!'
-            }
-          />
-        }
-      />
+      <ScrollableTabView
+        onChangeTab={onChangeTab}
+        tabBarUnderlineStyle={{backgroundColor: colors.green}}
+        tabBarActiveTextColor={colors.greenDark}
+        tabBarBackgroundColor={colors.white}
+        initialPage={0}
+        renderTabBar={() => <ScrollableTabBar />}>
+        {listStatusOrder.map(item => (
+          <View style={styles.warpperBody} tabLabel={item.name}>
+            <FlatList
+              data={data.list}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={styles.list}
+              keyExtractor={keyExtractor}
+              renderItem={renderItem}
+              ListEmptyComponent={
+                <ListLoadingComponent
+                  onReady={data.onReady}
+                  numberOfPlaceholder={3}
+                  text={'Không có dữ liệu'}
+                />
+              }
+            />
+          </View>
+        ))}
+      </ScrollableTabView>
     </View>
   );
 }
 const styles = StyleSheet.create({
+  container: {flex: 1, backgroundColor: colors.backgroundScreen},
   btnBack: {
     height: '100%',
     alignItems: 'center',
@@ -83,5 +114,10 @@ const styles = StyleSheet.create({
   titleToolBar: {
     color: colors.white,
     textTransform: 'uppercase',
+  },
+  warpperBody: {
+    flex: 1,
+    paddingHorizontal: scale(10),
+    marginTop: scale(10),
   },
 });
