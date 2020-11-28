@@ -3,6 +3,7 @@ import {
   GET_LIST_STADIUM,
   GET_STADIUM_COLLAGE_DETAIL,
   GET_STADIUM_DETAIL,
+  REVIEW_STADIUM,
   SEARCH_STADIUM_NAME,
 } from './api-url';
 
@@ -21,4 +22,8 @@ export const getStadiumCollageDetailService = ({stadiumCollageId, date}) => {
 
 export const searchStadiumNameService = name => {
   return RequestHelper.get(SEARCH_STADIUM_NAME(name));
+};
+
+export const reviewStadiumService = ({stadiumId, content, rate}) => {
+  return RequestHelper.post(REVIEW_STADIUM, {stadiumId, content, rate});
 };

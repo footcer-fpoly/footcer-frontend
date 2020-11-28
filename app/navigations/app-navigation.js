@@ -12,7 +12,7 @@ import SplashScreen from '../screens/auth/splash.screen';
 import CreateGameScreen from '../screens/game/create-game.screen';
 import ListOrderScreen from '../screens/order/list-order.screen';
 import orderDetailScreen from '../screens/order/order-detail.screen';
-import ReviewStadiumScreen from '../screens/review-stadium.screen';
+import ReviewStadiumScreen from '../screens/stadium/review-stadium.screen';
 import StadiumCollageDetailScreen from '../screens/stadium/stadium-collage-detail.screen';
 import StadiumDetailScreen from '../screens/stadium/stadium-detail.screen';
 import CreateTeamScreen from '../screens/team/create-team.screen';

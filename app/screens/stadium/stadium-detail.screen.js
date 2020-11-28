@@ -1,5 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {Animated, FlatList, Image, StyleSheet, View} from 'react-native';
+import {
+  Animated,
+  FlatList,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import StarRating from 'react-native-star-rating';
 import Swiper from 'react-native-swiper';
 import {getStadiumDetailService} from '../../api/stadium.api';
@@ -8,9 +15,13 @@ import BackIcon from '../../components/common/BackIcon';
 import {headline4, Text} from '../../components/common/Text';
 import ContentPlaceholder from '../../components/placeholder/ContentPlaceholder';
 import ImagePlaceholder from '../../components/placeholder/ImagePlaceholder';
+import BlockNameStadium from '../../components/stadium/BlockNameStadium';
 import CardStadiumCollage from '../../components/stadium/CardStadiumCollage';
 import {getStatusBarHeight} from '../../helpers/device.helper';
 import {scale} from '../../helpers/size.helper';
+import Styles from '../../helpers/styles.helper';
+import rootNavigator from '../../navigations/root.navigator';
+import {REVIEW_STADIUM_SCREEN} from '../../navigations/route-name';
 import colors from '../../theme/colors';
 
 const HEADER_MAX_HEIGHT = 200;
@@ -105,23 +116,15 @@ export default function StadiumDetailScreen({route}) {
               resizeMode="cover"
             />
           </Swiper>
-          <View style={styles.warpperTitle}>
-            <Text type={headline4}>{data.stadiumName}</Text>
-            <View>
-              <StarRating
-                disabled={true}
-                maxStars={5}
-                rating={data.star}
-                fullStarColor={colors.yellow}
-                starSize={20}
-                containerStyle={{width: 100}}
-              />
-              <Text>{data.star || 0}/5</Text>
-            </View>
-          </View>
         </Animated.View>
         <View style={styles.body}>
-          <Text>Chi tiết sân</Text>
+          <BlockNameStadium name={data.stadiumName} />
+          <TouchableOpacity
+            onPress={() =>
+              rootNavigator.navigate(REVIEW_STADIUM_SCREEN, {item: data})
+            }>
+            <Text>Đánh giá sân</Text>
+          </TouchableOpacity>
         </View>
       </Animated.ScrollView>
       <View style={styles.footer}>
@@ -142,7 +145,7 @@ export default function StadiumDetailScreen({route}) {
 }
 
 const styles = StyleSheet.create({
-  flex1: {flex: 1, backgroundColor: colors.viewBackground},
+  flex1: {flex: 1, backgroundColor: colors.white},
   contentPlaceholder: {width: scale(344), flex: 1, marginTop: scale(20)},
   sliderHeight: {
     height: scale(250),
@@ -150,9 +153,6 @@ const styles = StyleSheet.create({
   sliderImage: {
     width: '100%',
     height: '100%',
-  },
-  body: {
-    backgroundColor: colors.viewBackground,
   },
   toolbarContainer: (borderBottomWidth, backgroundColor) => ({
     position: 'absolute',
@@ -179,18 +179,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: scale(14),
   }),
+  body: {
+    backgroundColor: colors.white,
+  },
   scrollViewContent: {
     flex: 1,
-    backgroundColor: colors.viewBackground,
+    backgroundColor: colors.white,
     marginBottom: scale(150),
-  },
-  warpperTitle: {
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    left: 0,
-    backgroundColor: colors.red,
-    padding: scale(10),
   },
   footer: {
     position: 'absolute',
