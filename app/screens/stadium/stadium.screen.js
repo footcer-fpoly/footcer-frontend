@@ -1,29 +1,44 @@
 import LottieView from 'lottie-react-native';
 import React, {useEffect, useRef, useState} from 'react';
-import {Animated, Dimensions, Image, StyleSheet, View} from 'react-native';
+import {
+  Animated,
+  Dimensions,
+  Image,
+  LayoutAnimation,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {connect} from 'react-redux';
-import {getListStadiumService} from '../../api/stadium.api';
+import {
+  getListStadiumService,
+  searchStadiumNameService,
+} from '../../api/stadium.api';
 import {StatusCode} from '../../api/status-code';
 import markerDefault from '../../assets/images/marker-default.png';
 import markerStadium from '../../assets/images/marker-stadium.png';
 import animationMap from '../../assets/lottie-animation/map-animation.json';
+import SearchInput from '../../components/common/SearchInput';
 import {headline4, headline5, Text} from '../../components/common/Text';
 import ToolBar from '../../components/common/Toolbar';
+import ButtonMyLocation from '../../components/stadium/ButtonMyLocation';
 import CardStadium from '../../components/stadium/CardStadium';
 import PermissionFail from '../../components/stadium/PermissionFail';
 import {scale} from '../../helpers/size.helper';
-import colors from '../../theme/colors';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Styles from '../../helpers/styles.helper';
+import colors from '../../theme/colors';
 import spacing from '../../theme/spacing';
+import {showLoading, hideLoading} from '../../redux/actions/loading.action';
+import TextError from '../../components/common/TextError';
 
 const {width} = Dimensions.get('window');
 const CARD_WIDTH = width * 0.8;
 const SPACING_FOR_CARD_INSET = width * 0.1 - 10;
-const StadiumScreen = ({isPermissionLocation}) => {
-  console.log('isPermissionLocation: ', isPermissionLocation);
+const StadiumScreen = ({isPermissionLocation, showLoading, hideLoading}) => {
   const [state, setState] = useState({
     listStadium: [],
     region: {
@@ -34,10 +49,26 @@ const StadiumScreen = ({isPermissionLocation}) => {
     },
     onReady: false,
   });
+  const [search, setSearch] = useState({
+    show: false,
+    iconName: 'search',
+    text: '',
+  });
+  const [showMove, setShowMove] = useState(true);
+  const toggleSearch = () => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setSearch({
+      show: !search.show,
+      iconName: search.iconName === 'search' ? 'refresh' : 'search',
+      text: '',
+    });
+
+    getData();
+  };
 
   useEffect(() => {
     if (isPermissionLocation) {
-      setTimeout(getData, 500);
+      setTimeout(getData, 3000);
     }
   }, []);
 
@@ -49,6 +80,7 @@ const StadiumScreen = ({isPermissionLocation}) => {
           longitude: position?.coords?.longitude,
         });
         if (resListStadium && resListStadium.code === StatusCode.SUCCESS) {
+          setShowMove(true);
           setState({
             ...state,
             listStadium: resListStadium.data,
@@ -92,7 +124,7 @@ const StadiumScreen = ({isPermissionLocation}) => {
               latitudeDelta: state.region.latitudeDelta,
               longitudeDelta: state.region.longitudeDelta,
             },
-            350,
+            1000,
           );
         }
       }, 10);
@@ -122,19 +154,53 @@ const StadiumScreen = ({isPermissionLocation}) => {
   const _map = useRef();
   const _scrollView = useRef();
   const renderItem = (item, index) => {
-    console.log(index);
-    return <CardStadium keyExtractor={index.toString()} item={item} />;
+    return (
+      <CardStadium showMove={showMove} key={index.toString()} item={item} />
+    );
+  };
+  const searchStadium = async () => {
+    try {
+      if (search.text.length) {
+        showLoading();
+        const res = await searchStadiumNameService(search.text);
+        if (res && res.code === StatusCode.SUCCESS) {
+          setState({...state, listStadium: res.data});
+          setShowMove(false);
+        } else {
+        }
+        hideLoading();
+      }
+    } catch (error) {}
   };
   const renderToolBar = () => {
     return (
-      <ToolBar
-        style={{backgroundColor: colors.main}}
-        center={
-          <Text type={headline5} style={styles.titleToolbar}>
-            Danh sách cụm sân
-          </Text>
-        }
-      />
+      <>
+        <ToolBar
+          style={{backgroundColor: colors.main}}
+          center={
+            <Text type={headline5} style={styles.titleToolbar}>
+              Đặt sân bóng
+            </Text>
+          }
+          right={
+            <TouchableOpacity onPress={toggleSearch} style={styles.btnSearch}>
+              <MaterialIcons
+                name={search.iconName}
+                size={scale(25)}
+                color={colors.white}
+              />
+            </TouchableOpacity>
+          }
+        />
+        {search.show && (
+          <View style={styles.warpperSearch}>
+            <SearchInput
+              onChangeText={value => setSearch({...search, text: value})}
+              onPress={searchStadium}
+            />
+          </View>
+        )}
+      </>
     );
   };
   if (!isPermissionLocation) {
@@ -155,6 +221,21 @@ const StadiumScreen = ({isPermissionLocation}) => {
   return (
     <View style={styles.container}>
       {renderToolBar()}
+      {!search.show && (
+        <ButtonMyLocation
+          onPress={() => {
+            _map.current.animateToRegion(
+              {
+                latitude: state.region.latitude,
+                longitude: state.region.longitude,
+                latitudeDelta: state.region.latitudeDelta,
+                longitudeDelta: state.region.longitudeDelta,
+              },
+              2000,
+            );
+          }}
+        />
+      )}
       <MapView
         ref={_map}
         provider={PROVIDER_GOOGLE}
@@ -199,7 +280,7 @@ const StadiumScreen = ({isPermissionLocation}) => {
       <View style={styles.footer}>
         <View style={styles.warpperTitle}>
           <Text type={headline4} style={styles.titleFooter}>
-            Danh sách cụm sân gần bạn
+            Danh sách cụm sân
           </Text>
           <View style={styles.warpperTitle}>
             <Text type={headline5} style={styles.txtCountListStadium}>
@@ -246,19 +327,23 @@ const styles = StyleSheet.create({
     bottom: -50,
     zIndex: -1,
   },
+  warpperSearch: {
+    backgroundColor: colors.white,
+    paddingHorizontal: scale(10),
+    paddingVertical: scale(10),
+  },
   marker: {width: scale(30), height: scale(30)},
   markerStadium: {width: scale(40), height: scale(40)},
   container: {
     flex: 1,
   },
-
   footer: {
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
     paddingVertical: 10,
-    backgroundColor: colors.white + 'B3',
+    backgroundColor: colors.white,
     borderTopRightRadius: scale(20),
     borderTopLeftRadius: scale(20),
   },
@@ -277,6 +362,9 @@ const styles = StyleSheet.create({
     color: colors.green,
     marginRight: spacing.tiny,
   },
+  btnSearch: {
+    marginRight: scale(10),
+  },
 });
 
 function mapStateToProps(state) {
@@ -284,8 +372,12 @@ function mapStateToProps(state) {
     isPermissionLocation: state.authState.isPermissionsLocation,
   };
 }
+const mapDispatchToProps = {
+  showLoading,
+  hideLoading,
+};
 
 export default connect(
   mapStateToProps,
-  null,
+  mapDispatchToProps,
 )(StadiumScreen);

@@ -3,6 +3,7 @@ import {
   GET_LIST_STADIUM,
   GET_STADIUM_COLLAGE_DETAIL,
   GET_STADIUM_DETAIL,
+  SEARCH_STADIUM_NAME,
 } from './api-url';
 
 export const getListStadiumService = ({latitude, longitude}) => {
@@ -16,4 +17,8 @@ export const getStadiumCollageDetailService = ({stadiumCollageId, date}) => {
   return RequestHelper.get(
     GET_STADIUM_COLLAGE_DETAIL({stadiumCollageId, date}),
   );
+};
+
+export const searchStadiumNameService = name => {
+  return RequestHelper.get(SEARCH_STADIUM_NAME(name));
 };

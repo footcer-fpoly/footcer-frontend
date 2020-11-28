@@ -1,16 +1,17 @@
-import React, {Component} from 'react';
-import {View, StyleSheet, Linking} from 'react-native';
-import PrimaryButton from '../common/PrimaryButton';
-import {body2, body3, Text} from '../common/Text';
+import LottieView from 'lottie-react-native';
+import React from 'react';
+import {BackHandler, Linking, StyleSheet, View} from 'react-native';
 import animationOnLocation from '../../assets/lottie-animation/on-location.json';
-import spacing from '../../theme/spacing';
 import {scale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
-import LottieView from 'lottie-react-native';
 import colors from '../../theme/colors';
+import spacing from '../../theme/spacing';
+import PrimaryButton from '../common/PrimaryButton';
+import {body3, Text} from '../common/Text';
 
 export default function PermissionFail() {
   const openSetting = () => {
+    BackHandler.exitApp();
     Linking.openSettings();
   };
   return (

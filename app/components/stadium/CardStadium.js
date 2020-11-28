@@ -11,7 +11,7 @@ import {body3, headline5, headline6, Text} from '../common/Text';
 
 const {width} = Dimensions.get('window');
 const CARD_WIDTH = width * 0.8;
-export default function CardStadium({item, keyExtractor}) {
+export default function CardStadium({item, showMove}) {
   const rowItem = (iconName, text, style, subText) => {
     return (
       <View style={[styles.flexRow, style]}>
@@ -24,7 +24,7 @@ export default function CardStadium({item, keyExtractor}) {
     );
   };
   return (
-    <View key={keyExtractor} style={styles.container}>
+    <View key={item.stadiumId} style={styles.container}>
       <View>
         <Image source={{uri: item.image}} style={styles.image} />
         <Text type={headline5} style={styles.txtName}>
@@ -36,22 +36,24 @@ export default function CardStadium({item, keyExtractor}) {
       </View>
       <View style={styles.body}>
         {rowItem('location-on', item?.address, styles.mrTop5)}
-        <View style={[styles.flexRow, styles.mrTop5]}>
-          {rowItem(
-            'transfer-within-a-station',
-            item?.distance,
-            styles.flex1,
-            ' km',
-          )}
-          {rowItem('timelapse', item?.timer, styles.flex1, ' phút')}
-        </View>
+        {showMove && (
+          <View style={[styles.flexRow, styles.mrTop5]}>
+            {rowItem(
+              'transfer-within-a-station',
+              item?.distance,
+              styles.flex1,
+              ' km',
+            )}
+            {rowItem('timelapse', item?.timer, styles.flex1, ' phút')}
+          </View>
+        )}
         <PrimaryButton
           onPress={() =>
             rootNavigation.navigate(STADIUM_DETAIL_SCREEN, {
               stadiumId: item.stadiumId,
             })
           }
-          style={styles.mrTop5}
+          style={styles.btn}
           title={'Xem chi tiết'}
         />
       </View>
@@ -62,31 +64,32 @@ const styles = StyleSheet.create({
   mrTop5: {
     marginTop: scale(5),
   },
+  btn: {
+    marginTop: scale(10),
+    backgroundColor: colors.greenDark,
+  },
   flex1: {flex: 1},
   flexRow: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   container: {
+    ...Styles.borderView(colors.main, 2, 0),
     backgroundColor: colors.white,
     borderTopRightRadius: scale(10),
     borderTopLeftRadius: scale(10),
     overflow: 'hidden',
-    marginRight: 20,
+    marginRight: scale(5),
     elevation: 2,
-    marginHorizontal: 10,
+    marginHorizontal: scale(10),
     shadowColor: '#000',
-    shadowRadius: 5,
-    shadowOpacity: 0.3,
-    shadowOffset: {x: 2, y: -2},
     width: CARD_WIDTH,
-    paddingBottom: scale(5),
     borderWidth: 2,
-    ...Styles.borderView(colors.main, 1, 0),
+    paddingBottom: scale(5),
   },
   image: {
     width: CARD_WIDTH,
-    height: 100,
+    height: scale(100),
   },
   txtName: {
     position: 'absolute',
