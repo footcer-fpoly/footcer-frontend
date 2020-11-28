@@ -3,10 +3,15 @@ import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import {converSecondsToTime, formatDateTime} from '../../helpers/format.helper';
 import {scale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
+import rootNavigator from '../../navigations/root.navigator';
+import {ORDER_DETAIL_SCREEN} from '../../navigations/route-name';
 import colors from '../../theme/colors';
 import {body3, headline5, headline6, Text} from '../common/Text';
 
 export default function CardStatusOrder({item}) {
+  const goToDetail = () => {
+    rootNavigator.navigate(ORDER_DETAIL_SCREEN, {orderId: item.orderId});
+  };
   const renderStatus = () => {
     switch (item.order_status.status) {
       case 'ACCEPT':
@@ -20,7 +25,7 @@ export default function CardStatusOrder({item}) {
     }
   };
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity onPress={goToDetail} style={styles.container}>
       <View style={{...Styles.rowBetween}}>
         <Text type={headline6} style={styles.status(renderStatus().bgColor)}>
           {renderStatus().text}

@@ -26,5 +26,6 @@ export const STADIUM_COLLAGE_DETAIL_SCREEN = 'stadium_collage_detail_screen';
 
 //ORDER
 export const LIST_ORDER_SCREEN = 'list_order_screen';
+export const ORDER_DETAIL_SCREEN = 'order_detail_screen';
 
 export const TEST_SCREEN = 'test_screen';

@@ -1,16 +1,15 @@
-import React, {useEffect, useState} from 'react';
-import {ScrollView, StyleSheet, View, TouchableOpacity} from 'react-native';
+import React, {useState} from 'react';
+import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import Carousel from 'react-native-snap-carousel';
+import Icon from 'react-native-vector-icons/Octicons';
 import {getStadiumCollageDetailService} from '../../api/stadium.api';
 import {StatusCode} from '../../api/status-code';
-import ListLoadingComponent from '../../components/common/ListLoadingComponent';
 import PrimaryButton from '../../components/common/PrimaryButton';
 import {headline5, Text} from '../../components/common/Text';
 import ToolBar from '../../components/common/Toolbar';
 import DateItem from '../../components/stadium/DateItem';
 import ModalCreateOrder from '../../components/stadium/ModalCreateOrder';
 import TimeItem from '../../components/stadium/TimeItem';
-import Icon from 'react-native-vector-icons/Octicons';
 import {
   converSecondsToTime,
   detachedArray,
