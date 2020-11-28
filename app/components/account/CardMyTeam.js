@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableHighlight,
   View,
+  TouchableOpacity,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {scale} from '../../helpers/size.helper';
@@ -16,7 +17,7 @@ import spacing from '../../theme/spacing';
 import {headline3, headline5, Text} from '../common/Text';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-export default function CardMyTeam({item}) {
+export default function CardMyTeam({item, onPress, width}) {
   const navigateToScreen = (routeName, params) => () => {
     rootNavigation.navigate(routeName, params);
   };
@@ -39,8 +40,12 @@ export default function CardMyTeam({item}) {
   };
   return (
     <TouchableHighlight
-      onPress={navigateToScreen(TEAM_DETAIL_SCREEN, {teamDetail: item})}
-      style={styles.container}>
+      onPress={
+        onPress
+          ? onPress
+          : navigateToScreen(TEAM_DETAIL_SCREEN, {teamDetail: item})
+      }
+      style={styles.container(width)}>
       <ImageBackground
         source={{uri: item?.background}}
         style={styles.background}>
@@ -61,7 +66,12 @@ export default function CardMyTeam({item}) {
               {item?.member?.length === 1 ? 'Thêm thành viên' : 'Thành viên'}
             </Text>
             {item?.member?.length === 1 ? (
-              <Icon name="add-circle" size={50} color={colors.greenLight} />
+              <TouchableOpacity
+                onPress={navigateToScreen(TEAM_DETAIL_SCREEN, {
+                  teamDetail: item,
+                })}>
+                <Icon name="add-circle" size={50} color={colors.greenLight} />
+              </TouchableOpacity>
             ) : (
               renderMember()
             )}
@@ -76,13 +86,14 @@ const styles = StyleSheet.create({
     color: '#48dbfb',
     marginBottom: spacing.small,
   },
-  container: {
+  container: width => ({
     marginRight: spacing.medium,
     height: scale(200),
-    width: scale(320),
+    width: width,
     overflow: 'hidden',
     borderRadius: 10,
-  },
+    marginTop: spacing.medium,
+  }),
   background: {
     flex: 1,
     borderRadius: 1000,

@@ -1,19 +1,19 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import React from 'react';
+import {connect} from 'react-redux';
+import TabbarComponent from '../components/common/TabbarComponent';
 // import TabbarComponent from '../components/common/TabbarComponent';
 import TabbarIcon from '../components/common/TabbarIcon';
-import HomeScreen from '../screens/home/home.screen';
-import FindOpponentScreen from '../screens/opponent/find-opponent.screen';
-import stadiumScreen from '../screens/stadium/stadium.screen';
 import AccountScreen from '../screens/account/account.screen';
+import ListGameScreen from '../screens/game/list-game.screen';
+import HomeScreen from '../screens/home/home.screen';
+import stadiumScreen from '../screens/stadium/stadium.screen';
 import {
   ACCOUNT_SCREEN,
   HOME_SCREEN,
+  LIST_GAME_SCREEN,
   STADIUM_SCREEN,
-  FIND_OPPONENT_SCREEN,
 } from './route-name';
-import TabbarComponent from '../components/common/TabbarComponent';
-import {connect} from 'react-redux';
 
 const Tab = createBottomTabNavigator();
 
@@ -24,7 +24,7 @@ const BottomTab = ({profile}) => {
         return {type: 'icon', name: 'home-outline'};
       case STADIUM_SCREEN:
         return {type: 'icon', name: 'book-open'};
-      case FIND_OPPONENT_SCREEN:
+      case LIST_GAME_SCREEN:
         return {
           type: 'icon',
           name: 'sword-cross',
@@ -65,8 +65,8 @@ const BottomTab = ({profile}) => {
         }}
       />
       <Tab.Screen
-        name={FIND_OPPONENT_SCREEN}
-        component={FindOpponentScreen}
+        name={LIST_GAME_SCREEN}
+        component={ListGameScreen}
         options={{
           tabBarLabel: 'Trận đấu',
         }}

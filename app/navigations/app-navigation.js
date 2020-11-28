@@ -9,8 +9,9 @@ import SignInScreen from '../screens/auth/sign-in.screen';
 import SignUpFbGgScreen from '../screens/auth/sign-up-fb-gg.screen';
 import SignUpPhoneScreen from '../screens/auth/sign-up-phone.screen';
 import SplashScreen from '../screens/auth/splash.screen';
+import CreateGameScreen from '../screens/game/create-game.screen';
 import ListOrderScreen from '../screens/order/list-order.screen';
-import orderDetail from '../screens/order/order-detail';
+import orderDetailScreen from '../screens/order/order-detail.screen';
 import ReviewStadiumScreen from '../screens/review-stadium.screen';
 import StadiumCollageDetailScreen from '../screens/stadium/stadium-collage-detail.screen';
 import StadiumDetailScreen from '../screens/stadium/stadium-detail.screen';
@@ -36,6 +37,7 @@ import {
   TEST_SCREEN,
   UPDATE_PASS_SCREEN,
   ORDER_DETAIL_SCREEN,
+  CREATE_GAME_SCREEN,
 } from './route-name';
 
 const Stack = createStackNavigator();
@@ -84,7 +86,11 @@ const MainRouter = ({isLogedIn}) => {
           component={StadiumCollageDetailScreen}
         />
         <Stack.Screen name={LIST_ORDER_SCREEN} component={ListOrderScreen} />
-        <Stack.Screen name={ORDER_DETAIL_SCREEN} component={orderDetail} />
+        <Stack.Screen
+          name={ORDER_DETAIL_SCREEN}
+          component={orderDetailScreen}
+        />
+        <Stack.Screen name={CREATE_GAME_SCREEN} component={CreateGameScreen} />
       </>
     );
   };

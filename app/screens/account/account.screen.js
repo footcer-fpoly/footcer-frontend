@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {FlatList, ScrollView, StyleSheet, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {connect} from 'react-redux';
@@ -17,23 +17,18 @@ import {
   CREATE_TEAM_SCREEN,
   DETAIL_PROFILE_SCREEN,
   LIST_ORDER_SCREEN,
-  TEST_SCREEN,
 } from '../../navigations/route-name';
 import {logout} from '../../redux/actions/auth.action';
-import {getListTeam} from '../../redux/actions/teams.action';
 import colors from '../../theme/colors';
 import spacing from '../../theme/spacing';
 
-const AccountScreen = ({profile, listTeam, logout, getListTeam}) => {
-  useEffect(() => {
-    getListTeam();
-  }, []);
+const AccountScreen = ({profile, listTeam, logout}) => {
   const navigateToScreen = (routeName, params) => () => {
     rootNavigation.navigate(routeName, params);
   };
   const keyExtractor = (item, index) => index.toString();
   const renderItem = ({item}) => {
-    return <CardMyTeam item={item} />;
+    return <CardMyTeam width={scale(320)} item={item} />;
   };
   return (
     <View style={styles.container}>
@@ -191,7 +186,6 @@ const styles = StyleSheet.create({
 });
 const mapDispatchToProps = {
   logout,
-  getListTeam,
 };
 function mapStateToProps(state) {
   return {

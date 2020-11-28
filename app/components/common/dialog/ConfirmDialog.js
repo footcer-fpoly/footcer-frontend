@@ -17,6 +17,7 @@ export default function ConfirmDialog({
   imageSVG,
   colorsCancel,
   colorsConfirm,
+  colorTitle,
   sizeImage,
   title,
   subTitle,
@@ -37,7 +38,9 @@ export default function ConfirmDialog({
             style={styles.redColor}
           />
         )}
-        <Text type={headline3}>{title}</Text>
+        <Text type={headline3} style={{color: colorTitle}}>
+          {title}
+        </Text>
         {subTitle && (
           <Text type={body2} style={styles.subTitle}>
             {subTitle}
@@ -86,5 +89,6 @@ const styles = StyleSheet.create({
   },
   subTitle: {
     marginTop: spacing.small,
+    textAlign: 'center',
   },
 });

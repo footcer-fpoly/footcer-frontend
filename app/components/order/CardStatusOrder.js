@@ -8,7 +8,7 @@ import {ORDER_DETAIL_SCREEN} from '../../navigations/route-name';
 import colors from '../../theme/colors';
 import {body3, headline5, headline6, Text} from '../common/Text';
 
-export default function CardStatusOrder({item}) {
+export default function CardStatusOrder({item, onPress}) {
   const goToDetail = () => {
     rootNavigator.navigate(ORDER_DETAIL_SCREEN, {orderId: item.orderId});
   };
@@ -25,7 +25,9 @@ export default function CardStatusOrder({item}) {
     }
   };
   return (
-    <TouchableOpacity onPress={goToDetail} style={styles.container}>
+    <TouchableOpacity
+      onPress={onPress ? onPress : goToDetail}
+      style={styles.container}>
       <View style={{...Styles.rowBetween}}>
         <Text type={headline6} style={styles.status(renderStatus().bgColor)}>
           {renderStatus().text}

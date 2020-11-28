@@ -9,7 +9,7 @@ export const SIGN_UP_FB_GG_SCREEN = 'register_fb_gg_screen';
 export const BOTTOM_TAB = 'bottom_tab';
 export const HOME_SCREEN = 'home_screen';
 export const STADIUM_SCREEN = 'stadium_screen';
-export const FIND_OPPONENT_SCREEN = 'find_opponent_screen';
+export const LIST_GAME_SCREEN = 'list_game_screen';
 export const ACCOUNT_SCREEN = 'account_screen';
 export const DETAIL_PROFILE_SCREEN = 'detail_profile_screen';
 
@@ -27,5 +27,7 @@ export const STADIUM_COLLAGE_DETAIL_SCREEN = 'stadium_collage_detail_screen';
 //ORDER
 export const LIST_ORDER_SCREEN = 'list_order_screen';
 export const ORDER_DETAIL_SCREEN = 'order_detail_screen';
+
+export const CREATE_GAME_SCREEN = 'create_game_screen';
 
 export const TEST_SCREEN = 'test_screen';

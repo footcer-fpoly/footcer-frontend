@@ -21,6 +21,7 @@ export default function RowProflie({
   onChangeText,
   textError,
   textErrorStyle,
+  otherTextInputProps,
 }) {
   return (
     <>
@@ -67,6 +68,7 @@ export default function RowProflie({
               editable ? {color: colors.black} : {color: colors.grayDark},
               stylesTxt,
             ]}
+            {...otherTextInputProps}
           />
         )}
       </View>

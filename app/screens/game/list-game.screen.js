@@ -2,11 +2,12 @@ import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import {headline5, Text} from '../../components/common/Text';
 import ToolBar from '../../components/common/Toolbar';
+import FloatingActionButton from '../../components/game/FLoatingActionButton';
 import colors from '../../theme/colors';
 
-const FindOpponentScreen = () => {
+const ListGameScreen = () => {
   return (
-    <View>
+    <View style={styles.container}>
       <ToolBar
         style={{backgroundColor: colors.main}}
         center={
@@ -16,13 +17,17 @@ const FindOpponentScreen = () => {
         }
       />
       <Text> find-opponent.screen </Text>
+      <FloatingActionButton />
     </View>
   );
 };
-export default FindOpponentScreen;
+export default ListGameScreen;
 const styles = StyleSheet.create({
   titleToolbar: {
     color: colors.white,
     textTransform: 'uppercase',
+  },
+  container: {
+    flex: 1,
   },
 });

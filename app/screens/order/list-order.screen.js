@@ -14,28 +14,19 @@ import ScrollableTabView, {
   ScrollableTabBar,
 } from 'react-native-scrollable-tab-view';
 import {listStatusOrder} from '../../helpers/data-local.helper';
+import {connect} from 'react-redux';
 
 let initialListOrder = [];
-export default function ListOrderScreen() {
+const ListOrderScreen = ({listOrder}) => {
+  initialListOrder = [...listOrder];
   const [data, setdata] = useState({
-    list: [],
+    list: listOrder,
     onReady: false,
   });
   const handleOnPress = () => {
     rootNavigator.back();
   };
-  useEffect(() => {
-    getData();
-  }, []);
-  const getData = async () => {
-    const res = await getListOrderService();
-    if (res && res.code === StatusCode.SUCCESS) {
-      initialListOrder = [...res.data];
-      setdata({...data, list: res.data, onReady: true});
-    } else {
-      alert('Lỗi');
-    }
-  };
+
   const onChangeTab = ({i}) => {
     let newList = [...initialListOrder];
     if (i) {
@@ -99,7 +90,7 @@ export default function ListOrderScreen() {
       </ScrollableTabView>
     </View>
   );
-}
+};
 const styles = StyleSheet.create({
   container: {flex: 1, backgroundColor: colors.backgroundScreen},
   btnBack: {
@@ -121,3 +112,14 @@ const styles = StyleSheet.create({
     marginTop: scale(10),
   },
 });
+
+function mapStateToProps(state) {
+  return {
+    listOrder: state.authState.listOrder,
+  };
+}
+
+export default connect(
+  mapStateToProps,
+  null,
+)(ListOrderScreen);

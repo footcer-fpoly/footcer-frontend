@@ -9,6 +9,8 @@ import {
   ACCEPT_PERMISSION_LOCATION,
   REFUSE_PERMISSION_LOCATION,
   REQUESTED_PERMISSION_LOCATION,
+  GET_LIST_ORDER,
+  GET_LIST_ORDER_SUCCESS,
 } from './types';
 
 export const logout = () => {
@@ -54,4 +56,12 @@ export const acceptPermissionLocation = () => ({
 
 export const refusePermissionLocation = () => ({
   type: REFUSE_PERMISSION_LOCATION,
+});
+
+export const getListOrder = () => ({
+  type: GET_LIST_ORDER,
+});
+export const getListOrderSuccess = data => ({
+  type: GET_LIST_ORDER_SUCCESS,
+  data,
 });
