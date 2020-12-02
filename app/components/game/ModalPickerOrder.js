@@ -1,21 +1,19 @@
-import React, {useImperativeHandle, useRef, useState} from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import React, {useImperativeHandle, useRef} from 'react';
+import {StyleSheet, View} from 'react-native';
 import {Modalize} from 'react-native-modalize';
 import {Portal} from 'react-native-portalize';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {connect} from 'react-redux';
 import {scale, verticalScale} from '../../helpers/size.helper';
 import colors from '../../theme/colors';
-import CardMyTeam from '../account/CardMyTeam';
-import {body2, headline3, Text} from '../common/Text';
+import {headline3, Text} from '../common/Text';
 import CardStatusOrder from '../order/CardStatusOrder';
 
 const ModalPickerOrder = React.forwardRef(({onSelectItem, listOrder}, ref) => {
   const modalizeRef = useRef();
   const newListOrder = listOrder.filter(
     item =>
-      item?.order_status?.status === 'ACCEPT' ||
-      item?.order_status?.status === 'WAITING',
+      item?.order_status?.status === 'WAITING' ||
+      item?.order_status?.status === 'ACCEPT',
   );
 
   const openModal = () => {

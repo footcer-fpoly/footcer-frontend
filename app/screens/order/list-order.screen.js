@@ -69,8 +69,11 @@ const ListOrderScreen = ({listOrder}) => {
         tabBarBackgroundColor={colors.white}
         initialPage={0}
         renderTabBar={() => <ScrollableTabBar />}>
-        {listStatusOrder.map(item => (
-          <View style={styles.warpperBody} tabLabel={item.name}>
+        {listStatusOrder.map((item, index) => (
+          <View
+            key={index.toString()}
+            style={styles.warpperBody}
+            tabLabel={item.name}>
             <FlatList
               data={data.list}
               showsVerticalScrollIndicator={false}

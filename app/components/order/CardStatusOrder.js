@@ -27,7 +27,7 @@ export default function CardStatusOrder({item, onPress}) {
   return (
     <TouchableOpacity
       onPress={onPress ? onPress : goToDetail}
-      style={styles.container}>
+      style={styles.container(renderStatus().bgColor)}>
       <View style={{...Styles.rowBetween}}>
         <Text type={headline6} style={styles.status(renderStatus().bgColor)}>
           {renderStatus().text}
@@ -38,23 +38,25 @@ export default function CardStatusOrder({item, onPress}) {
           </Text>
         )}
       </View>
-      <Text> {formatDateTime(item.time)} </Text>
-      <Text>Cụm sân: {item.stadium.stadiumName} </Text>
-      <Text>Sân con: {item.stadium_collage.stadiumCollageName} </Text>
+      <Text type={headline5}> {formatDateTime(item.time)} </Text>
+      <Text>Cụm sân: {item.stadium.stadiumName}</Text>
+      <Text>Sân con: {item.stadium_collage.stadiumCollageName}</Text>
       <Text>
-        {converSecondsToTime(item.stadium_details.startTimeDetail)} -{' '}
+        {converSecondsToTime(item.stadium_details.startTimeDetail)} -
         {converSecondsToTime(item.stadium_details.endTimeDetail)}
       </Text>
     </TouchableOpacity>
   );
 }
 const styles = StyleSheet.create({
-  container: {
+  container: color => ({
     ...Styles.borderView(colors.grayOpacity, scale(1), scale(5)),
     backgroundColor: colors.white,
     marginBottom: scale(10),
     padding: scale(10),
-  },
+    borderBottomWidth: scale(5),
+    borderBottomColor: color + 'B3',
+  }),
 
   status: backgroundColor => {
     return {

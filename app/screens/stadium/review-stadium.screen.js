@@ -38,7 +38,7 @@ const ReviewStadiumScreen = ({route, showLoading, hideLoading}) => {
         rate: review.star,
       });
       if (res && res.code === StatusCode.SUCCESS) {
-        rootNavigator.navigate(STADIUM_SCREEN);
+        rootNavigator.back();
         ToastHelper.showToast('Gữi đánh giá thành công');
       }
       hideLoading();

@@ -3,6 +3,7 @@ import {
   Animated,
   FlatList,
   Image,
+  LayoutAnimation,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -12,10 +13,17 @@ import Swiper from 'react-native-swiper';
 import {getStadiumDetailService} from '../../api/stadium.api';
 import {StatusCode} from '../../api/status-code';
 import BackIcon from '../../components/common/BackIcon';
-import {headline4, Text} from '../../components/common/Text';
+import {
+  body2,
+  body3,
+  headline4,
+  headline5,
+  Text,
+} from '../../components/common/Text';
 import ContentPlaceholder from '../../components/placeholder/ContentPlaceholder';
 import ImagePlaceholder from '../../components/placeholder/ImagePlaceholder';
 import BlockNameStadium from '../../components/stadium/BlockNameStadium';
+import CardReview from '../../components/stadium/CardReview';
 import CardStadiumCollage from '../../components/stadium/CardStadiumCollage';
 import {getStatusBarHeight} from '../../helpers/device.helper';
 import {scale} from '../../helpers/size.helper';
@@ -23,12 +31,27 @@ import Styles from '../../helpers/styles.helper';
 import rootNavigator from '../../navigations/root.navigator';
 import {REVIEW_STADIUM_SCREEN} from '../../navigations/route-name';
 import colors from '../../theme/colors';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useFocusEffect} from '@react-navigation/native';
+import RowProflie from '../../components/account/RowProflie';
+import {IconType} from '../../components/common/IconMaterialOrSvg';
 
 const HEADER_MAX_HEIGHT = 200;
 const HEADER_MIN_HEIGHT = 60;
 const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
 export default function StadiumDetailScreen({route}) {
   const [data, setData] = useState(null);
+  const [review, setReview] = useState({
+    show: true,
+    icon: 'minus',
+  });
+  const toogleShowReivew = () => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setReview({
+      show: !review.show,
+      icon: review.icon === 'plus' ? 'minus' : 'plus',
+    });
+  };
   const getStadiumDetail = async () => {
     try {
       const {stadiumId} = route.params;
@@ -43,9 +66,11 @@ export default function StadiumDetailScreen({route}) {
       console.log('getStadiumDetailService -->err: ', error);
     }
   };
-  useEffect(() => {
-    getStadiumDetail();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      getStadiumDetail();
+    }, []),
+  );
   const keyExtractor = (item, index) => index.toString();
   const renderStadiumCollage = ({item}) => {
     return <CardStadiumCollage item={item} />;
@@ -76,6 +101,19 @@ export default function StadiumDetailScreen({route}) {
         <Animated.Text style={styles.textTitleToolBar(fadeIn0To1)}>
           Chi tiết cụm sân
         </Animated.Text>
+        <View style={{...Styles.rowCenter}}>
+          <StarRating
+            disabled={true}
+            maxStars={5}
+            rating={data.rateCount}
+            fullStarColor={colors.yellow}
+            starSize={20}
+            containerStyle={styles.star}
+          />
+          <Text type={body3} style={styles.txtCountRate}>
+            {data.rateCount || 0}/5
+          </Text>
+        </View>
       </Animated.View>
     );
   };
@@ -118,13 +156,73 @@ export default function StadiumDetailScreen({route}) {
           </Swiper>
         </Animated.View>
         <View style={styles.body}>
-          <BlockNameStadium name={data.stadiumName} />
-          <TouchableOpacity
-            onPress={() =>
-              rootNavigator.navigate(REVIEW_STADIUM_SCREEN, {item: data})
-            }>
-            <Text>Đánh giá sân</Text>
-          </TouchableOpacity>
+          <BlockNameStadium item={data} />
+        </View>
+        <View style={styles.wrapperSection}>
+          <Text style={styles.titleSection} type={headline5}>
+            THÔNG TIN SÂN
+          </Text>
+          <RowProflie
+            label="Loại sân"
+            value={data?.category}
+            iconType={IconType.MaterialIcons}
+            iconName="account-circle"
+            editable={false}
+          />
+          <RowProflie
+            label="Số sân đơn"
+            value={data?.stadium_collage?.length + ' sân'}
+            iconType={IconType.MaterialIcons}
+            iconName="account-circle"
+            editable={false}
+          />
+        </View>
+        <View style={styles.line} />
+
+        <View style={styles.wrapperSection}>
+          <Text style={styles.titleSection} type={headline5}>
+            ĐỊA CHỈ
+          </Text>
+          <RowProflie
+            label="Tỉnh/Thành phố"
+            value={data?.city}
+            iconType={IconType.MaterialIcons}
+            iconName="account-circle"
+            editable={false}
+          />
+          <RowProflie
+            label="Quận/Huyện"
+            value={data?.district}
+            iconType={IconType.MaterialIcons}
+            iconName="account-circle"
+            editable={false}
+          />
+          <RowProflie
+            label="Phường/Xã"
+            value={data?.ward}
+            iconType={IconType.MaterialIcons}
+            iconName="account-circle"
+            editable={false}
+          />
+        </View>
+        <View style={styles.line} />
+        <View style={styles.wrapperSection}>
+          <Text style={styles.titleSection} type={headline5}>
+            GIỚI THIỆU
+          </Text>
+          <Text>{data?.description}</Text>
+        </View>
+        <View style={styles.line} />
+        <View style={styles.wrapperSection}>
+          <View style={{...Styles.rowBetween}}>
+            <Text style={styles.titleSection} type={headline5}>
+              ĐÁNH GIÁ ({data?.review?.length || 0})
+            </Text>
+            <TouchableOpacity onPress={toogleShowReivew}>
+              <Icon name={review.icon} style={{fontSize: scale(25)}} />
+            </TouchableOpacity>
+          </View>
+          {review.show && data.review.map(item => <CardReview item={item} />)}
         </View>
       </Animated.ScrollView>
       <View style={styles.footer}>
@@ -179,19 +277,16 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: scale(14),
   }),
+  txtCountRate: {color: colors.white, marginLeft: scale(5)},
   body: {
     backgroundColor: colors.white,
   },
   scrollViewContent: {
     flex: 1,
     backgroundColor: colors.white,
-    marginBottom: scale(150),
+    marginBottom: scale(5),
   },
   footer: {
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    left: 0,
     borderTopRightRadius: scale(10),
     borderTopLeftRadius: scale(10),
     backgroundColor: colors.green,
@@ -207,5 +302,17 @@ const styles = StyleSheet.create({
   },
   listStadiumCollage: {
     paddingHorizontal: scale(10),
+  },
+  wrapperSection: {
+    paddingHorizontal: scale(10),
+    marginBottom: scale(30),
+  },
+  titleSection: {color: colors.gray},
+  line: {
+    width: '100%',
+    height: scale(5),
+    backgroundColor: colors.grayLight,
+    marginTop: scale(10),
+    marginBottom: scale(20),
   },
 });

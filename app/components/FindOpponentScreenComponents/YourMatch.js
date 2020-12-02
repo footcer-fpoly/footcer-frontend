@@ -13,11 +13,15 @@ export default function YourMatch(props) {
             justifyContent: 'space-between',
           }}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Image source={{uri: props.urlImgTeam}} style={styles.imgTeam} />
+            <Image
+              source={{
+                uri:
+                  'https://znews-photo.zadn.vn/w660/Uploaded/qhj_yvobvhfwbv/2018_07_18/Nguyen_Huy_Binh1.jpg',
+              }}
+              style={styles.imgTeam}
+            />
             <View style={{marginLeft: 10}}>
-              <Text style={{fontSize: 16, color: '#0AB134'}}>
-                {props.nameTeam}
-              </Text>
+              <Text style={{fontSize: 16, color: '#0AB134'}}>haha</Text>
               <Text
                 style={{
                   fontSize: 12,
@@ -27,7 +31,7 @@ export default function YourMatch(props) {
                   marginTop: 5,
                   borderWidth: 0.5,
                 }}>
-                {props.size}
+                5
               </Text>
             </View>
           </View>
@@ -52,7 +56,7 @@ export default function YourMatch(props) {
         <View style={styles.matchAddressContainer}>
           <Icon name="place" color="#FF0000" size={18} />
           <Text Text numberOfLines={1} style={styles.textMatchAddress}>
-            {props.addressStadium}
+            123 Hồ Chí Minh
           </Text>
         </View>
         <View
@@ -64,10 +68,10 @@ export default function YourMatch(props) {
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Icon name="public" color="#0AB134" size={18} />
             <Text Text numberOfLines={1} style={styles.textMatchAddress}>
-              {props.private}
+              private
             </Text>
           </View>
-          <Text>{props.status}</Text>
+          <Text>chờ trận đấu</Text>
         </View>
       </View>
     </View>

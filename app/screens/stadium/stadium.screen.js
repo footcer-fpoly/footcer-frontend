@@ -295,7 +295,7 @@ const StadiumScreen = ({isPermissionLocation, showLoading, hideLoading}) => {
           pagingEnabled
           scrollEventThrottle={1}
           showsHorizontalScrollIndicator={false}
-          snapToInterval={CARD_WIDTH + 20}
+          snapToInterval={CARD_WIDTH + 10}
           snapToAlignment="center"
           contentContainerStyle={{
             paddingHorizontal: SPACING_FOR_CARD_INSET,

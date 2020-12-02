@@ -33,6 +33,11 @@ import TitleTextInputField from '../../components/common/TitleTextInputField';
 import CardMyTeam from '../../components/account/CardMyTeam';
 import TextError from '../../components/common/TextError';
 import {createIconSetFromFontello} from 'react-native-vector-icons';
+import {createGameService} from '../../api/game.api';
+import {StatusCode} from '../../api/status-code';
+import {ToastHelper} from '../../helpers/ToastHelper';
+import {connect} from 'react-redux';
+import {showLoading, hideLoading} from '../../redux/actions/loading.action';
 
 if (
   Platform.OS === 'android' &&
@@ -40,7 +45,7 @@ if (
 ) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
-export default function CreateGameScreen() {
+const CreateGameScreen = ({showLoading, hideLoading}) => {
   const modalizeTeamsRef = useRef();
   const modalizeOrderRef = useRef();
   const [dataTeam, setDataTeam] = useState(null);
@@ -87,13 +92,40 @@ export default function CreateGameScreen() {
       order: false,
     });
   };
-  const createGame = () => {
-    if (!dataTeam) {
-      setError({...error, team: true});
-    } else if (!dataOrder) {
-      setError({...error, order: true});
-    } else {
-      alert('haha');
+  const createGame = async () => {
+    try {
+      if (!dataTeam) {
+        setError({...error, team: true});
+      } else if (!dataOrder) {
+        setError({...error, order: true});
+      } else {
+        showLoading();
+        const res = await createGameService({
+          date: formatToDate(dataOrder.time),
+          hour: `${converSecondsToTime(
+            dataOrder?.stadium_details?.startTimeDetail,
+          )} - ${converSecondsToTime(
+            dataOrder?.stadium_details?.endTimeDetail,
+          )}`,
+          type: `${dataOrder?.stadium_collage?.amountPeople} vs ${
+            dataOrder?.stadium_collage?.amountPeople
+          }`,
+          description,
+          stadiumId: dataOrder.stadium.stadiumId,
+          teamIdHost: dataTeam.teamId,
+        });
+        if (res && res.code === StatusCode.SUCCESS) {
+          ToastHelper.showToast('Tạo trận đấu thành công');
+          rootNavigator.back();
+        } else {
+          hideLoading();
+          ToastHelper.showToast('Lỗi hệ thống');
+        }
+        hideLoading();
+      }
+    } catch (error) {
+      console.log('createGameService -->error: ', error);
+      hideLoading();
     }
   };
   const renderToolBar = () => {
@@ -233,7 +265,7 @@ export default function CreateGameScreen() {
       </View>
     </Host>
   );
-}
+};
 const styles = StyleSheet.create({
   mrTop: {
     marginTop: scale(60),
@@ -288,3 +320,13 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: scale(10),
   },
 });
+
+const mapDispatchToProps = {
+  showLoading,
+  hideLoading,
+};
+
+export default connect(
+  null,
+  mapDispatchToProps,
+)(CreateGameScreen);

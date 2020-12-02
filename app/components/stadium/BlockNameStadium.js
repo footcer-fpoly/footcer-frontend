@@ -1,26 +1,32 @@
-import React, {Component} from 'react';
-import {View, StyleSheet} from 'react-native';
-import StarRating from 'react-native-star-rating';
+import React from 'react';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import {scale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
+import rootNavigator from '../../navigations/root.navigator';
+import {REVIEW_STADIUM_SCREEN} from '../../navigations/route-name';
 import colors from '../../theme/colors';
 import {body3, headline4, Text} from '../common/Text';
 
-export default function BlockNameStadium({name, star}) {
+export default function BlockNameStadium({item}) {
   return (
     <View style={styles.container}>
       <Text type={headline4} style={styles.txtName}>
-        {name}
+        {item?.stadiumName}
       </Text>
-      <StarRating
-        disabled={true}
-        maxStars={5}
-        rating={star}
-        fullStarColor={colors.yellow}
-        starSize={20}
-        containerStyle={styles.star}
-      />
-      <Text type={body3}>{star || 0}/5</Text>
+      <Icon name="place" color="#FF0000" size={scale(25)} />
+      <Text type={body3} style={styles.txtAddress}>
+        {item?.address}
+      </Text>
+      <TouchableOpacity
+        onPress={() =>
+          rootNavigator.navigate(REVIEW_STADIUM_SCREEN, {item: item})
+        }
+        style={styles.btn}>
+        <Text type={body3} style={styles.txtBtn}>
+          Đánh giá sân
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -30,7 +36,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     borderRadius: scale(8),
     paddingHorizontal: scale(24),
-    marginTop: scale(-40),
+    marginTop: scale(-60),
     marginHorizontal: scale(20),
     alignItems: 'center',
     shadowColor: colors.black,
@@ -47,7 +53,18 @@ const styles = StyleSheet.create({
     marginBottom: scale(10),
     color: colors.orange,
   },
-  star: {
+  btn: {
+    ...Styles.columnCenter,
     width: 120,
+    backgroundColor: colors.blue,
+    paddingVertical: scale(5),
+    borderRadius: scale(5),
+    marginTop: scale(10),
+  },
+  txtBtn: {
+    color: colors.white,
+  },
+  txtAddress: {
+    textAlign: 'center',
   },
 });

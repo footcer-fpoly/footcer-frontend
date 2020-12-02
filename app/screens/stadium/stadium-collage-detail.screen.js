@@ -34,6 +34,7 @@ export default function StadiumCollageDetailScreen({route}) {
     listDate,
     listTime: [],
     onReady: false,
+    collageDetail: {},
   });
   const [order, setOrder] = useState({
     nameSadium: '',
@@ -83,6 +84,7 @@ export default function StadiumCollageDetailScreen({route}) {
             listTime: res.data.stadiumDetails.filter(
               el => diffHours(el.startTimeDetail) > 0,
             ),
+            collageDetail: res.data,
           });
         } else {
           setData({
@@ -121,7 +123,13 @@ export default function StadiumCollageDetailScreen({route}) {
 
   const keyExtractor = (item, index) => index.toString();
   const renderItemChooseDate = ({item, index}) => {
-    return <DateItem onPress={onPressChooseDate(item, index)} item={item} />;
+    return (
+      <DateItem
+        key={index.toString()}
+        onPress={onPressChooseDate(item, index)}
+        item={item}
+      />
+    );
   };
 
   const renderSectionDate = () => {
@@ -192,22 +200,15 @@ export default function StadiumCollageDetailScreen({route}) {
       />
     );
   };
-  // if (!data.onReady) {
-  //   return (
-  //     <View style={styles.flex1}>
-  //       {renderToolBar()}
-  //       <View style={styles.mrTop10}>
-  //         <ListLoadingComponent />
-  //       </View>
-  //     </View>
-  //   );
-  // }
   return (
     <View style={styles.container}>
       {renderToolBar()}
       <ScrollView style={styles.flex1}>
         {renderSectionDate()}
         {renderSectionTime()}
+        <View>
+          <Text>{converSecondsToTime(data.collageDetail.startTime)}ádsa</Text>
+        </View>
       </ScrollView>
       <View style={styles.wrapperBtnOrder}>
         <PrimaryButton onPress={toggleModalCreateOrder} title="Đặt sân" />
