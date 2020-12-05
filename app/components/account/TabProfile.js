@@ -8,7 +8,7 @@ import {StatusCode} from '../../api/status-code';
 import {updateInfoUserService} from '../../api/user.api';
 import {body2, Text} from '../../components/common/Text';
 import {ListLevel, ListPosition} from '../../helpers/data-local.helper';
-import {formatCouponDateDisplay} from '../../helpers/format.helper';
+import {formatDateTime} from '../../helpers/format.helper';
 import {scale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
 import {ToastHelper} from '../../helpers/ToastHelper';
@@ -89,7 +89,7 @@ const TabProfile = ({profile, showLoading, hideLoading, updateInfoUser}) => {
   const handleConfirm = date => {
     setData({
       ...data,
-      birthday: formatCouponDateDisplay(date),
+      birthday: formatDateTime(date),
     });
     toogleDatePicker();
   };

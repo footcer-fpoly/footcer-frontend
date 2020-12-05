@@ -41,4 +41,5 @@ export const GET_ORDER_DETAIL = orderId => `${ROOT_API_URL}/order/${orderId}`;
 export const CANCEL_ORDER = `${ROOT_API_URL}/order/update-status`;
 
 //GAME
+export const GET_GAME = params => `${ROOT_API_URL}/game/gets/${params}`;
 export const CREATE_GAME = `${ROOT_API_URL}/game/add`;

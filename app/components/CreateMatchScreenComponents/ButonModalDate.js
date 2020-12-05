@@ -3,7 +3,7 @@ import {View, TouchableOpacity, StyleSheet, Text} from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
-export default function App() {
+export default function ButonModalDate() {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
   const showDatePicker = () => {

@@ -1,5 +1,5 @@
 import RequestHelper from '../helpers/request.helper';
-import {CREATE_GAME} from './api-url';
+import {CREATE_GAME, GET_GAME} from './api-url';
 
 export const createGameService = ({
   date,
@@ -18,4 +18,8 @@ export const createGameService = ({
     stadiumId,
     teamIdHost,
   });
+};
+
+export const getGameService = params => {
+  return RequestHelper.get(GET_GAME(params));
 };

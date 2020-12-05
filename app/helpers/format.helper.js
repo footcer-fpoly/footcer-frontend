@@ -68,6 +68,12 @@ export const formatToDate = date => {
     .format('YYYY-MM-DD');
 };
 
+export const formatToHours = date => {
+  return dayjs(date)
+    .locale(locale_vi)
+    .format('HH:mm');
+};
+
 export const convertMilisecondsToMinutes = miliseconds => {
   return Number(miliseconds) / 60000;
 };
