@@ -63,7 +63,7 @@ export default function ModalCreateOrder({dismiss, visible, data}) {
         <View style={styles.warpperButton}>
           <PrimaryButton
             style={[styles.btn, styles.mrRight]}
-            title="Hủy bỏ"
+            title="Hủy"
             onPress={dismiss}
           />
           <PrimaryButton

@@ -10,7 +10,7 @@ export class ToastHelper {
   }
   static showToast = (
     message,
-    backgroundColor = colors.gray,
+    backgroundColor = colors.black,
     duration = 500,
   ) => {
     this.toast?.show(message, duration, backgroundColor);
@@ -31,8 +31,8 @@ export class ToastHelper {
 }
 
 const styles = StyleSheet.create({
-  toast: {
-    backgroundColor: colors.green,
-  },
+  // toast: {
+  //   backgroundColor: colors.green,
+  // },
   toastText: {color: colors.white},
 });

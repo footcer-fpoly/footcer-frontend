@@ -231,7 +231,7 @@ const StadiumScreen = ({isPermissionLocation, showLoading, hideLoading}) => {
                 latitudeDelta: state.region.latitudeDelta,
                 longitudeDelta: state.region.longitudeDelta,
               },
-              2000,
+              1000,
             );
           }}
         />

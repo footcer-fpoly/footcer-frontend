@@ -8,7 +8,7 @@ import {scale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
 import colors from '../../theme/colors';
 import spacing from '../../theme/spacing';
-import {body3, headline5, Text} from '../common/Text';
+import {body3, headline5, headline6, Text} from '../common/Text';
 
 export default function TimeItem({item, key, onPress}) {
   const colorItemTime = hasOrder => {
@@ -40,7 +40,7 @@ export default function TimeItem({item, key, onPress}) {
       key={key}
       style={styles.itemTime(colorItemTime(item.hasOrder).backgroundColor)}>
       <Text
-        type={headline5}
+        type={headline6}
         style={styles.txtTitleTimeItem(colorItemTime(item.hasOrder).colorTime)}>
         {converSecondsToTime(item.startTimeDetail)} -
         {converSecondsToTime(item.endTimeDetail)}

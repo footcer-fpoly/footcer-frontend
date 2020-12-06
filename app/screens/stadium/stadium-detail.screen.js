@@ -73,7 +73,14 @@ export default function StadiumDetailScreen({route}) {
   );
   const keyExtractor = (item, index) => index.toString();
   const renderStadiumCollage = ({item}) => {
-    return <CardStadiumCollage item={item} />;
+    return (
+      <CardStadiumCollage
+        item={item}
+        stadiumName={data.stadiumName}
+        address={data.address}
+        category={data.category}
+      />
+    );
   };
 
   const [scrollY, setScrollY] = useState(new Animated.Value(0));
@@ -94,10 +101,15 @@ export default function StadiumDetailScreen({route}) {
     outputRange: [0, scale(30), scale(60)],
     extrapolate: 'clamp',
   });
+  const handleOnPress = () => {
+    rootNavigator.back();
+  };
   const renderToolbar = () => {
     return (
       <Animated.View style={styles.toolbarContainer(fadeIn0To1, toolBarFadeIn)}>
-        <BackIcon iconName="chevron-left" />
+        <TouchableOpacity style={styles.btnBack} onPress={handleOnPress}>
+          <Icon name="chevron-left" size={scale(30)} color={colors.white} />
+        </TouchableOpacity>
         <Animated.Text style={styles.textTitleToolBar(fadeIn0To1)}>
           Chi tiết cụm sân
         </Animated.Text>
@@ -132,11 +144,11 @@ export default function StadiumDetailScreen({route}) {
     <View style={styles.flex1}>
       {renderToolbar()}
       <Animated.ScrollView
+        contentContainerStyle={styles.contentContainer}
         onScroll={Animated.event(
           [{nativeEvent: {contentOffset: {y: scrollY}}}],
           {useNativeDriver: false},
-        )}
-        style={styles.scrollViewContent}>
+        )}>
         <Animated.View
           style={[
             styles.sliderHeight,
@@ -222,7 +234,10 @@ export default function StadiumDetailScreen({route}) {
               <Icon name={review.icon} style={{fontSize: scale(25)}} />
             </TouchableOpacity>
           </View>
-          {review.show && data.review.map(item => <CardReview item={item} />)}
+          {review.show &&
+            data.review.map((item, index) => (
+              <CardReview key={index.toString()} item={item} />
+            ))}
         </View>
       </Animated.ScrollView>
       <View style={styles.footer}>
@@ -262,7 +277,6 @@ const styles = StyleSheet.create({
     right: 0,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: scale(15),
     backgroundColor,
     borderBottomWidth,
     borderBottomColor: colors.gray,
@@ -273,18 +287,26 @@ const styles = StyleSheet.create({
     opacity,
     flex: 1,
     color: colors.white,
-    textAlign: 'center',
+    textAlign: 'left',
     fontWeight: 'bold',
     fontSize: scale(14),
   }),
-  txtCountRate: {color: colors.white, marginLeft: scale(5)},
+  btnBack: {
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: scale(15),
+  },
+  txtCountRate: {
+    color: colors.white,
+    marginLeft: scale(5),
+    marginRight: scale(10),
+  },
   body: {
     backgroundColor: colors.white,
   },
-  scrollViewContent: {
-    flex: 1,
-    backgroundColor: colors.white,
-    marginBottom: scale(5),
+  contentContainer: {
+    paddingBottom: scale(150),
   },
   footer: {
     borderTopRightRadius: scale(10),

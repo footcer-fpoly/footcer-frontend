@@ -3,12 +3,12 @@ import {StyleSheet, TouchableOpacity} from 'react-native';
 import {formatDateTime} from '../../helpers/format.helper';
 import {scale} from '../../helpers/size.helper';
 import colors from '../../theme/colors';
-import {headline5, Text} from '../common/Text';
+import {headline6, Text} from '../common/Text';
 
 export default function DateItem({item, onPress}) {
   return (
     <TouchableOpacity onPress={onPress} style={styles.container(item.choose)}>
-      <Text type={headline5} style={styles.txt(item.choose)}>
+      <Text type={headline6} style={styles.txt(item.choose)}>
         {formatDateTime(item.date)}
       </Text>
     </TouchableOpacity>

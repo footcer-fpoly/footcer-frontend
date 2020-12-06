@@ -8,10 +8,18 @@ import {STADIUM_COLLAGE_DETAIL_SCREEN} from '../../navigations/route-name';
 import colors from '../../theme/colors';
 import {body3, headline5, Text} from '../common/Text';
 
-export default function CardStadiumCollage({item}) {
+export default function CardStadiumCollage({
+  item,
+  stadiumName,
+  address,
+  category,
+}) {
   const getNavigateCollageDetail = () => {
     rootNavigator.navigate(STADIUM_COLLAGE_DETAIL_SCREEN, {
       stadiumCollageId: item.stadiumCollageId,
+      stadiumName,
+      address,
+      category,
     });
   };
   return (
