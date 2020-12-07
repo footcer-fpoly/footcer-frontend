@@ -29,7 +29,7 @@ const HomeScreen = ({getListOrder, getListTeam}) => {
       />
       <ScrollView>
         <View style={{backgroundColor: 'red', height: 250}}>
-          <Swiper
+          {/* <Swiper
             activeDotColor={colors.main}
             dotColor={colors.white}
             autoplay={true}
@@ -42,7 +42,7 @@ const HomeScreen = ({getListOrder, getListTeam}) => {
                 resizeMode="cover"
               />
             ))}
-          </Swiper>
+          </Swiper> */}
         </View>
       </ScrollView>
     </View>

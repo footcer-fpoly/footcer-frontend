@@ -12,9 +12,9 @@
         android:usesCleartextTraffic="true"
         android:name=".MainApplication"
         android:allowBackup="false"
-        android:icon="@mipmap/logo-app"
+        android:icon="@drawable/logo_app"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/logo-app"
+        android:roundIcon="@drawable/logo_app"
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
