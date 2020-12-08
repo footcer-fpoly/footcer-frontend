@@ -11,6 +11,8 @@ import {
   REQUESTED_PERMISSION_LOCATION,
   GET_LIST_ORDER,
   GET_LIST_ORDER_SUCCESS,
+  GET_LIST_GAME,
+  GET_LIST_GAME_SUCCESS,
 } from './types';
 
 export const logout = () => {
@@ -63,5 +65,13 @@ export const getListOrder = () => ({
 });
 export const getListOrderSuccess = data => ({
   type: GET_LIST_ORDER_SUCCESS,
+  data,
+});
+
+export const getListGame = () => ({
+  type: GET_LIST_GAME,
+});
+export const getListGameSuccess = data => ({
+  type: GET_LIST_GAME_SUCCESS,
   data,
 });

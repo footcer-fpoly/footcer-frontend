@@ -1,9 +1,11 @@
 import {PermissionsAndroid} from 'react-native';
-import {call, put} from 'redux-saga/effects';
+import {put} from 'redux-saga/effects';
+import {getGameForUserService} from '../../api/game.api';
 import {getListOrderService} from '../../api/order.api';
 import {StatusCode} from '../../api/status-code';
 import {
   acceptPermissionLocation,
+  getListGameSuccess,
   getListOrderSuccess,
   refusePermissionLocation,
 } from '../actions/auth.action';
@@ -31,5 +33,17 @@ export function* getListOrderSaga() {
     }
   } catch (error) {
     console.log('requestLocationPermissionSaga -->error: ', error);
+  }
+}
+
+export function* getListGameSaga() {
+  try {
+    const res = yield getGameForUserService();
+    console.log('res----', res);
+    if (res && res.code === StatusCode.SUCCESS) {
+      yield put(getListGameSuccess(res.data));
+    }
+  } catch (error) {
+    console.log('getListGameSaga -->error: ', error);
   }
 }

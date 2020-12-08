@@ -2,6 +2,7 @@ import {removeToken, saveToken} from '../../helpers/storage.helper';
 import {
   ACCEPT_PERMISSION_LOCATION,
   CHECK_LOGIN,
+  GET_LIST_GAME_SUCCESS,
   GET_LIST_ORDER_SUCCESS,
   LOGIN,
   LOGOUT,
@@ -25,6 +26,7 @@ const authState = {
   },
   isPermissionsLocation: false,
   listOrder: [],
+  listGame: [],
 };
 
 export const authReducer = (state = authState, action) => {
@@ -94,6 +96,11 @@ export const authReducer = (state = authState, action) => {
       return {
         ...state,
         listOrder: action.data,
+      };
+    case GET_LIST_GAME_SUCCESS:
+      return {
+        ...state,
+        listGame: action.data,
       };
     default:
       return state;

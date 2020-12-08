@@ -1,26 +1,28 @@
-import React, {useState, useEffect} from 'react';
-import {View, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import ScrollableTabView, {
   DefaultTabBar,
-  ScrollableTabBar,
 } from 'react-native-scrollable-tab-view';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import {connect} from 'react-redux';
 import {getGameService} from '../../api/game.api';
 import {StatusCode} from '../../api/status-code';
 import ListLoadingComponent from '../../components/common/ListLoadingComponent';
 import {body3, headline5, Text} from '../../components/common/Text';
 import ToolBar from '../../components/common/Toolbar';
-import ButonModalDate from '../../components/CreateMatchScreenComponents/ButonModalDate';
 import CardGame from '../../components/game/CardGame';
 import FloatingActionButton from '../../components/game/FLoatingActionButton';
+import {formatToDate} from '../../helpers/format.helper';
 import {scale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
-import colors from '../../theme/colors';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import {formatToDate} from '../../helpers/format.helper';
 import {ToastHelper} from '../../helpers/ToastHelper';
-
-const ListGameScreen = () => {
+import {getListGame} from '../../redux/actions/auth.action';
+import colors from '../../theme/colors';
+import CardMyGame from '../../components/game/CardMyGame';
+import {color} from 'react-native-reanimated';
+const ListGameScreen = ({getListGame, listGameUser}) => {
+  console.log('listGameUser: ', listGameUser);
   const [listGame, setListGame] = useState({
     data: [],
     onReady: false,
@@ -29,6 +31,7 @@ const ListGameScreen = () => {
   });
   useEffect(() => {
     getData('all');
+    getListGame();
   }, []);
   const getData = async params => {
     try {
@@ -67,7 +70,6 @@ const ListGameScreen = () => {
     });
   };
   const handleConfirmDatePicker = date => {
-    console.log('------');
     getData(formatToDate(date));
     setListGame({
       ...listGame,
@@ -79,13 +81,16 @@ const ListGameScreen = () => {
   const renderItem = ({item, index}) => {
     return <CardGame item={item} />;
   };
+  const renderItemMyGame = ({item, index}) => {
+    return <CardMyGame item={item} />;
+  };
   return (
     <View style={styles.container}>
       <ToolBar
         style={{backgroundColor: colors.main}}
         center={
           <Text type={headline5} style={styles.titleToolbar}>
-            Danh sách trận đấu
+            Trận đấu
           </Text>
         }
       />
@@ -101,7 +106,7 @@ const ListGameScreen = () => {
         tabBarBackgroundColor={colors.white}
         initialPage={0}
         renderTabBar={() => <DefaultTabBar />}>
-        <View style={styles.warpperContent} tabLabel="Trận đấu">
+        <View style={styles.warpperContent} tabLabel="Tất cả trận đấu">
           <View style={styles.warpperHeader}>
             <Text type={body3}>{listGame.data.length} trận</Text>
             <TouchableOpacity onPress={refreshData}>
@@ -134,15 +139,27 @@ const ListGameScreen = () => {
             }
           />
         </View>
-        <View
-          style={[styles.warpperContent, styles.mrTop]}
-          tabLabel="Trận đấu của bạn">
+        <View style={styles.warpperContent} tabLabel="Trận đấu của bạn">
+          <View style={styles.warpperHeader}>
+            <View style={styles.warpperStatus}>
+              <View style={styles.status(colors.greenDark)} />
+              <Text type={body3} style={styles.txtStatus}>
+                Trận đấu sắp tới
+              </Text>
+            </View>
+            <View style={styles.warpperStatus}>
+              <View style={styles.status(colors.grayDark)} />
+              <Text type={body3} style={styles.txtStatus}>
+                Trận đấu đã qua
+              </Text>
+            </View>
+          </View>
           <FlatList
-            data={listGame.data}
+            data={listGameUser}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.list}
             keyExtractor={keyExtractor}
-            renderItem={renderItem}
+            renderItem={renderItemMyGame}
             ListEmptyComponent={
               <ListLoadingComponent
                 onReady={listGame.onReady}
@@ -157,11 +174,7 @@ const ListGameScreen = () => {
     </View>
   );
 };
-export default ListGameScreen;
 const styles = StyleSheet.create({
-  mrTop: {
-    marginTop: scale(10),
-  },
   titleToolbar: {
     color: colors.white,
     textTransform: 'uppercase',
@@ -187,4 +200,31 @@ const styles = StyleSheet.create({
   list: {
     paddingBottom: scale(150),
   },
+  warpperStatus: {
+    ...Styles.rowAlignCenter,
+    flex: 1,
+  },
+  status: bg => ({
+    width: scale(20),
+    height: scale(20),
+    backgroundColor: bg,
+    borderRadius: scale(5),
+  }),
+  txtStatus: {
+    marginLeft: scale(5),
+  },
 });
+
+const mapDispatchToProps = {
+  getListGame,
+};
+function mapStateToProps(state) {
+  return {
+    listGameUser: state.authState.listGame,
+  };
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(ListGameScreen);

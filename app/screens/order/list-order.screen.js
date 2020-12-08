@@ -1,20 +1,18 @@
-import React, {useState, useEffect} from 'react';
-import {View, StyleSheet, TouchableOpacity, FlatList} from 'react-native';
-import ToolBar from '../../components/common/Toolbar';
-import Icon from 'react-native-vector-icons/Octicons';
-import rootNavigator from '../../navigations/root.navigator';
-import {headline5, Text} from '../../components/common/Text';
-import colors from '../../theme/colors';
-import {scale} from '../../helpers/size.helper';
-import {getListOrderService} from '../../api/order.api';
-import {StatusCode} from '../../api/status-code';
-import ListLoadingComponent from '../../components/common/ListLoadingComponent';
-import CardStatusOrder from '../../components/order/CardStatusOrder';
+import React, {useState} from 'react';
+import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
 import ScrollableTabView, {
   ScrollableTabBar,
 } from 'react-native-scrollable-tab-view';
-import {listStatusOrder} from '../../helpers/data-local.helper';
+import Icon from 'react-native-vector-icons/Octicons';
 import {connect} from 'react-redux';
+import ListLoadingComponent from '../../components/common/ListLoadingComponent';
+import {headline5, Text} from '../../components/common/Text';
+import ToolBar from '../../components/common/Toolbar';
+import CardStatusOrder from '../../components/order/CardStatusOrder';
+import {listStatusOrder} from '../../helpers/data-local.helper';
+import {scale} from '../../helpers/size.helper';
+import rootNavigator from '../../navigations/root.navigator';
+import colors from '../../theme/colors';
 
 let initialListOrder = [];
 const ListOrderScreen = ({listOrder}) => {
