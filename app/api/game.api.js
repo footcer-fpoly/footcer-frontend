@@ -8,6 +8,7 @@ export const createGameService = ({
   description,
   stadiumId,
   teamIdHost,
+  orderId,
 }) => {
   return RequestHelper.post(CREATE_GAME, {
     date,
@@ -17,6 +18,7 @@ export const createGameService = ({
     description,
     stadiumId,
     teamIdHost,
+    orderId,
   });
 };
 

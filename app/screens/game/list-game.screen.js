@@ -9,7 +9,7 @@ import {connect} from 'react-redux';
 import {getGameService} from '../../api/game.api';
 import {StatusCode} from '../../api/status-code';
 import ListLoadingComponent from '../../components/common/ListLoadingComponent';
-import {body3, headline5, Text} from '../../components/common/Text';
+import {body3, headline5, headline6, Text} from '../../components/common/Text';
 import ToolBar from '../../components/common/Toolbar';
 import CardGame from '../../components/game/CardGame';
 import FloatingActionButton from '../../components/game/FLoatingActionButton';
@@ -21,6 +21,8 @@ import {getListGame} from '../../redux/actions/auth.action';
 import colors from '../../theme/colors';
 import CardMyGame from '../../components/game/CardMyGame';
 import {color} from 'react-native-reanimated';
+import {useFocusEffect} from '@react-navigation/native';
+import DescriptionStatus from '../../components/common/DescriptionStatus';
 const ListGameScreen = ({getListGame, listGameUser}) => {
   console.log('listGameUser: ', listGameUser);
   const [listGame, setListGame] = useState({
@@ -29,10 +31,12 @@ const ListGameScreen = ({getListGame, listGameUser}) => {
     date: '',
     visbaleModal: false,
   });
-  useEffect(() => {
-    getData('all');
-    getListGame();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      getListGame();
+      getData('all');
+    }, []),
+  );
   const getData = async params => {
     try {
       const res = await getGameService(params);
@@ -141,18 +145,17 @@ const ListGameScreen = ({getListGame, listGameUser}) => {
         </View>
         <View style={styles.warpperContent} tabLabel="Trận đấu của bạn">
           <View style={styles.warpperHeader}>
-            <View style={styles.warpperStatus}>
-              <View style={styles.status(colors.greenDark)} />
-              <Text type={body3} style={styles.txtStatus}>
-                Trận đấu sắp tới
-              </Text>
+            <View style={styles.warpperCountList}>
+              <Text type={headline6}>{listGameUser.length} trận</Text>
             </View>
-            <View style={styles.warpperStatus}>
-              <View style={styles.status(colors.grayDark)} />
-              <Text type={body3} style={styles.txtStatus}>
-                Trận đấu đã qua
-              </Text>
-            </View>
+            <DescriptionStatus
+              color={colors.greenDark}
+              lable="Trận đấu sắp tới"
+            />
+            <DescriptionStatus
+              color={colors.grayDark}
+              lable="Trận đấu đã qua"
+            />
           </View>
           <FlatList
             data={listGameUser}
@@ -168,9 +171,9 @@ const ListGameScreen = ({getListGame, listGameUser}) => {
               />
             }
           />
+          <FloatingActionButton />
         </View>
       </ScrollableTabView>
-      <FloatingActionButton />
     </View>
   );
 };
@@ -191,27 +194,21 @@ const styles = StyleSheet.create({
     borderBottomWidth: scale(0.5),
     borderBottomColor: colors.gray,
   },
+  warpperCountList: {
+    flex: 0,
+    marginRight: scale(10),
+    paddingRight: scale(10),
+    borderRightWidth: 1,
+    borderRightColor: colors.gray,
+  },
   warpperFilter: {
     ...Styles.rowBetween,
   },
   warpperContent: {
-    // marginTop: scale(10),
+    flex: 1,
   },
   list: {
     paddingBottom: scale(150),
-  },
-  warpperStatus: {
-    ...Styles.rowAlignCenter,
-    flex: 1,
-  },
-  status: bg => ({
-    width: scale(20),
-    height: scale(20),
-    backgroundColor: bg,
-    borderRadius: scale(5),
-  }),
-  txtStatus: {
-    marginLeft: scale(5),
   },
 });
 

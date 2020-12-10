@@ -9,6 +9,7 @@ import {
   Platform,
   ScrollView,
   TextInput,
+  ImageBackground,
 } from 'react-native';
 import {headline4, headline5, Text} from '../../components/common/Text';
 import ToolBar from '../../components/common/Toolbar';
@@ -38,6 +39,10 @@ import {StatusCode} from '../../api/status-code';
 import {ToastHelper} from '../../helpers/ToastHelper';
 import {connect} from 'react-redux';
 import {showLoading, hideLoading} from '../../redux/actions/loading.action';
+import {bgStadiumImage} from '../../assets/Images';
+import dimens from '../../theme/dimens';
+import {color} from 'react-native-reanimated';
+import LinearGradient from 'react-native-linear-gradient';
 
 if (
   Platform.OS === 'android' &&
@@ -45,9 +50,11 @@ if (
 ) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
-const CreateGameScreen = ({showLoading, hideLoading}) => {
+const CreateGameScreen = ({showLoading, hideLoading, listGameUser}) => {
   const modalizeTeamsRef = useRef();
   const modalizeOrderRef = useRef();
+  const scrollRef = useRef();
+
   const [dataTeam, setDataTeam] = useState(null);
   const [dataOrder, setDataOrder] = useState(null);
   const [description, setDescription] = useState('');
@@ -58,6 +65,7 @@ const CreateGameScreen = ({showLoading, hideLoading}) => {
     team: false,
     order: false,
   });
+
   const navigateToScreen = () => {
     rootNavigator.navigate(HOME_SCREEN);
   };
@@ -113,6 +121,7 @@ const CreateGameScreen = ({showLoading, hideLoading}) => {
           description,
           stadiumId: dataOrder.stadium.stadiumId,
           teamIdHost: dataTeam.teamId,
+          orderId: dataOrder.orderId,
         });
         if (res && res.code === StatusCode.SUCCESS) {
           ToastHelper.showToast('Tạo trận đấu thành công');
@@ -152,117 +161,129 @@ const CreateGameScreen = ({showLoading, hideLoading}) => {
   };
   return (
     <Host>
-      <View style={styles.container}>
-        {renderToolBar()}
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.scrollContainer}>
-          <View style={styles.sectionTeam}>
-            <TouchableHighlight
-              activeOpacity={0.6}
-              underlayColor={colors.red}
-              style={[styles.btn, {backgroundColor: colors.errorBackground}]}
-              onPress={showDialogTeams}>
-              <Text style={{color: colors.white}} type={headline4}>
-                {dataTeam ? 'Đội bóng' : 'Chọn đội bóng'}
+      <ImageBackground source={bgStadiumImage} style={styles.container}>
+        <LinearGradient
+          colors={['#00000000', '#00000070', '#00000090']}
+          style={styles.center}>
+          {renderToolBar()}
+          <ScrollView
+            ref={scrollRef}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.scrollContainer}>
+            <View style={styles.sectionTeam}>
+              <TouchableOpacity style={styles.btn} onPress={showDialogTeams}>
+                <Text style={{color: colors.white}} type={headline4}>
+                  {dataTeam ? 'Đội bóng' : 'Chọn đội bóng'}
+                </Text>
+              </TouchableOpacity>
+              {error?.team && (
+                <TextError style={styles.txtErr} text="Hãy chọn đội bóng" />
+              )}
+              {dataTeam && (
+                <>
+                  <CardMyTeam width={'100%'} item={dataTeam} />
+                </>
+              )}
+            </View>
+            <View style={[styles.sectionTeam, styles.mrTop]}>
+              <TouchableOpacity style={styles.btn} onPress={showDialogOrder}>
+                <Text style={{color: colors.white}} type={headline4}>
+                  {dataOrder
+                    ? dataOrder?.stadium?.stadiumName
+                    : 'Chọn sân bóng'}
+                </Text>
+              </TouchableOpacity>
+              {error?.order && (
+                <TextError style={styles.txtErr} text="Hãy chọn sân bóng" />
+              )}
+              {dataOrder && (
+                <View
+                  style={{
+                    backgroundColor: colors.white,
+                    paddingHorizontal: scale(10),
+                    marginTop: scale(5),
+                    borderRadius: scale(3),
+                    paddingTop: scale(5),
+                    paddingBottom: scale(20),
+                  }}>
+                  <RowProflie
+                    label="Sân con"
+                    value={dataOrder?.stadium_collage?.stadiumCollageName}
+                    iconType={IconType.MaterialIcons}
+                    iconName="sports-soccer"
+                    editable={false}
+                  />
+                  <RowProflie
+                    label="Ngày đấu"
+                    value={formatDateTime(dataOrder?.time)}
+                    iconType={IconType.MaterialIcons}
+                    iconName="date-range"
+                    editable={false}
+                  />
+                  <RowProflie
+                    label="Thời gian"
+                    value={`${converSecondsToTime(
+                      dataOrder?.stadium_details?.startTimeDetail,
+                    )} - ${converSecondsToTime(
+                      dataOrder?.stadium_details?.endTimeDetail,
+                    )}`}
+                    iconType={IconType.MaterialIcons}
+                    iconName="update"
+                    editable={false}
+                  />
+                  <RowProflie
+                    label="Kiểu thi đấu"
+                    value={`${dataOrder?.stadium_collage?.amountPeople} vs ${
+                      dataOrder?.stadium_collage?.amountPeople
+                    }`}
+                    iconType={IconType.MaterialIcons}
+                    iconName="6-ft-apart"
+                    editable={false}
+                  />
+                  <RowProflie
+                    label="Địa điểm"
+                    value={dataOrder?.stadium?.address}
+                    iconType={IconType.MaterialIcons}
+                    iconName="location-pin"
+                    editable={false}
+                    otherTextInputProps={{
+                      multiline: true,
+                    }}
+                  />
+                </View>
+              )}
+            </View>
+            <View style={styles.wrapperDescription}>
+              <Text type={headline5} style={styles.txtTitleDes}>
+                Lời nhắn đến đối thủ
               </Text>
-            </TouchableHighlight>
-            {error?.team && (
-              <TextError style={styles.txtErr} text="Hãy chọn đội bóng" />
-            )}
-            {dataTeam && (
-              <>
-                <CardMyTeam width={'100%'} item={dataTeam} />
-              </>
-            )}
-          </View>
-          <View style={[styles.sectionTeam, styles.mrTop]}>
-            <TouchableHighlight
-              activeOpacity={0.6}
-              underlayColor={colors.greenDark}
-              style={[styles.btn, {backgroundColor: colors.greenLight}]}
-              onPress={showDialogOrder}>
-              <Text style={{color: colors.white}} type={headline4}>
-                {dataOrder ? dataOrder?.stadium?.stadiumName : 'Chọn sân bóng'}
-              </Text>
-            </TouchableHighlight>
-            {error?.order && (
-              <TextError style={styles.txtErr} text="Hãy chọn sân bóng" />
-            )}
-            {dataOrder && (
-              <>
-                <RowProflie
-                  label="Sân con"
-                  value={dataOrder?.stadium_collage?.stadiumCollageName}
-                  iconType={IconType.MaterialIcons}
-                  iconName="sports-soccer"
-                  editable={false}
+              <View style={styles.wrapperInput}>
+                <TextInput
+                  multiline={true}
+                  onChangeText={text => setDescription(text)}
+                  placeholderTextColor={colors.gray}
+                  placeholder="Nhập lời nhắn đến đối thủ"
+                  style={styles.textInput}
+                  maxLength={300}
                 />
-                <RowProflie
-                  label="Ngày đấu"
-                  value={formatDateTime(dataOrder?.time)}
-                  iconType={IconType.MaterialIcons}
-                  iconName="date-range"
-                  editable={false}
-                />
-                <RowProflie
-                  label="Thời gian"
-                  value={`${converSecondsToTime(
-                    dataOrder?.stadium_details?.startTimeDetail,
-                  )} - ${converSecondsToTime(
-                    dataOrder?.stadium_details?.endTimeDetail,
-                  )}`}
-                  iconType={IconType.MaterialIcons}
-                  iconName="update"
-                  editable={false}
-                />
-                <RowProflie
-                  label="Kiểu thi đấu"
-                  value={`${dataOrder?.stadium_collage?.amountPeople} vs ${
-                    dataOrder?.stadium_collage?.amountPeople
-                  }`}
-                  iconType={IconType.MaterialIcons}
-                  iconName="6-ft-apart"
-                  editable={false}
-                />
-                <RowProflie
-                  label="Địa điểm"
-                  value={dataOrder?.stadium?.address}
-                  iconType={IconType.MaterialIcons}
-                  iconName="location-pin"
-                  editable={false}
-                  otherTextInputProps={{
-                    multiline: true,
-                  }}
-                />
-              </>
-            )}
-          </View>
-          <View style={[styles.sectionTeam, styles.mrTop]}>
-            <TitleTextInputField
-              style={{marginTop: scale(-50), backgroundColor: colors.white}}
-              lable="Lời nhắn đến đối thủ"
-              onChangeText={text => setDescription(text)}
-              otherTextInputProps={{
-                multiline: true,
-                placeholder: 'Nhập lời nhắn đến đối thủ',
-              }}
-            />
-          </View>
-        </ScrollView>
+                <Text style={styles.txtCountDes}>{description.length}/300</Text>
+              </View>
+            </View>
+          </ScrollView>
 
-        <View style={styles.wrapperBtnOrder}>
-          <PrimaryButton onPress={createGame} title="Tạo trận đấu" />
-        </View>
-        <ModalPickerTeams
-          ref={modalizeTeamsRef}
-          onSelectItem={onSelectItemTeam}
-        />
-        <ModalPickerOrder
-          ref={modalizeOrderRef}
-          onSelectItem={onSelectItemOrder}
-        />
-      </View>
+          <View style={styles.wrapperBtnOrder}>
+            <PrimaryButton onPress={createGame} title="Tạo trận đấu" />
+          </View>
+          <ModalPickerTeams
+            ref={modalizeTeamsRef}
+            onSelectItem={onSelectItemTeam}
+          />
+          <ModalPickerOrder
+            ref={modalizeOrderRef}
+            onSelectItem={onSelectItemOrder}
+          />
+        </LinearGradient>
+      </ImageBackground>
     </Host>
   );
 };
@@ -288,27 +309,23 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: colors.white,
+    resizeMode: 'cover',
   },
   scrollContainer: {
     paddingTop: scale(50),
     paddingBottom: scale(100),
   },
   sectionTeam: {
-    backgroundColor: 'white',
-    padding: scale(10),
-    ...Styles.borderView(colors.greenDark, scale(1), scale(5)),
     marginHorizontal: scale(10),
   },
   btn: {
-    ...Styles.borderView(colors.gray, scale(1), scale(5)),
+    ...Styles.borderView(colors.white, scale(0.5), scale(5)),
     ...Styles.columnCenter,
-    paddingVertical: scale(10),
+    paddingVertical: scale(20),
     marginTop: scale(-35),
-    backgroundColor: colors.white,
   },
   wrapperBtnOrder: {
-    backgroundColor: colors.white,
+    backgroundColor: colors.white + 'B3',
     position: 'absolute',
     bottom: 0,
     right: 0,
@@ -319,14 +336,46 @@ const styles = StyleSheet.create({
     borderTopRightRadius: scale(10),
     borderTopLeftRadius: scale(10),
   },
+  center: {...Styles.flex1},
+  wrapperDescription: {
+    paddingHorizontal: scale(10),
+    marginTop: scale(30),
+  },
+  txtTitleDes: {
+    color: colors.white,
+    marginLeft: scale(10),
+  },
+  wrapperInput: {
+    ...Styles.borderView(colors.white, 0.5, 5),
+    paddingHorizontal: scale(10),
+    height: scale(140),
+    paddingBottom: scale(20),
+    paddingTop: scale(5),
+  },
+  textInput: {
+    color: colors.white,
+    textAlign: 'justify',
+  },
+  txtCountDes: {
+    color: colors.white,
+    textAlign: 'right',
+    position: 'absolute',
+    bottom: scale(5),
+    right: scale(10),
+  },
 });
 
 const mapDispatchToProps = {
   showLoading,
   hideLoading,
 };
+function mapStateToProps(state) {
+  return {
+    listGameUser: state.authState.listGame,
+  };
+}
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps,
 )(CreateGameScreen);
