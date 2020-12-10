@@ -8,7 +8,7 @@ import {REVIEW_STADIUM_SCREEN} from '../../navigations/route-name';
 import colors from '../../theme/colors';
 import {body3, headline4, Text} from '../common/Text';
 
-export default function BlockNameStadium({item}) {
+export default function BlockNameStadium({item, showBtnReview}) {
   return (
     <View style={styles.container}>
       <Text type={headline4} style={styles.txtName}>
@@ -18,15 +18,17 @@ export default function BlockNameStadium({item}) {
       <Text type={body3} style={styles.txtAddress}>
         {item?.address}
       </Text>
-      <TouchableOpacity
-        onPress={() =>
-          rootNavigator.navigate(REVIEW_STADIUM_SCREEN, {item: item})
-        }
-        style={styles.btn}>
-        <Text type={body3} style={styles.txtBtn}>
-          Đánh giá sân
-        </Text>
-      </TouchableOpacity>
+      {showBtnReview && (
+        <TouchableOpacity
+          onPress={() =>
+            rootNavigator.navigate(REVIEW_STADIUM_SCREEN, {item: item})
+          }
+          style={styles.btn}>
+          <Text type={body3} style={styles.txtBtn}>
+            Đánh giá sân
+          </Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 }

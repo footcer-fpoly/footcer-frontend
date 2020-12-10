@@ -35,11 +35,21 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useFocusEffect} from '@react-navigation/native';
 import RowProflie from '../../components/account/RowProflie';
 import {IconType} from '../../components/common/IconMaterialOrSvg';
+import {connect} from 'react-redux';
+import {getListOrder} from '../../redux/actions/auth.action';
+import {listStatusOrder} from '../../helpers/data-local.helper';
 
 const HEADER_MAX_HEIGHT = 200;
 const HEADER_MIN_HEIGHT = 60;
 const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
-export default function StadiumDetailScreen({route}) {
+export const StadiumDetailScreen = ({route, listOrder, getListOrder}) => {
+  const {stadiumId} = route.params;
+  const listOrderComplete = listOrder.filter(item => {
+    return item?.order_status?.status === listStatusOrder[3].key;
+  });
+  const isHasOrder = listOrderComplete.find(
+    item => item?.stadium?.stadiumId === stadiumId,
+  );
   const [data, setData] = useState(null);
   const [review, setReview] = useState({
     show: true,
@@ -54,7 +64,6 @@ export default function StadiumDetailScreen({route}) {
   };
   const getStadiumDetail = async () => {
     try {
-      const {stadiumId} = route.params;
       const res = await getStadiumDetailService(stadiumId);
       console.log('getStadiumDetailService -->res: ', res);
       if (res && res.code === StatusCode.SUCCESS) {
@@ -68,9 +77,13 @@ export default function StadiumDetailScreen({route}) {
   };
   useFocusEffect(
     React.useCallback(() => {
-      getStadiumDetail();
+      fetchData();
     }, []),
   );
+
+  const fetchData = async () => {
+    await Promise.all([getStadiumDetail(), getListOrder()]);
+  };
   const keyExtractor = (item, index) => index.toString();
   const renderStadiumCollage = ({item}) => {
     return (
@@ -169,7 +182,7 @@ export default function StadiumDetailScreen({route}) {
           </Swiper>
         </Animated.View>
         <View style={styles.body}>
-          <BlockNameStadium item={data} />
+          <BlockNameStadium showBtnReview={isHasOrder} item={data} />
         </View>
         <View style={styles.wrapperSection}>
           <Text style={styles.titleSection} type={headline5}>
@@ -256,7 +269,7 @@ export default function StadiumDetailScreen({route}) {
       </View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   flex1: {flex: 1, backgroundColor: colors.white},
@@ -307,7 +320,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
   },
   contentContainer: {
-    paddingBottom: scale(150),
+    paddingBottom: scale(100),
   },
   footer: {
     borderTopRightRadius: scale(10),
@@ -339,3 +352,17 @@ const styles = StyleSheet.create({
     marginBottom: scale(20),
   },
 });
+
+function mapStateToProps(state) {
+  return {
+    listOrder: state.authState.listOrder,
+  };
+}
+const mapDispatchToProps = {
+  getListOrder,
+};
+
+export default connect(
+  mapStateToProps,
+  null,
+)(StadiumDetailScreen);
