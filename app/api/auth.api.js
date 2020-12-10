@@ -33,6 +33,6 @@ export const signUpFbGgService = data => {
     userId: data.id,
   });
 };
-export const updatePassService = (phone, pass) => {
-  return RequestHelper.put(UPDATE_PASS, {phone, pass});
+export const updatePassService = (phone, password) => {
+  return RequestHelper.put(UPDATE_PASS, {phone, password});
 };

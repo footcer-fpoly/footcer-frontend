@@ -112,8 +112,8 @@ const styles = StyleSheet.create({
     paddingLeft: spacing.small,
   },
   imgMem: {
-    ...Styles.borderRadiusCircle(50),
-    ...Styles.borderView(colors.white, 2, 0),
+    ...Styles.borderRadiusCircle(scale(50)),
+    ...Styles.borderView(colors.white, 2, scale(50) / 2),
     marginLeft: -spacing.small,
   },
   imgBgTeam: {

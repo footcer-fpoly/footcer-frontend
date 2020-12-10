@@ -66,6 +66,8 @@ const MainRouter = ({isLogedIn}) => {
     return (
       <>
         <Stack.Screen name={BOTTOM_TAB} component={BottomTab} />
+        <Stack.Screen name={UPDATE_PASS_SCREEN} component={updatePassScreen} />
+        <Stack.Screen name={OTP_SCREEN} component={OTPScreen} />
         <Stack.Screen
           name={DETAIL_PROFILE_SCREEN}
           component={ProfileDetailScreen}

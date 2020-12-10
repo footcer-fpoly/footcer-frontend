@@ -144,6 +144,7 @@ export default function StadiumDetailScreen({route}) {
     <View style={styles.flex1}>
       {renderToolbar()}
       <Animated.ScrollView
+        nestedScrollEnabled={true}
         contentContainerStyle={styles.contentContainer}
         onScroll={Animated.event(
           [{nativeEvent: {contentOffset: {y: scrollY}}}],

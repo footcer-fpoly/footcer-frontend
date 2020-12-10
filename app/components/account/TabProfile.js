@@ -8,7 +8,7 @@ import {StatusCode} from '../../api/status-code';
 import {updateInfoUserService} from '../../api/user.api';
 import {body2, Text} from '../../components/common/Text';
 import {ListLevel, ListPosition} from '../../helpers/data-local.helper';
-import {formatDateTime} from '../../helpers/format.helper';
+import {formatBirthday, formatDateTime} from '../../helpers/format.helper';
 import {scale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
 import {ToastHelper} from '../../helpers/ToastHelper';
@@ -17,12 +17,19 @@ import {updateInfoUser} from '../../redux/actions/auth.action';
 import {hideLoading, showLoading} from '../../redux/actions/loading.action';
 import colors from '../../theme/colors';
 import spacing from '../../theme/spacing';
+import DialogConfirmSendOPT from '../../utils/dialogs/DialogConfirmSendOPT';
 import {IconType} from '../common/IconMaterialOrSvg';
 import ModalPicker from '../common/ModalPicker';
 import PrimaryButton from '../common/PrimaryButton';
 import RowProflie from './RowProflie';
 
-const TabProfile = ({profile, showLoading, hideLoading, updateInfoUser}) => {
+const TabProfile = ({
+  profile,
+  showLoading,
+  hideLoading,
+  updateInfoUser,
+  navigation,
+}) => {
   const modalizeRef = useRef();
   const [editable, setEditable] = useState(false);
   const toogleEditable = () => {
@@ -37,6 +44,7 @@ const TabProfile = ({profile, showLoading, hideLoading, updateInfoUser}) => {
     position: profile?.position,
     errorYup: null,
   });
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const goback = () => {
     rootNavigator.back();
@@ -89,7 +97,7 @@ const TabProfile = ({profile, showLoading, hideLoading, updateInfoUser}) => {
   const handleConfirm = date => {
     setData({
       ...data,
-      birthday: formatDateTime(date),
+      birthday: formatBirthday(date),
     });
     toogleDatePicker();
   };
@@ -175,7 +183,7 @@ const TabProfile = ({profile, showLoading, hideLoading, updateInfoUser}) => {
               textError={data.errorYup?.displayName}
             />
             <RowProflie
-              label="Số điện thoai"
+              label="Số điện thoại"
               value={data.phone}
               iconType={IconType.MaterialCommunityIcons}
               iconName="cellphone-android"
@@ -186,9 +194,9 @@ const TabProfile = ({profile, showLoading, hideLoading, updateInfoUser}) => {
               value="Đổi mật khẩu"
               iconType={IconType.MaterialCommunityIcons}
               iconName="key"
-              editable={false}
+              editable={true}
               stylesTxt={styles.txtRowProfile}
-              onPress={toogleDatePicker}
+              onPress={() => setIsModalVisible(true)}
             />
             <RowProflie
               label="Ngày sinh"
@@ -199,7 +207,7 @@ const TabProfile = ({profile, showLoading, hideLoading, updateInfoUser}) => {
               editable={editable}
             />
             <RowProflie
-              label="Ví trí"
+              label="Vị trí"
               value={data?.position ? data?.position : 'Chọn vị trí'}
               iconType={IconType.MaterialCommunityIcons}
               iconName="checkerboard"
@@ -247,6 +255,14 @@ const TabProfile = ({profile, showLoading, hideLoading, updateInfoUser}) => {
           )}
         </View>
         <ModalPicker ref={modalizeRef} onSelectItem={onSelectItem} />
+        <DialogConfirmSendOPT
+          phone={data.phone}
+          flag={2}
+          visible={isModalVisible}
+          navigation={navigation}
+          data={data}
+          dismiss={() => setIsModalVisible(false)}
+        />
       </ScrollView>
     </Host>
   );

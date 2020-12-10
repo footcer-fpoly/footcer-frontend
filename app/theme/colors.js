@@ -23,5 +23,6 @@ const colors = {
   viewBackground: '#f1f2f6',
   orange: '#d35400',
   yellow: '#ffd32a',
+  yellowDark: '#f39c12',
 };
 export default colors;

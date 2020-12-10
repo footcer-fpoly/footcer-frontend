@@ -160,7 +160,7 @@ const CreateGameScreen = ({showLoading, hideLoading}) => {
           <View style={styles.sectionTeam}>
             <TouchableHighlight
               activeOpacity={0.6}
-              underlayColor="#DDDDDD"
+              underlayColor={colors.red}
               style={[styles.btn, {backgroundColor: colors.errorBackground}]}
               onPress={showDialogTeams}>
               <Text style={{color: colors.white}} type={headline4}>

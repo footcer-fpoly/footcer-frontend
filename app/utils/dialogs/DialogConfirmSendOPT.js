@@ -4,6 +4,7 @@ import Modal from 'react-native-modal';
 import PrimaryButton from '../../components/common/PrimaryButton';
 import {body2, headline3, Text} from '../../components/common/Text';
 import {scale} from '../../helpers/size.helper';
+import rootNavigator from '../../navigations/root.navigator';
 import {OTP_SCREEN} from '../../navigations/route-name';
 import colors from '../../theme/colors';
 import spacing from '../../theme/spacing';
@@ -19,7 +20,7 @@ const DialogConfirmSendOPT = ({
 }) => {
   const _gotoOTPScreen = (phone, flag, dismiss, data) => () => {
     dismiss();
-    navigation.navigate(OTP_SCREEN, {phone, flag, data});
+    rootNavigator.navigate(OTP_SCREEN, {phone, flag, data});
   };
   return (
     <Modal
@@ -34,7 +35,7 @@ const DialogConfirmSendOPT = ({
           {phone}
         </Text>
         <Text type={body2}>
-          Chúng tôi sẻ gữi một mã xác thực đến {phone}. Bạn có muốn tiếp tục?
+          Chúng tôi sẻ gửi một mã xác thực đến {phone}. Bạn có muốn tiếp tục?
         </Text>
         <View style={styles.footer}>
           <PrimaryButton

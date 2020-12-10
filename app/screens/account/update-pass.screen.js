@@ -24,6 +24,8 @@ import colors from '../../theme/colors';
 import styles from '../../theme/StylesAuth';
 import AlertSuccessful from '../../utils/alerts/AlertSuccessful';
 import {logout} from '../../redux/actions/auth.action';
+import rootNavigator from '../../navigations/root.navigator';
+import {SIGN_IN_SCREEN} from '../../navigations/route-name';
 
 const UpdatePassScreen = ({
   navigation,
@@ -132,6 +134,11 @@ const UpdatePassScreen = ({
           });
           setTimeout(() => {
             logout();
+            setAlertSuccess({
+              ...alertSuccess,
+              visible: false,
+            });
+            rootNavigator.replace(SIGN_IN_SCREEN);
           }, 2000);
         } else {
           console.log('updatePass => res.code: ', res.code);

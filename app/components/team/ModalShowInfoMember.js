@@ -14,7 +14,19 @@ import {body1, body3, headline4, Text} from '../common/Text';
 
 const ModalShowInfoMember = ({visible, dismiss, data, isLeader}) => {
   console.log('data :', data);
-  console.log('isLeader :', data);
+  console.log('isLeader :', isLeader);
+  const renderButtonDelete = () => {
+    if (data?.role != 1 || !isLeader) {
+      return (
+        <PrimaryButton
+          style={styles.btn}
+          title="Loại khỏi đội"
+          textStyle={styles.txtBtn}
+        />
+      );
+    }
+    return <View />;
+  };
   return (
     <Modal
       onBackButtonPress={dismiss}
@@ -46,12 +58,20 @@ const ModalShowInfoMember = ({visible, dismiss, data, isLeader}) => {
           </View>
           <RowProflie
             label="Trạng thái"
-            value={data?.accept == 1 ? 'Thành viên' : 'Chờ xác nhận'}
+            value={
+              data?.role == 1
+                ? 'Đội trưởng'
+                : data?.accept == 1
+                ? 'Thành viên'
+                : 'Chờ xác nhận'
+            }
             iconType={IconType.MaterialCommunityIcons}
             iconName="bell"
             editable={false}
             stylesTxt={
-              data?.accept == 1
+              data?.role == 1
+                ? {color: colors.yellowDark}
+                : data?.accept == 1
                 ? {color: colors.greenDark}
                 : {color: colors.orange}
             }
@@ -87,14 +107,7 @@ const ModalShowInfoMember = ({visible, dismiss, data, isLeader}) => {
             iconName="chess-queen"
             editable={false}
           />
-          {data?.role != 1 ||
-            (!isLeader && (
-              <PrimaryButton
-                style={styles.btn}
-                title="Loại khỏi đội"
-                textStyle={styles.txtBtn}
-              />
-            ))}
+          {renderButtonDelete()}
         </View>
       </View>
     </Modal>

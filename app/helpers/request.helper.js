@@ -115,7 +115,8 @@ export default class RequestHelper {
 
   static async put(url, data) {
     const source = axios.CancelToken.source();
-    console.log('data: ', data);
+    console.log('put -->data: ', data);
+    console.log('put -->url: ', url);
     setTimeout(() => {
       source.cancel();
     }, configTimeOut);

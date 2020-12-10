@@ -329,10 +329,7 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
             lable="Khu vực thi đấu của bạn (*)"
             typeLeft={IconType.MaterialIcons}
             iconNameLeft="location-pin"
-            otherTextInputProps={{
-              placeholder: 'Chọn khu vưc thi đấu',
-            }}
-            value={dataTeam.place}
+            value={dataTeam.place ? dataTeam.place : 'Chọn khu vực thi đấu'}
             typeRigth={IconType.MaterialIcons}
             iconNameRigth="keyboard-arrow-down"
             sizeIcon={scale(22)}
@@ -344,10 +341,7 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
             lable="Trình độ"
             typeLeft={IconType.MaterialCommunityIcons}
             iconNameLeft="chess-queen"
-            otherTextInputProps={{
-              placeholder: 'Chọn trình độ đội bóng',
-            }}
-            value={dataTeam.level}
+            value={dataTeam.level ? dataTeam.level : 'Chọn trình độ đội bóng'}
             typeRigth={IconType.MaterialIcons}
             iconNameRigth="keyboard-arrow-down"
             sizeIcon={scale(22)}

@@ -68,6 +68,10 @@ export const formatToDate = date => {
     .format('YYYY-MM-DD');
 };
 
+export const formatBirthday = date => {
+  return dayjs(date).format('DD/MM/YYYY');
+};
+
 export const formatToHours = date => {
   return dayjs(date)
     .locale(locale_vi)

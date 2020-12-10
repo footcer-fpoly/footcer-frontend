@@ -44,13 +44,21 @@ const TitleTextInputField = ({
                 style={styles.icon}
               />
             )}
-            <TextInput
-              style={[styles.textInput, styleInput]}
-              value={value}
-              editable={!onPress}
-              onChangeText={onChangeText}
-              {...otherTextInputProps}
-            />
+            {!typeRigth ? (
+              <TextInput
+                style={[styles.textInput, styleInput]}
+                value={value}
+                editable={!onPress}
+                onChangeText={onChangeText}
+                {...otherTextInputProps}
+              />
+            ) : (
+              <TouchableOpacity
+                onPress={onPress}
+                style={[styles.textInput, styleInput]}>
+                <Text type={body2}>{value}</Text>
+              </TouchableOpacity>
+            )}
             {typeRigth && (
               <TouchableOpacity onPress={onPress}>
                 <IconMaterialOrSvg
