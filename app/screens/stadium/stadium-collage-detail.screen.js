@@ -37,6 +37,7 @@ export default function StadiumCollageDetailScreen({route}) {
     address,
     category,
     nameCollage,
+    stadiumUserId,
   } = route.params;
   const listDate = useNextDays();
   const scrollRef = useRef();
@@ -50,6 +51,7 @@ export default function StadiumCollageDetailScreen({route}) {
   });
   const [order, setOrder] = useState({
     nameSadium: stadiumName,
+    stadiumUserId,
     nameCollage,
     timeOrder: '',
     dateOrder: formatToDate(listDate[0]?.date),
@@ -84,7 +86,7 @@ export default function StadiumCollageDetailScreen({route}) {
         if (!index) {
           setState({
             ...state,
-            listTime: res.data.stadiumDetails.filter(
+            listTime: res?.data?.stadiumDetails?.filter(
               el => diffHours(el.startTimeDetail) > 0,
             ),
             data: res.data,
@@ -93,7 +95,9 @@ export default function StadiumCollageDetailScreen({route}) {
         } else {
           setState({
             ...state,
+            data: res.data,
             listTime: res.data.stadiumDetails,
+            onReady: true,
           });
         }
       } else {
@@ -189,55 +193,46 @@ export default function StadiumCollageDetailScreen({route}) {
     ));
   };
   const renderSectionTime = () => {
-    const newList = [...state.listTime];
-    const subList = detachedArray(newList, 4);
-    return (
-      <View style={[styles.section, styles.mrTop]}>
-        <Text type={headline6} style={styles.txtTitle}>
-          2. Chọn giờ:
-        </Text>
-        <View style={styles.wrapperDesStatus}>
-          <DescriptionStatus color={colors.white} lable="Còn trống" />
-          <DescriptionStatus color={colors.grayOpacity} lable="Đã được đặt" />
-          <DescriptionStatus color={colors.green} lable="Đang chọn" />
+    if (!!state?.data?.stadiumDetails) {
+      const newList = [...state.listTime];
+      const subList = detachedArray(newList, 4);
+      return (
+        <View style={[styles.section, styles.mrTop]}>
+          <Text type={headline6} style={styles.txtTitle}>
+            2. Chọn giờ:
+          </Text>
+          <View style={styles.wrapperDesStatus}>
+            <DescriptionStatus color={colors.white} lable="Còn trống" />
+            <DescriptionStatus color={colors.grayOpacity} lable="Đã được đặt" />
+            <DescriptionStatus color={colors.green} lable="Đang chọn" />
+          </View>
+          {state.error && <TextError text={'Vui lòng chọn giờ'} />}
+          {!subList.length ? (
+            <>
+              <Text />
+              <NoDataComponent text="Hôm nay đã hết giờ hoạt động vui lòng chọn ngày hôm sau!" />
+            </>
+          ) : (
+            <ScrollView
+              nestedScrollEnabled={true}
+              showsHorizontalScrollIndicator={false}
+              horizontal
+              style={styles.paddingHor}>
+              {subList.map((item, index) => (
+                <View key={index.toString()} style={{marginRight: scale(5)}}>
+                  {render(item)}
+                </View>
+              ))}
+            </ScrollView>
+          )}
         </View>
-        {state.error && <TextError text={'Vui lòng chọn giờ'} />}
-        {!subList.length ? (
-          <>
-            <Text />
-            <NoDataComponent text="Hôm nay đã hết giờ hoạt động vui lòng chọn ngày hôm sau!" />
-          </>
-        ) : (
-          <ScrollView
-            nestedScrollEnabled={true}
-            showsHorizontalScrollIndicator={false}
-            horizontal
-            style={styles.paddingHor}>
-            {subList.map((item, index) => (
-              <View key={index.toString()} style={{marginRight: scale(5)}}>
-                {render(item)}
-              </View>
-            ))}
-          </ScrollView>
-        )}
-      </View>
-    );
+      );
+    }
+    return <View />;
   };
   const renderToolBar = () => {
     return (
-      <ToolBar
-        style={styles.toolBar}
-        left={
-          <TouchableOpacity style={styles.btnBack} onPress={handleOnPress}>
-            <Icon name="chevron-left" size={scale(25)} color={colors.white} />
-          </TouchableOpacity>
-        }
-        center={
-          <Text type={headline5} style={styles.titleContent}>
-            Đặt sân bóng
-          </Text>
-        }
-      />
+      <ToolBar left={true} title="Đặt sân" backgroundColor={colors.main} />
     );
   };
 
@@ -307,24 +302,11 @@ const styles = StyleSheet.create({
   mrTop: {
     marginTop: spacing.tiny,
   },
-  btnBack: {
-    height: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: scale(15),
-  },
-  toolBar: {
-    backgroundColor: colors.main,
-  },
   container: {
     flex: 1,
   },
   contentContainer: {
     paddingBottom: scale(60),
-  },
-  titleContent: {
-    color: colors.white,
-    textTransform: 'uppercase',
   },
   section: {
     backgroundColor: colors.white,

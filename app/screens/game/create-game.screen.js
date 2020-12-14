@@ -142,19 +142,11 @@ const CreateGameScreen = ({showLoading, hideLoading, listGameUser}) => {
   const renderToolBar = () => {
     return (
       <ToolBar
-        style={styles.toolBar}
-        left={
-          <TouchableOpacity style={styles.btnBack} onPress={handleOnPress}>
-            <Icon name="chevron-left" size={scale(25)} color={colors.white} />
-          </TouchableOpacity>
-        }
-        center={
-          <Text type={headline5} style={styles.titleToolBar}>
-            Tạo trận đấu
-          </Text>
-        }
+        backgroundColor={colors.main}
+        left={true}
+        title="Tạo trận đấu"
         right={
-          <TouchableOpacity style={styles.btnBack} onPress={navigateToScreen}>
+          <TouchableOpacity onPress={navigateToScreen}>
             <Icon name="home" size={scale(25)} color={colors.white} />
           </TouchableOpacity>
         }

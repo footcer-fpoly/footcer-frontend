@@ -59,7 +59,7 @@ const FloatingActionButton = ({listTeam, listOrder}) => {
         visible: true,
       });
       return false;
-    } else if (!listOrderWaitting.length || !listOrderAccept.length) {
+    } else if (!listOrderWaitting.length && !listOrderAccept.length) {
       setContentModal({
         ...contentModal,
         image: icAddOther,
@@ -82,15 +82,16 @@ const FloatingActionButton = ({listTeam, listOrder}) => {
       <ConfirmDialog
         visible={contentModal.visible}
         imageSVG={contentModal.image}
-        sizeImage={scale(200)}
+        sizeImage={scale(150)}
         confirmText={contentModal.titleConfirm}
         cancelText="Hủy"
         colorsCancel={colors.grayDark}
         colorsConfirm={colors.green}
-        title="Thông báo tạo trân đấu"
+        title="Thông báo tạo trận đấu"
         subTitle={contentModal.subTitle}
         onCancelClick={toggleModal}
         onConfirmClick={navigateToScreen}
+        colorTitle={colors.orange}
       />
     </>
   );

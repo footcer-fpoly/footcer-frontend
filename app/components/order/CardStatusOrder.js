@@ -44,7 +44,7 @@ export default function CardStatusOrder({item, onPress}) {
         <Image
           style={styles.image}
           source={{
-            uri: 'https://reactnative.dev/img/tiny_logo.png',
+            uri: item?.stadium?.image,
           }}
         />
         <View style={styles.warpperContent}>

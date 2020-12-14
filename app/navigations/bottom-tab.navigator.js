@@ -31,11 +31,11 @@ const BottomTab = ({profile}) => {
           type: 'icon',
           name: 'sword-cross',
         };
-      case NOTIFICATION_SCREEN:
-        return {
-          type: 'icon',
-          name: 'bell',
-        };
+      // case NOTIFICATION_SCREEN:
+      //   return {
+      //     type: 'icon',
+      //     name: 'bell',
+      //   };
       case ACCOUNT_SCREEN:
         return {
           type: 'image',
@@ -78,13 +78,13 @@ const BottomTab = ({profile}) => {
           tabBarLabel: 'Trận đấu',
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name={NOTIFICATION_SCREEN}
         component={NotificationScreen}
         options={{
           tabBarLabel: 'Thông báo',
         }}
-      />
+      /> */}
       <Tab.Screen
         name={ACCOUNT_SCREEN}
         component={AccountScreen}

@@ -74,7 +74,7 @@ const TabbarComponent = ({state, descriptors, navigation}) => {
 const styles = StyleSheet.create({
   buttonTabbar: {flex: 1, alignItems: 'center'},
   wrapper: {
-    backgroundColor: colors.grayLight,
+    backgroundColor: colors.white,
   },
   tabContainer: {
     flexDirection: 'row',

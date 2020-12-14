@@ -112,9 +112,10 @@ export const StadiumDetailScreen = ({route, listOrder, getListOrder}) => {
     return (
       <CardStadiumCollage
         item={item}
-        stadiumName={data.stadiumName}
-        address={data.address}
-        category={data.category}
+        stadiumName={data?.stadiumName}
+        address={data?.address}
+        category={data?.category}
+        stadiumUserId={data?.user?.userId}
       />
     );
   };
@@ -265,14 +266,14 @@ export const StadiumDetailScreen = ({route, listOrder, getListOrder}) => {
             label="Loại sân"
             value={data?.category}
             iconType={IconType.MaterialIcons}
-            iconName="account-circle"
+            iconName="category"
             editable={false}
           />
           <RowProflie
             label="Số sân đơn"
             value={data?.stadium_collage?.length + ' sân'}
             iconType={IconType.MaterialIcons}
-            iconName="account-circle"
+            iconName="casino"
             editable={false}
           />
         </View>
@@ -286,21 +287,21 @@ export const StadiumDetailScreen = ({route, listOrder, getListOrder}) => {
             label="Tỉnh/Thành phố"
             value={data?.city}
             iconType={IconType.MaterialIcons}
-            iconName="account-circle"
+            iconName="festival"
             editable={false}
           />
           <RowProflie
             label="Quận/Huyện"
             value={data?.district}
             iconType={IconType.MaterialIcons}
-            iconName="account-circle"
+            iconName="festival"
             editable={false}
           />
           <RowProflie
             label="Phường/Xã"
             value={data?.ward}
             iconType={IconType.MaterialIcons}
-            iconName="account-circle"
+            iconName="festival"
             editable={false}
           />
         </View>

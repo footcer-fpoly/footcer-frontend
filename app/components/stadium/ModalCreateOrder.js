@@ -27,12 +27,12 @@ export default function ModalCreateOrder({dismiss, visible, data}) {
       price: data.price,
       description,
       stadiumDetailsId: data.stadiumDetailsId,
+      stadiumUserId: data.stadiumUserId,
     });
-    console.log('res.orderId: ', res.data.orderId);
     if (res && res.code === StatusCode.SUCCESS) {
       dismiss();
-      ToastHelper.showToast('Bạn đã đặt lịch thành công');
-      rootNavigator.replace(ORDER_DETAIL_SCREEN, {orderId: res.data.orderId});
+      ToastHelper.showToast('Bạn đã đặt lịch thành công', colors.main);
+      rootNavigator.replace(ORDER_DETAIL_SCREEN, {orderId: res?.data?.orderId});
     } else {
       dismiss();
       ToastHelper.showToast('Lỗi rồi fr');

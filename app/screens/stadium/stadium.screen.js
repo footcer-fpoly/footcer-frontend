@@ -346,10 +346,6 @@ const styles = StyleSheet.create({
   titleFooter: {
     marginBottom: scale(10),
   },
-  titleToolbar: {
-    color: colors.white,
-    textTransform: 'uppercase',
-  },
   warpperTitle: {
     ...Styles.rowBetween,
     paddingHorizontal: scale(10),
@@ -357,9 +353,6 @@ const styles = StyleSheet.create({
   txtCountListStadium: {
     color: colors.green,
     marginRight: spacing.tiny,
-  },
-  btnSearch: {
-    marginRight: scale(10),
   },
 });
 

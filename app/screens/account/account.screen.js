@@ -1,19 +1,13 @@
-import React from 'react';
-import {
-  FlatList,
-  ScrollView,
-  StyleSheet,
-  View,
-  TouchableOpacity,
-} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import React, {useState} from 'react';
+import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {connect} from 'react-redux';
 import AccountBlock from '../../components/account/AccountBlock';
 import BlockCount from '../../components/account/BlockCount';
-import CardMyTeam from '../../components/account/CardMyTeam';
+import RowButton from '../../components/account/RowButton';
 import Avatar from '../../components/common/Avatar';
+import ConfirmDialog from '../../components/common/dialog/ConfirmDialog';
 import {IconType} from '../../components/common/IconMaterialOrSvg';
-import ListLoadingComponent from '../../components/common/ListLoadingComponent';
 import {headline4, headline5, Text} from '../../components/common/Text';
 import ToolBar from '../../components/common/Toolbar';
 import {scale} from '../../helpers/size.helper';
@@ -21,34 +15,44 @@ import Styles from '../../helpers/styles.helper';
 import {ToastHelper} from '../../helpers/ToastHelper';
 import rootNavigation from '../../navigations/root.navigator';
 import {
-  CREATE_TEAM_SCREEN,
   DETAIL_PROFILE_SCREEN,
+  LIST_GAME_SCREEN,
   LIST_ORDER_SCREEN,
+  NOTIFICATION_SCREEN,
   TEAM_SCREEN,
 } from '../../navigations/route-name';
 import {logout} from '../../redux/actions/auth.action';
 import colors from '../../theme/colors';
 import spacing from '../../theme/spacing';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const AccountScreen = ({profile, listTeam, listOrder, logout}) => {
+  const [visibleModal, setVisibleModal] = useState(false);
+
   const navigateToScreen = (routeName, params) => () => {
     rootNavigation.navigate(routeName, params);
   };
-  const keyExtractor = (item, index) => index.toString();
-  const renderItem = ({item}) => {
-    return <CardMyTeam width={scale(320)} item={item} />;
+  const commingSoon = () => {
+    ToastHelper.showToast('Tính năng đang phát triển', colors.orange);
   };
+  const toggleModal = () => {
+    setVisibleModal(!visibleModal);
+  };
+
   return (
     <View style={styles.container}>
       <ToolBar
         title="Tài khoản"
         left={true}
         right={
-          <TouchableOpacity>
-            <Ionicons name="settings" size={scale(25)} color={colors.black} />
+          <TouchableOpacity onPress={navigateToScreen(NOTIFICATION_SCREEN)}>
+            <MaterialCommunityIcons
+              name="bell-outline"
+              size={scale(25)}
+              color={colors.white}
+            />
           </TouchableOpacity>
         }
+        backgroundColor={colors.main}
       />
       <ScrollView
         style={styles.flex1}
@@ -79,11 +83,19 @@ const AccountScreen = ({profile, listTeam, listOrder, logout}) => {
               lable="Tổng số lịch đặt sân"
               count={listOrder?.length ? `${listOrder?.length} đơn` : '0 đơn'}
               colorCount={colors.blue}
+              onPress={navigateToScreen(LIST_ORDER_SCREEN)}
             />
           </View>
         </View>
         <View style={styles.section}>
           <View style={styles.block}>
+            <AccountBlock
+              type={IconType.MaterialCommunityIcons}
+              iconName="account-outline"
+              text="Thông tin cá nhân"
+              style={styles.flex47}
+              onPress={navigateToScreen(DETAIL_PROFILE_SCREEN)}
+            />
             <AccountBlock
               type={IconType.MaterialCommunityIcons}
               iconName="clipboard-list-outline"
@@ -92,77 +104,86 @@ const AccountScreen = ({profile, listTeam, listOrder, logout}) => {
               onPress={navigateToScreen(LIST_ORDER_SCREEN)}
             />
             <AccountBlock
-              type={IconType.MaterialIcons}
-              iconName="group-add"
-              text="Tạo đội bóng"
+              type={IconType.MaterialCommunityIcons}
+              iconName="account-group-outline"
+              text="Quản lý đội bóng"
               style={styles.flex47}
-              onPress={navigateToScreen(CREATE_TEAM_SCREEN)}
-            />
-            <AccountBlock
-              type={IconType.MaterialIcons}
-              iconName="share"
-              text="Mời bạn bè"
-              style={styles.flex47}
-              onPress={() => ToastHelper.showToast('haha')}
+              onPress={navigateToScreen(TEAM_SCREEN)}
             />
           </View>
-          <View style={[styles.block, {marginTop: spacing.small}]}>
-            <AccountBlock
-              type={IconType.MaterialIcons}
-              iconName="settings"
-              text="Cài đặt"
-              style={styles.flex47}
+        </View>
+        <View style={styles.warpperOption}>
+          <View style={styles.warpperSectionOption}>
+            <Text type={headline5} style={styles.titleOption}>
+              Tài khoản
+            </Text>
+            <RowButton
+              iconType={IconType.MaterialCommunityIcons}
+              iconName="sword-cross"
+              text="Trận đấu của bạn"
+              onPress={navigateToScreen(LIST_GAME_SCREEN)}
             />
-            <AccountBlock
-              type={IconType.MaterialIcons}
-              iconName="qr-code"
-              text="QR Code"
-              style={styles.flex47}
+            <RowButton
+              iconType={IconType.MaterialCommunityIcons}
+              iconName="gift-outline"
+              text="Khuyến mãi dành cho bạn"
+              onPress={commingSoon}
             />
-            <AccountBlock
-              onPress={logout}
-              type={IconType.MaterialIcons}
+            <RowButton
+              iconType={IconType.MaterialCommunityIcons}
+              iconName="feature-search-outline"
+              text="Lịch sử tìm kiếm"
+              onPress={commingSoon}
+            />
+            <RowButton
+              iconType={IconType.MaterialCommunityIcons}
+              iconName="star-circle-outline"
+              text="Sân yêu thích"
+              onPress={commingSoon}
+            />
+          </View>
+          <View style={styles.warpperSectionOption}>
+            <Text type={headline5} style={styles.titleOption}>
+              Khác
+            </Text>
+            <RowButton
+              iconType={IconType.MaterialCommunityIcons}
+              iconName="help-circle-outline"
+              text="Liên hệ trợ giúp"
+              onPress={commingSoon}
+            />
+            <RowButton
+              iconType={IconType.MaterialCommunityIcons}
+              iconName="alert-circle-outline"
+              text="Về chúng tôi"
+              onPress={commingSoon}
+            />
+            <RowButton
+              iconType={IconType.MaterialCommunityIcons}
               iconName="logout"
               text="Đăng xuất"
-              style={styles.flex47}
+              onPress={toggleModal}
             />
           </View>
         </View>
-        <View style={styles.section}>
-          <View style={styles.warpperTeam}>
-            <Text type={headline5} style={styles.txtMyTeam}>
-              Danh sách đội bóng của bạn
-            </Text>
-            <View style={styles.warpperTeam}>
-              <Text type={headline5} style={styles.txtCountTeam}>
-                {listTeam?.length}
-              </Text>
-              <Icon
-                size={scale(20)}
-                color={colors.green}
-                name="account-group"
-              />
-            </View>
-          </View>
-          <FlatList
-            data={listTeam}
-            showsHorizontalScrollIndicator={false}
-            horizontal
-            contentContainerStyle={styles.listMember}
-            keyExtractor={keyExtractor}
-            renderItem={renderItem}
-            ListEmptyComponent={
-              <ListLoadingComponent
-                onReady={listTeam !== null}
-                numberOfPlaceholder={1}
-                text={
-                  'Bạn chưa tham gia đội bóng nào click vào tạo đội bóng để tạo đội ngay!'
-                }
-              />
-            }
-          />
+        <View style={styles.footer}>
+          <Text style={styles.txtfooter}>Copyright ©2020 by Footer Team</Text>
+          <Text style={[styles.txtfooter, {marginTop: spacing.tiny}]}>
+            Thiết kế và phát triển bởi Footcer Team
+          </Text>
         </View>
       </ScrollView>
+      <ConfirmDialog
+        visible={visibleModal}
+        confirmText="Đăng xuất"
+        cancelText="Hủy"
+        colorsCancel={colors.grayDark}
+        colorsConfirm={colors.orange}
+        title="Đăng xuất tài khoản"
+        subTitle="Bạn có chắc muốn đăng xuất tài khoản?"
+        onCancelClick={toggleModal}
+        onConfirmClick={logout}
+      />
     </View>
   );
 };
@@ -203,16 +224,30 @@ const styles = StyleSheet.create({
     width: '100%',
     marginTop: scale(30),
   },
-  txtMyTeam: {
-    color: colors.blueDark,
-    marginBottom: spacing.medium,
+  warpperOption: {
+    backgroundColor: colors.white,
+    marginTop: scale(10),
+    borderRadius: scale(5),
+    paddingHorizontal: scale(10),
+    paddingTop: scale(20),
   },
-  warpperTeam: {
-    ...Styles.rowBetween,
+  titleOption: {
+    color: '#16a085',
+    borderBottomWidth: scale(0.5),
+    borderBottomColor: colors.gray,
+    paddingBottom: scale(5),
   },
-  txtCountTeam: {
-    color: colors.green,
-    marginRight: spacing.tiny,
+  footer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: scale(30),
+  },
+  warpperSectionOption: {
+    marginBottom: scale(10),
+  },
+  txtfooter: {
+    fontSize: scale(12),
+    color: '#a4b0be',
   },
 });
 const mapDispatchToProps = {

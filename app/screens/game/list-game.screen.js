@@ -1,4 +1,5 @@
-import React, {useEffect, useState} from 'react';
+import {useFocusEffect} from '@react-navigation/native';
+import React, {useState} from 'react';
 import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import ScrollableTabView, {
@@ -8,24 +9,24 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import {connect} from 'react-redux';
 import {getGameService} from '../../api/game.api';
 import {StatusCode} from '../../api/status-code';
+import DescriptionStatus from '../../components/common/DescriptionStatus';
 import ListLoadingComponent from '../../components/common/ListLoadingComponent';
-import {body3, headline5, headline6, Text} from '../../components/common/Text';
+import {body3, headline6, Text} from '../../components/common/Text';
 import ToolBar from '../../components/common/Toolbar';
 import CardGame from '../../components/game/CardGame';
+import CardMyGame from '../../components/game/CardMyGame';
 import FloatingActionButton from '../../components/game/FLoatingActionButton';
 import {compareDateTime, formatToDate} from '../../helpers/format.helper';
 import {scale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
 import {ToastHelper} from '../../helpers/ToastHelper';
-import {getListGame} from '../../redux/actions/auth.action';
+import {getListGame, getListOrder} from '../../redux/actions/auth.action';
 import colors from '../../theme/colors';
-import CardMyGame from '../../components/game/CardMyGame';
-import {color} from 'react-native-reanimated';
-import {useFocusEffect} from '@react-navigation/native';
-import DescriptionStatus from '../../components/common/DescriptionStatus';
-import {date} from 'yup';
-const ListGameScreen = ({getListGame, listGameUser}) => {
-  console.log('listGameUser: ', listGameUser);
+const ListGameScreen = ({getListGame, listGameUser, getListOrder}) => {
+  console.log(
+    '🚀 ~ file: list-game.screen.js ~ line 26 ~ ListGameScreen ~ getListOrder',
+    getListOrder.length,
+  );
   const [listGame, setListGame] = useState({
     data: [],
     onReady: false,
@@ -34,10 +35,12 @@ const ListGameScreen = ({getListGame, listGameUser}) => {
   });
   useFocusEffect(
     React.useCallback(() => {
-      getListGame();
-      getData('all');
+      fechData();
     }, []),
   );
+  const fechData = async () => {
+    await Promise.all([getData('all'), getListGame(), getListOrder()]);
+  };
   const getData = async params => {
     try {
       const res = await getGameService(params);
@@ -93,7 +96,7 @@ const ListGameScreen = ({getListGame, listGameUser}) => {
   };
   return (
     <View style={styles.container}>
-      <ToolBar title="Trận đấu" />
+      <ToolBar left={true} title="Trận đấu" backgroundColor={colors.main} />
       <DateTimePickerModal
         isVisible={listGame.visbaleModal}
         mode="date"
@@ -167,17 +170,13 @@ const ListGameScreen = ({getListGame, listGameUser}) => {
               />
             }
           />
-          <FloatingActionButton />
         </View>
       </ScrollableTabView>
+      <FloatingActionButton />
     </View>
   );
 };
 const styles = StyleSheet.create({
-  titleToolbar: {
-    color: colors.white,
-    textTransform: 'uppercase',
-  },
   container: {
     flex: 1,
   },
@@ -210,6 +209,7 @@ const styles = StyleSheet.create({
 
 const mapDispatchToProps = {
   getListGame,
+  getListOrder,
 };
 function mapStateToProps(state) {
   return {

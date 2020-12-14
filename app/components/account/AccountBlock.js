@@ -19,7 +19,7 @@ export default function AccountBlock({
       <IconMaterialOrSvg
         type={type}
         name={iconName}
-        size={scale(30)}
+        size={scale(25)}
         imageStyle={styles.imageSouceStyle}
         nameSvg={nameSvg}
         style={styles.icon}
@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     paddingVertical: scale(10),
+    backgroundColor: colors.white,
     borderRadius: scale(5),
     shadowColor: colors.grayLight,
     shadowOffset: {
@@ -49,8 +50,9 @@ const styles = StyleSheet.create({
     color: colors.black,
     textAlign: 'center',
     marginTop: spacing.tiny,
+    fontSize: scale(11),
   },
   icon: {
-    color: colors.main,
+    color: colors.greenDark,
   },
 });

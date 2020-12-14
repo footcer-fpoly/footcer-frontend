@@ -11,12 +11,14 @@ export const addOrderService = ({
   price,
   description,
   stadiumDetailsId,
+  stadiumUserId,
 }) => {
   return RequestHelper.post(ADD_ORDER, {
     time,
     price,
     description,
     stadiumDetailsId,
+    stadiumUserId,
   });
 };
 

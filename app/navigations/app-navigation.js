@@ -11,6 +11,7 @@ import SignUpPhoneScreen from '../screens/auth/sign-up-phone.screen';
 import SplashScreen from '../screens/auth/splash.screen';
 import CreateGameScreen from '../screens/game/create-game.screen';
 import GameDetailScreen from '../screens/game/game-detail.screen';
+import NotificationScreen from '../screens/notification.screen';
 import ListOrderScreen from '../screens/order/list-order.screen';
 import orderDetailScreen from '../screens/order/order-detail.screen';
 import ReviewStadiumScreen from '../screens/stadium/review-stadium.screen';
@@ -42,6 +43,7 @@ import {
   CREATE_GAME_SCREEN,
   GAME_DETAIL_SCREEN,
   TEAM_SCREEN,
+  NOTIFICATION_SCREEN,
 } from './route-name';
 
 const Stack = createStackNavigator();
@@ -99,6 +101,10 @@ const MainRouter = ({isLogedIn}) => {
         <Stack.Screen name={CREATE_GAME_SCREEN} component={CreateGameScreen} />
         <Stack.Screen name={GAME_DETAIL_SCREEN} component={GameDetailScreen} />
         <Stack.Screen name={TEAM_SCREEN} component={TeamScreen} />
+        <Stack.Screen
+          name={NOTIFICATION_SCREEN}
+          component={NotificationScreen}
+        />
       </>
     );
   };

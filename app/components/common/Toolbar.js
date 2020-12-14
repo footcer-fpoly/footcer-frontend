@@ -26,10 +26,14 @@ const ToolBar = ({left, right, style, backgroundColor, barStyle, title}) => {
       <View style={styles.containerToolbar(TOOL_BAR_HEIGHT)}>
         <TouchableOpacity style={styles.iconLeft} onPress={handleOnPress}>
           {left && (
-            <Icon name="chevron-left" size={scale(25)} color={colors.black} />
+            <Icon
+              name="chevron-left"
+              size={scale(25)}
+              color={backgroundColor ? colors.white : colors.black}
+            />
           )}
         </TouchableOpacity>
-        <Text style={styles.center} type={headline5}>
+        <Text style={styles.center(backgroundColor)} type={headline5}>
           {`  ${title}`}
         </Text>
         <View style={styles.iconRight}>{right}</View>
@@ -72,9 +76,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: scale(50),
   },
-  center: {
+  center: bg => ({
     flex: 1,
     textAlign: 'center',
     textTransform: 'uppercase',
-  },
+    color: bg ? colors.white : colors.black,
+  }),
 });

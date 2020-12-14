@@ -13,6 +13,7 @@ export default function CardStadiumCollage({
   stadiumName,
   address,
   category,
+  stadiumUserId,
 }) {
   const getNavigateCollageDetail = () => {
     rootNavigator.navigate(STADIUM_COLLAGE_DETAIL_SCREEN, {
@@ -20,6 +21,7 @@ export default function CardStadiumCollage({
       stadiumName,
       address,
       category,
+      stadiumUserId,
       nameCollage: item.stadiumCollageName,
     });
   };

@@ -90,5 +90,6 @@ const styles = StyleSheet.create({
   subTitle: {
     marginTop: spacing.small,
     textAlign: 'center',
+    color: colors.gray,
   },
 });
