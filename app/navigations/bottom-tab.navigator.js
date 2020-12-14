@@ -7,11 +7,13 @@ import TabbarIcon from '../components/common/TabbarIcon';
 import AccountScreen from '../screens/account/account.screen';
 import ListGameScreen from '../screens/game/list-game.screen';
 import HomeScreen from '../screens/home/home.screen';
+import NotificationScreen from '../screens/notification.screen';
 import stadiumScreen from '../screens/stadium/stadium.screen';
 import {
   ACCOUNT_SCREEN,
   HOME_SCREEN,
   LIST_GAME_SCREEN,
+  NOTIFICATION_SCREEN,
   STADIUM_SCREEN,
 } from './route-name';
 
@@ -28,6 +30,11 @@ const BottomTab = ({profile}) => {
         return {
           type: 'icon',
           name: 'sword-cross',
+        };
+      case NOTIFICATION_SCREEN:
+        return {
+          type: 'icon',
+          name: 'bell',
         };
       case ACCOUNT_SCREEN:
         return {
@@ -69,6 +76,13 @@ const BottomTab = ({profile}) => {
         component={ListGameScreen}
         options={{
           tabBarLabel: 'Trận đấu',
+        }}
+      />
+      <Tab.Screen
+        name={NOTIFICATION_SCREEN}
+        component={NotificationScreen}
+        options={{
+          tabBarLabel: 'Thông báo',
         }}
       />
       <Tab.Screen

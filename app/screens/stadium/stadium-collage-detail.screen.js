@@ -1,17 +1,16 @@
-import React, {useEffect, useState} from 'react';
-import {
-  LayoutAnimation,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React, {useEffect, useRef, useState} from 'react';
+import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import Icon from 'react-native-vector-icons/Octicons';
 import {getStadiumCollageDetailService} from '../../api/stadium.api';
 import {StatusCode} from '../../api/status-code';
+import DescriptionStatus from '../../components/common/DescriptionStatus';
+import ListLoadingComponent from '../../components/common/ListLoadingComponent';
+import NoDataComponent from '../../components/common/NoDataComponent';
 import PrimaryButton from '../../components/common/PrimaryButton';
+import RowInfo from '../../components/common/RowInfo';
 import {headline5, headline6, Text} from '../../components/common/Text';
+import TextError from '../../components/common/TextError';
 import ToolBar from '../../components/common/Toolbar';
 import DateItem from '../../components/stadium/DateItem';
 import ModalCreateOrder from '../../components/stadium/ModalCreateOrder';
@@ -32,18 +31,26 @@ import dimens from '../../theme/dimens';
 import spacing from '../../theme/spacing';
 
 export default function StadiumCollageDetailScreen({route}) {
-  const {stadiumCollageId, stadiumName, address, category} = route.params;
+  const {
+    stadiumCollageId,
+    stadiumName,
+    address,
+    category,
+    nameCollage,
+  } = route.params;
   const listDate = useNextDays();
+  const scrollRef = useRef();
 
   const [state, setState] = useState({
     listDate,
     listTime: [],
     data: {},
-    error: null,
     onReady: false,
+    error: null,
   });
   const [order, setOrder] = useState({
-    nameSadium: '',
+    nameSadium: stadiumName,
+    nameCollage,
     timeOrder: '',
     dateOrder: formatToDate(listDate[0]?.date),
     price: 0,
@@ -58,7 +65,12 @@ export default function StadiumCollageDetailScreen({route}) {
   };
 
   const toggleModalCreateOrder = () => {
-    setVisibleModal(!visibleModal);
+    if (!order.timeOrder) {
+      scrollRef.current.scrollToEnd();
+      setState({...state, error: true});
+    } else {
+      setVisibleModal(!visibleModal);
+    }
   };
 
   const getData = async (index, date) => {
@@ -110,6 +122,7 @@ export default function StadiumCollageDetailScreen({route}) {
     setOrder({
       ...order,
       dateOrder: formatToDate(item.date),
+      timeOrder: '',
     });
     getData(index, item.date);
   };
@@ -122,7 +135,7 @@ export default function StadiumCollageDetailScreen({route}) {
         e.hasOrder = false;
       }
     });
-    setState({...state, listTime: newList});
+    setState({...state, listTime: newList, error: false});
     setOrder({
       ...order,
       price: item.price,
@@ -177,22 +190,36 @@ export default function StadiumCollageDetailScreen({route}) {
   };
   const renderSectionTime = () => {
     const newList = [...state.listTime];
-    const subList = detachedArray(newList, 6);
+    const subList = detachedArray(newList, 4);
     return (
       <View style={[styles.section, styles.mrTop]}>
         <Text type={headline6} style={styles.txtTitle}>
           2. Chọn giờ:
         </Text>
-        <ScrollView
-          showsHorizontalScrollIndicator={false}
-          horizontal
-          style={styles.paddingHor}>
-          {subList.map((item, index) => (
-            <View key={index.toString()} style={{marginRight: scale(5)}}>
-              {render(item)}
-            </View>
-          ))}
-        </ScrollView>
+        <View style={styles.wrapperDesStatus}>
+          <DescriptionStatus color={colors.white} lable="Còn trống" />
+          <DescriptionStatus color={colors.grayOpacity} lable="Đã được đặt" />
+          <DescriptionStatus color={colors.green} lable="Đang chọn" />
+        </View>
+        {state.error && <TextError text={'Vui lòng chọn giờ'} />}
+        {!subList.length ? (
+          <>
+            <Text />
+            <NoDataComponent text="Hôm nay đã hết giờ hoạt động vui lòng chọn ngày hôm sau!" />
+          </>
+        ) : (
+          <ScrollView
+            nestedScrollEnabled={true}
+            showsHorizontalScrollIndicator={false}
+            horizontal
+            style={styles.paddingHor}>
+            {subList.map((item, index) => (
+              <View key={index.toString()} style={{marginRight: scale(5)}}>
+                {render(item)}
+              </View>
+            ))}
+          </ScrollView>
+        )}
       </View>
     );
   };
@@ -213,37 +240,49 @@ export default function StadiumCollageDetailScreen({route}) {
       />
     );
   };
+
+  if (!state.onReady) {
+    return (
+      <>
+        {renderToolBar()}
+        <Text />
+        <ListLoadingComponent onReady={state.onReady} />
+      </>
+    );
+  }
   return (
     <View style={styles.container}>
       {renderToolBar()}
       <ScrollView
+        ref={scrollRef}
         contentContainerStyle={styles.contentContainer}
         style={styles.flex1}>
         <View style={styles.section}>
           <Text type={headline6} style={styles.txtTitle}>
-            Thông tin cụm sân:
+            Thông tin sân:
           </Text>
           <View style={styles.paddingHor}>
-            <Text>Cụm sân: {stadiumName}</Text>
-            <Text>Địa chỉ: {address}</Text>
-            <Text>Loại sân: {category}</Text>
-          </View>
-        </View>
-        <View style={[styles.section, styles.mrTop]}>
-          <Text type={headline6} style={styles.txtTitle}>
-            Thông tin sân con:
-          </Text>
-          <View style={styles.paddingHor}>
-            <Text>Tên sân con: {state.data.stadiumCollageName}</Text>
-            <Text>Quy mô: sân {state.data.amountPeople} người</Text>
-            <Text>
-              Thời gian hoạt động: {converSecondsToTime(state.data.startTime)} -
-              {converSecondsToTime(state.data.endTime)}
-            </Text>
-            <Text>
-              Thời gian trận đấu:{' '}
-              {convertMilisecondsToMinutes(state.data.playTime)} phút
-            </Text>
+            <RowInfo lable="Cụm sân: " value={stadiumName} />
+            <RowInfo
+              lable="Tên sân con: "
+              value={state.data.stadiumCollageName}
+            />
+            <RowInfo lable="Loại sân: " value={category} />
+            <RowInfo
+              lable="Quy mô: "
+              value={`Sân ${state.data.amountPeople} người`}
+            />
+            <RowInfo
+              lable="Thời gian hoạt động: "
+              value={`${converSecondsToTime(
+                state.data.startTime,
+              )} -${converSecondsToTime(state.data.endTime)}`}
+            />
+            <RowInfo
+              lable="Thời gian trận đấu: "
+              value={`${convertMilisecondsToMinutes(state.data.playTime)} phút`}
+            />
+            <RowInfo lable="Địa chỉ: " value={address} />
           </View>
         </View>
         {renderSectionDate()}
@@ -307,5 +346,10 @@ const styles = StyleSheet.create({
     paddingBottom: scale(5),
     borderTopRightRadius: scale(10),
     borderTopLeftRadius: scale(10),
+  },
+  wrapperDesStatus: {
+    flexDirection: 'row',
+    paddingHorizontal: scale(10),
+    paddingVertical: scale(5),
   },
 });

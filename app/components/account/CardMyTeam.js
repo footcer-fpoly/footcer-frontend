@@ -49,9 +49,7 @@ export default function CardMyTeam({item, onPress, width}) {
       <ImageBackground
         source={{uri: item?.background}}
         style={styles.background}>
-        <LinearGradient
-          colors={['#00000000', '#00000070', '#00000090']}
-          style={styles.gradient}>
+        <LinearGradient colors={colors.blackGradient} style={styles.gradient}>
           <Text type={headline3} style={styles.txtTeamName}>
             {item?.name}
           </Text>

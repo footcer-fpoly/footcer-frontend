@@ -1,14 +1,12 @@
 import React from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {scale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
-import rootNavigator from '../../navigations/root.navigator';
-import {REVIEW_STADIUM_SCREEN} from '../../navigations/route-name';
 import colors from '../../theme/colors';
 import {body3, headline4, Text} from '../common/Text';
 
-export default function BlockNameStadium({item, showBtnReview}) {
+export default function BlockNameStadium({item}) {
   return (
     <View style={styles.container}>
       <Text type={headline4} style={styles.txtName}>
@@ -18,17 +16,6 @@ export default function BlockNameStadium({item, showBtnReview}) {
       <Text type={body3} style={styles.txtAddress}>
         {item?.address}
       </Text>
-      {showBtnReview && (
-        <TouchableOpacity
-          onPress={() =>
-            rootNavigator.navigate(REVIEW_STADIUM_SCREEN, {item: item})
-          }
-          style={styles.btn}>
-          <Text type={body3} style={styles.txtBtn}>
-            Đánh giá sân
-          </Text>
-        </TouchableOpacity>
-      )}
     </View>
   );
 }
@@ -38,7 +25,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     borderRadius: scale(8),
     paddingHorizontal: scale(24),
-    marginTop: scale(-60),
+    marginTop: scale(-50),
+    marginBottom: scale(20),
     marginHorizontal: scale(20),
     alignItems: 'center',
     shadowColor: colors.black,

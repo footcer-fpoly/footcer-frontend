@@ -32,9 +32,7 @@ export default function BackgroudImage({
       <ImageBackground
         source={image ? {uri} : yardImage}
         style={[styles.header(height), style]}>
-        <LinearGradient
-          colors={['#00000000', '#00000070', '#00000090']}
-          style={styles.center}>
+        <LinearGradient colors={colors.blackGradient} style={styles.center}>
           {children}
           {onPress && (
             <TouchableOpacity onPress={onPress} style={styles.iconEdit}>

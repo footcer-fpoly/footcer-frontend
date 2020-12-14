@@ -24,5 +24,8 @@ const colors = {
   orange: '#d35400',
   yellow: '#ffd32a',
   yellowDark: '#f39c12',
+  blueDarkGradient: ['#95a5a6', '#576574', '#2c3e50'],
+  blueGradient: ['#82ccdd', '#60a3bc', '#3c6382'],
+  blackGradient: ['#00000000', '#00000070', '#00000090'],
 };
 export default colors;

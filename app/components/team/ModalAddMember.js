@@ -11,6 +11,7 @@ import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {scale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
+import {ToastHelper} from '../../helpers/ToastHelper';
 import colors from '../../theme/colors';
 import Avatar from '../common/Avatar';
 import PrimaryButton from '../common/PrimaryButton';
@@ -31,19 +32,30 @@ const ModalAddMember = ({
   errorStyle,
   onReady,
 }) => {
+  const scanQR = () => {
+    ToastHelper.showToast('Tính năng đang phát triển', colors.orange);
+  };
   const searchPhone = () => {
     return (
       <>
         {!onReady ? (
           <ActivityIndicator size="large" color={colors.main} />
         ) : (
-          <TextInput
-            style={styles.input(phoneError ? colors.red : colors.greenLight)}
-            placeholder="Số điện thoại ..."
-            onChangeText={onChangeText}
-            keyboardType="numeric"
-            maxLength={10}
-          />
+          <View
+            style={styles.warpperInput(
+              phoneError ? colors.red : colors.greenLight,
+            )}>
+            <TextInput
+              style={styles.input}
+              placeholder="Số điện thoại ..."
+              onChangeText={onChangeText}
+              keyboardType="numeric"
+              maxLength={10}
+            />
+            <TouchableOpacity onPress={scanQR}>
+              <Icon name="qrcode" size={scale(20)} color={colors.gray} />
+            </TouchableOpacity>
+          </View>
         )}
         {phoneError && (
           <Animatable.Text
@@ -169,14 +181,18 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     fontWeight: 'normal',
   },
-  input: color => ({
+  warpperInput: color => ({
+    ...Styles.rowAlignCenter,
+    borderBottomWidth: 2,
+    borderBottomColor: color,
+    marginTop: scale(10),
+  }),
+  input: {
     backgroundColor: colors.white,
     textAlign: 'center',
-    borderBottomWidth: 2,
     width: '100%',
-    borderBottomColor: color,
     fontSize: 18,
-  }),
+  },
   subText: {
     color: colors.placeHolder,
     textAlign: 'center',

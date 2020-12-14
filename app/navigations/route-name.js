@@ -28,6 +28,11 @@ export const STADIUM_COLLAGE_DETAIL_SCREEN = 'stadium_collage_detail_screen';
 export const LIST_ORDER_SCREEN = 'list_order_screen';
 export const ORDER_DETAIL_SCREEN = 'order_detail_screen';
 
+//GAME
 export const CREATE_GAME_SCREEN = 'create_game_screen';
+export const GAME_DETAIL_SCREEN = 'game_detail_screen';
+
+//NOTI
+export const NOTIFICATION_SCREEN = 'notification_screen';
 
 export const TEST_SCREEN = 'test_screen';

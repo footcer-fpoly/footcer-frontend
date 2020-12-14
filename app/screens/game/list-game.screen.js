@@ -13,7 +13,7 @@ import {body3, headline5, headline6, Text} from '../../components/common/Text';
 import ToolBar from '../../components/common/Toolbar';
 import CardGame from '../../components/game/CardGame';
 import FloatingActionButton from '../../components/game/FLoatingActionButton';
-import {formatToDate} from '../../helpers/format.helper';
+import {compareDateTime, formatToDate} from '../../helpers/format.helper';
 import {scale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
 import {ToastHelper} from '../../helpers/ToastHelper';
@@ -23,6 +23,7 @@ import CardMyGame from '../../components/game/CardMyGame';
 import {color} from 'react-native-reanimated';
 import {useFocusEffect} from '@react-navigation/native';
 import DescriptionStatus from '../../components/common/DescriptionStatus';
+import {date} from 'yup';
 const ListGameScreen = ({getListGame, listGameUser}) => {
   console.log('listGameUser: ', listGameUser);
   const [listGame, setListGame] = useState({
@@ -43,7 +44,9 @@ const ListGameScreen = ({getListGame, listGameUser}) => {
       if (res && res.code === StatusCode.SUCCESS) {
         setListGame({
           ...listGame,
-          data: res.data,
+          data: res.data.filter(item =>
+            compareDateTime(item?.date, new Date()),
+          ),
           onReady: true,
         });
       } else {

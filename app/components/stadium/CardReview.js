@@ -27,7 +27,7 @@ export default function CardReview({item}) {
           containerStyle={styles.star}
         />
         <Text type={body3} style={styles.txtDate}>
-          {formatToDate(item.created_at)}
+          {formatToDate(item.updated_at)}
         </Text>
       </View>
       <Text type={body3} style={styles.txtContent}>

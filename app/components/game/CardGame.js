@@ -12,7 +12,7 @@ import {body3, headline5, headline6, Text} from '../common/Text';
 export default function CardGame({item}) {
   return (
     <LinearGradient
-      colors={['#95a5a6', '#576574', '#2c3e50']}
+      colors={item?.teamInvite ? colors.blueGradient : colors.blueDarkGradient}
       style={styles.container}>
       <Text type={headline5} style={styles.txtNameStadium}>
         {item?.stadium?.stadiumName}

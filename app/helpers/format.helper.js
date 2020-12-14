@@ -88,3 +88,9 @@ export const diffHours = hour => {
   const myHours = new Date(Number(hour)).toUTCString().substring(16, 19);
   return Number(myHours) - Number(nowHours);
 };
+
+export const compareDateTime = (fromDate, toDate) => {
+  const date1 = dayjs(fromDate).format();
+  const date2 = dayjs(toDate).format();
+  return dayjs(date1).isAfter(dayjs(date2));
+};

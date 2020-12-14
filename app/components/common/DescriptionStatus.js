@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {scale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
 import colors from '../../theme/colors';
@@ -17,10 +17,10 @@ export default function DescriptionStatus({color, lable}) {
 }
 const styles = StyleSheet.create({
   status: bg => ({
+    ...Styles.borderView(colors.grayOpacity, scale(0.5), 3),
     width: scale(20),
     height: scale(20),
     backgroundColor: bg,
-    borderRadius: scale(5),
   }),
   txtStatus: {
     marginLeft: scale(5),

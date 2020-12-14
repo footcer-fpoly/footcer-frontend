@@ -10,19 +10,25 @@ export default function PrimaryButton({
   style,
   textStyle,
   left,
+  right,
+  disabled,
 }) {
   return (
-    <TouchableOpacity style={[styles.container, style]} onPress={onPress}>
+    <TouchableOpacity
+      disabled={disabled}
+      style={[styles.container, style]}
+      onPress={onPress}>
       <View>{left}</View>
       <Text type={headline5} style={[styles.titleStyle, textStyle]}>
         {title}
       </Text>
+      <View>{right}</View>
     </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
-  titleStyle: {color: colors.white},
+  titleStyle: {color: colors.white, paddingHorizontal: scale(5)},
   container: {
     backgroundColor: colors.green,
     width: '100%',

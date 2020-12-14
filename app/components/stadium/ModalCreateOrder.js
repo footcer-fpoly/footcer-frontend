@@ -1,8 +1,9 @@
 import React, {useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View, ActivityIndicator} from 'react-native';
 import Modal from 'react-native-modal';
 import {addOrderService} from '../../api/order.api';
 import {StatusCode} from '../../api/status-code';
+import {numberWithCommas} from '../../helpers/format.helper';
 import {scale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
 import {ToastHelper} from '../../helpers/ToastHelper';
@@ -10,13 +11,17 @@ import rootNavigator from '../../navigations/root.navigator';
 import {ORDER_DETAIL_SCREEN} from '../../navigations/route-name';
 import colors from '../../theme/colors';
 import spacing from '../../theme/spacing';
+import RowProflie from '../account/RowProflie';
+import {IconType} from '../common/IconMaterialOrSvg';
 import PrimaryButton from '../common/PrimaryButton';
 import {headline4, Text} from '../common/Text';
 import TitleTextInputField from '../common/TitleTextInputField';
 
 export default function ModalCreateOrder({dismiss, visible, data}) {
   const [description, setdescription] = useState('');
+  const [loading, setLoading] = useState(false);
   const confirmOrder = async () => {
+    setLoading(true);
     const res = await addOrderService({
       time: data.dateOrder,
       price: data.price,
@@ -33,6 +38,7 @@ export default function ModalCreateOrder({dismiss, visible, data}) {
       ToastHelper.showToast('Lỗi rồi fr');
     }
   };
+
   return (
     <Modal
       onBackButtonPress={dismiss}
@@ -44,11 +50,43 @@ export default function ModalCreateOrder({dismiss, visible, data}) {
         <Text type={headline4} style={styles.txtTitle}>
           Xác nhận đặt sân
         </Text>
+
         <View style={styles.body}>
-          <Text>{data.dateOrder}</Text>
-          <Text>{data.price}</Text>
-          <Text>{data.timeOrder}</Text>
-          <Text>{data.stadiumDetailsId}</Text>
+          <RowProflie
+            label="Cụm sân: "
+            value={data.nameSadium}
+            iconType={IconType.MaterialCommunityIcons}
+            iconName="stadium"
+            editable={false}
+          />
+          <RowProflie
+            label="Sân con: "
+            value={data.nameCollage}
+            iconType={IconType.MaterialCommunityIcons}
+            iconName="ballot-outline"
+            editable={false}
+          />
+          <RowProflie
+            label="Ngày: "
+            value={data.dateOrder}
+            iconType={IconType.MaterialCommunityIcons}
+            iconName="calendar-month-outline"
+            editable={false}
+          />
+          <RowProflie
+            label="Thời gian: "
+            value={data.timeOrder}
+            iconType={IconType.MaterialCommunityIcons}
+            iconName="clock-time-four-outline"
+            editable={false}
+          />
+          <RowProflie
+            label="Giá tiền: "
+            value={`${numberWithCommas(data.price)} vnđ`}
+            iconType={IconType.MaterialIcons}
+            iconName="attach-money"
+            editable={false}
+          />
           <TitleTextInputField
             style={styles.inputField}
             lable="Ghi chú thêm"
@@ -65,11 +103,16 @@ export default function ModalCreateOrder({dismiss, visible, data}) {
             style={[styles.btn, styles.mrRight]}
             title="Hủy"
             onPress={dismiss}
+            disabled={loading}
           />
           <PrimaryButton
             onPress={confirmOrder}
             style={[styles.btn, styles.mrLeft]}
             title="Xác nhận"
+            disabled={loading}
+            right={
+              loading && <ActivityIndicator size="small" color={colors.white} />
+            }
           />
         </View>
       </View>
@@ -101,5 +144,8 @@ const styles = StyleSheet.create({
   body: {
     paddingHorizontal: scale(10),
     marginTop: scale(20),
+  },
+  inputField: {
+    marginTop: scale(15),
   },
 });

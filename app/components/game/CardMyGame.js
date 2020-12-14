@@ -1,18 +1,30 @@
 import React from 'react';
 import {StyleSheet, View, Image} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {converSecondsToTime, formatToDate} from '../../helpers/format.helper';
+import {
+  compareDateTime,
+  converSecondsToTime,
+  formatToDate,
+} from '../../helpers/format.helper';
 import {scale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
+import rootNavigator from '../../navigations/root.navigator';
+import {GAME_DETAIL_SCREEN} from '../../navigations/route-name';
 import colors from '../../theme/colors';
 import Avatar from '../common/Avatar';
 import PrimaryButton from '../common/PrimaryButton';
 import {body3, headline5, headline6, Text} from '../common/Text';
 
 export default function YourMatch({item}) {
+  const renderBgTop = () => {
+    if (compareDateTime(item?.date, new Date())) {
+      return colors.greenDark;
+    }
+    return colors.grayDark;
+  };
   return (
     <View style={styles.container}>
-      <View style={styles.top}>
+      <View style={styles.top(renderBgTop())}>
         <Text type={headline6} style={styles.txtDate}>
           {formatToDate(item?.date)}
         </Text>
@@ -64,6 +76,7 @@ export default function YourMatch({item}) {
       <PrimaryButton
         title="Xem chi tiết"
         style={{backgroundColor: colors.orange, marginTop: scale(10)}}
+        onPress={() => rootNavigator.navigate(GAME_DETAIL_SCREEN)}
       />
     </View>
   );
@@ -86,12 +99,12 @@ const styles = StyleSheet.create({
     marginHorizontal: scale(10),
     overflow: 'hidden',
   },
-  top: {
+  top: bg => ({
     ...Styles.rowAlignCenter,
-    backgroundColor: colors.greenDark,
+    backgroundColor: bg,
     paddingVertical: scale(3),
     paddingHorizontal: scale(10),
-  },
+  }),
   txtDate: {
     color: colors.white,
     flex: 1,

@@ -20,6 +20,7 @@ export default function CardStadiumCollage({
       stadiumName,
       address,
       category,
+      nameCollage: item.stadiumCollageName,
     });
   };
   return (

@@ -1,40 +1,43 @@
 import React, {Component} from 'react';
-import {Text, StyleSheet, View, Image} from 'react-native';
+import {StyleSheet, View, Image} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import {numberWithCommas} from '../../helpers/format.helper';
+import {scale} from '../../helpers/size.helper';
+import Styles from '../../helpers/styles.helper';
+import colors from '../../theme/colors';
+import {body3, headline6, Text} from '../common/Text';
 
-export default class ItemServeice extends Component {
-  render() {
-    const {imgService, txtService} = this.props;
-    return (
-      <View style={styles.container}>
-        <LinearGradient
-          colors={['#fff', '#00C17A']}
-          style={styles.linearGradient}>
-          <Image style={styles.imgService} source={imgService} />
-        </LinearGradient>
-        <Text style={styles.txtService} numberOfLines={1}>
-          {txtService}
-        </Text>
-      </View>
-    );
-  }
+export default function ItemServeice({image, name, price}) {
+  return (
+    <View style={styles.container}>
+      <Image
+        style={styles.imgService}
+        source={{
+          uri: image,
+        }}
+      />
+      <Text type={body3} numberOfLines={1} style={styles.txtPrice}>
+        {price ? numberWithCommas(price) : 'Miễm phí'}
+      </Text>
+      <Text type={headline6} numberOfLines={1}>
+        {name}
+      </Text>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    marginRight: 10,
     width: 90,
+    paddingHorizontal: scale(10),
+    marginTop: scale(10),
   },
-  linearGradient: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: 'red',
-    alignItems: 'center',
-    justifyContent: 'center',
+  imgService: {
+    ...Styles.borderRadiusCircle(60),
   },
-  txtService: {
-    maxWidth: 90,
+  txtPrice: {
+    marginTop: scale(5),
+    color: colors.orange,
   },
 });

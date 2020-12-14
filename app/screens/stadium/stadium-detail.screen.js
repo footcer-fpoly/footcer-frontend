@@ -38,6 +38,12 @@ import {IconType} from '../../components/common/IconMaterialOrSvg';
 import {connect} from 'react-redux';
 import {getListOrder} from '../../redux/actions/auth.action';
 import {listStatusOrder} from '../../helpers/data-local.helper';
+import {ScrollView} from 'react-native';
+import ItemServeice from '../../components/stadium/ItemServeice';
+import PrimaryButton from '../../components/common/PrimaryButton';
+import ButtonOutline from '../../components/common/ButtonOutline';
+import {Platform} from 'react-native';
+import {Linking} from 'react-native';
 
 const HEADER_MAX_HEIGHT = 200;
 const HEADER_MIN_HEIGHT = 60;
@@ -81,6 +87,23 @@ export const StadiumDetailScreen = ({route, listOrder, getListOrder}) => {
     }, []),
   );
 
+  const onPressDirection = (
+    latitude = 0,
+    longitude = 0,
+    label = 'Footcer',
+  ) => async () => {
+    const url = Platform.select({
+      android: 'geo:' + latitude + ',' + longitude + '?q=' + label,
+    });
+    const isLinkingSupport = await Linking.canOpenURL(url);
+    if (isLinkingSupport) {
+      Linking.openURL(url);
+    } else {
+      const urlGoogleMap = `https://www.google.com/maps/dir/Current+Location/${latitude},${longitude}`;
+      Linking.openURL(urlGoogleMap);
+    }
+  };
+
   const fetchData = async () => {
     await Promise.all([getStadiumDetail(), getListOrder()]);
   };
@@ -116,6 +139,9 @@ export const StadiumDetailScreen = ({route, listOrder, getListOrder}) => {
   });
   const handleOnPress = () => {
     rootNavigator.back();
+  };
+  const navigateToReview = () => {
+    rootNavigator.navigate(REVIEW_STADIUM_SCREEN, {item: data});
   };
   const renderToolbar = () => {
     return (
@@ -182,8 +208,55 @@ export const StadiumDetailScreen = ({route, listOrder, getListOrder}) => {
           </Swiper>
         </Animated.View>
         <View style={styles.body}>
-          <BlockNameStadium showBtnReview={isHasOrder} item={data} />
+          <BlockNameStadium item={data} />
         </View>
+        <View style={styles.wrapperBtn}>
+          {isHasOrder && (
+            <PrimaryButton
+              title="Đánh giá sân"
+              onPress={navigateToReview}
+              style={styles.btnReview}
+            />
+          )}
+          <ButtonOutline
+            style={isHasOrder ? styles.flex0 : styles.flex1}
+            title="Chỉ đường"
+            colorOutline={colors.blue}
+            titleColor={colors.blue}
+            onPress={onPressDirection(
+              data?.latitude,
+              data?.longitude,
+              data?.address,
+            )}
+            left={
+              <Icon
+                size={scale(20)}
+                color={colors.blue}
+                name="map-search-outline"
+              />
+            }
+          />
+        </View>
+        {data?.service?.length ? (
+          <View style={styles.wrapperSection}>
+            <Text style={styles.titleSection} type={headline5}>
+              DỊCH VỤ
+            </Text>
+            <ScrollView horizontal showsVerticalScrollIndicator>
+              {data?.service?.map((item, index) => (
+                <ItemServeice
+                  key={index.toString()}
+                  image={item?.image}
+                  name={item?.name}
+                  price={item?.price}
+                />
+              ))}
+            </ScrollView>
+          </View>
+        ) : (
+          <View />
+        )}
+        <View style={styles.line} />
         <View style={styles.wrapperSection}>
           <Text style={styles.titleSection} type={headline5}>
             THÔNG TIN SÂN
@@ -273,6 +346,7 @@ export const StadiumDetailScreen = ({route, listOrder, getListOrder}) => {
 
 const styles = StyleSheet.create({
   flex1: {flex: 1, backgroundColor: colors.white},
+  flex0: {flex: 0},
   contentPlaceholder: {width: scale(344), flex: 1, marginTop: scale(20)},
   sliderHeight: {
     height: scale(250),
@@ -320,7 +394,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
   },
   contentContainer: {
-    paddingBottom: scale(100),
+    paddingBottom: scale(50),
   },
   footer: {
     borderTopRightRadius: scale(10),
@@ -341,7 +415,7 @@ const styles = StyleSheet.create({
   },
   wrapperSection: {
     paddingHorizontal: scale(10),
-    marginBottom: scale(30),
+    marginBottom: scale(15),
   },
   titleSection: {color: colors.gray},
   line: {
@@ -350,6 +424,16 @@ const styles = StyleSheet.create({
     backgroundColor: colors.grayLight,
     marginTop: scale(10),
     marginBottom: scale(20),
+  },
+  wrapperBtn: {
+    paddingHorizontal: scale(10),
+    paddingBottom: scale(15),
+    flexDirection: 'row',
+  },
+  btnReview: {
+    flex: 1,
+    marginRight: scale(10),
+    backgroundColor: colors.yellowDark,
   },
 });
 
@@ -364,5 +448,5 @@ const mapDispatchToProps = {
 
 export default connect(
   mapStateToProps,
-  null,
+  mapDispatchToProps,
 )(StadiumDetailScreen);

@@ -123,16 +123,18 @@ const CreateGameScreen = ({showLoading, hideLoading, listGameUser}) => {
           teamIdHost: dataTeam.teamId,
           orderId: dataOrder.orderId,
         });
+        console.log('createGameService -->res: ', res);
         if (res && res.code === StatusCode.SUCCESS) {
           ToastHelper.showToast('Tạo trận đấu thành công');
           rootNavigator.back();
         } else {
           hideLoading();
-          ToastHelper.showToast('Lỗi hệ thống');
+          ToastHelper.showToast('Lỗi hệ thống', colors.red);
         }
         hideLoading();
       }
     } catch (error) {
+      ToastHelper.showToast('Lỗi hệ thống', colors.red);
       console.log('createGameService -->error: ', error);
       hideLoading();
     }
@@ -162,9 +164,7 @@ const CreateGameScreen = ({showLoading, hideLoading, listGameUser}) => {
   return (
     <Host>
       <ImageBackground source={bgStadiumImage} style={styles.container}>
-        <LinearGradient
-          colors={['#00000000', '#00000070', '#00000090']}
-          style={styles.center}>
+        <LinearGradient colors={colors.blackGradient} style={styles.center}>
           {renderToolBar()}
           <ScrollView
             ref={scrollRef}
