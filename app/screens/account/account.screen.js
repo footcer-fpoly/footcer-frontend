@@ -1,8 +1,15 @@
 import React from 'react';
-import {FlatList, ScrollView, StyleSheet, View} from 'react-native';
+import {
+  FlatList,
+  ScrollView,
+  StyleSheet,
+  View,
+  TouchableOpacity,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {connect} from 'react-redux';
 import AccountBlock from '../../components/account/AccountBlock';
+import BlockCount from '../../components/account/BlockCount';
 import CardMyTeam from '../../components/account/CardMyTeam';
 import Avatar from '../../components/common/Avatar';
 import {IconType} from '../../components/common/IconMaterialOrSvg';
@@ -17,12 +24,14 @@ import {
   CREATE_TEAM_SCREEN,
   DETAIL_PROFILE_SCREEN,
   LIST_ORDER_SCREEN,
+  TEAM_SCREEN,
 } from '../../navigations/route-name';
 import {logout} from '../../redux/actions/auth.action';
 import colors from '../../theme/colors';
 import spacing from '../../theme/spacing';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
-const AccountScreen = ({profile, listTeam, logout}) => {
+const AccountScreen = ({profile, listTeam, listOrder, logout}) => {
   const navigateToScreen = (routeName, params) => () => {
     rootNavigation.navigate(routeName, params);
   };
@@ -33,11 +42,12 @@ const AccountScreen = ({profile, listTeam, logout}) => {
   return (
     <View style={styles.container}>
       <ToolBar
-        style={{backgroundColor: colors.main}}
-        center={
-          <Text type={headline5} style={styles.titleContent}>
-            Tài khoản
-          </Text>
+        title="Tài khoản"
+        left={true}
+        right={
+          <TouchableOpacity>
+            <Ionicons name="settings" size={scale(25)} color={colors.black} />
+          </TouchableOpacity>
         }
       />
       <ScrollView
@@ -56,6 +66,21 @@ const AccountScreen = ({profile, listTeam, logout}) => {
             numberOfLines={1}>
             Xin chào, {profile.displayName}
           </Text>
+          <View style={styles.warpperCount}>
+            <BlockCount
+              style={styles.mrRight}
+              lable="Đội bóng"
+              count={listTeam?.length ? `${listTeam?.length} đội` : '0 đội'}
+              colorCount={colors.orange}
+              onPress={navigateToScreen(TEAM_SCREEN)}
+            />
+            <BlockCount
+              style={styles.mrLeft}
+              lable="Tổng số lịch đặt sân"
+              count={listOrder?.length ? `${listOrder?.length} đơn` : '0 đơn'}
+              colorCount={colors.blue}
+            />
+          </View>
         </View>
         <View style={styles.section}>
           <View style={styles.block}>
@@ -145,17 +170,15 @@ const styles = StyleSheet.create({
   flex47: {
     ...Styles.flex32,
   },
+  mrRight: {marginRight: scale(10)},
+  mrLeft: {marginLeft: scale(10)},
   scrollContainer: {
     paddingVertical: spacing.large,
     paddingHorizontal: scale(10),
   },
   container: {
     ...Styles.flex1,
-    backgroundColor: colors.white,
-  },
-  titleContent: {
-    color: colors.white,
-    textTransform: 'uppercase',
+    backgroundColor: colors.viewBackground,
   },
   section: {
     marginTop: spacing.large,
@@ -165,12 +188,20 @@ const styles = StyleSheet.create({
     ...Styles.rowBetween,
   },
   warpperAvatar: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    ...Styles.columnCenter,
+    backgroundColor: colors.blueDark,
+    borderRadius: scale(5),
+    paddingVertical: scale(20),
+    paddingHorizontal: scale(20),
   },
   welcomeUserText: {
-    color: colors.black,
+    color: colors.white,
     marginLeft: scale(12),
+  },
+  warpperCount: {
+    ...Styles.rowBetween,
+    width: '100%',
+    marginTop: scale(30),
   },
   txtMyTeam: {
     color: colors.blueDark,
@@ -191,6 +222,7 @@ function mapStateToProps(state) {
   return {
     profile: state.authState.profile,
     listTeam: state.teamsState.listTeam,
+    listOrder: state.authState.listOrder,
   };
 }
 

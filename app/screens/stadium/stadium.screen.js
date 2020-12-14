@@ -176,18 +176,14 @@ const StadiumScreen = ({isPermissionLocation, showLoading, hideLoading}) => {
     return (
       <>
         <ToolBar
-          style={{backgroundColor: colors.main}}
-          center={
-            <Text type={headline5} style={styles.titleToolbar}>
-              Đặt sân bóng
-            </Text>
-          }
+          title="Đặt sân bóng"
+          left={true}
           right={
-            <TouchableOpacity onPress={toggleSearch} style={styles.btnSearch}>
+            <TouchableOpacity onPress={toggleSearch}>
               <MaterialIcons
                 name={search.iconName}
                 size={scale(25)}
-                color={colors.white}
+                color={colors.black}
               />
             </TouchableOpacity>
           }

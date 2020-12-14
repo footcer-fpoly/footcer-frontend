@@ -40,26 +40,9 @@ const ListOrderScreen = ({listOrder}) => {
   const renderItem = ({item}) => {
     return <CardStatusOrder item={item} />;
   };
-  const renderToolBar = () => {
-    return (
-      <ToolBar
-        style={styles.toolBar}
-        left={
-          <TouchableOpacity style={styles.btnBack} onPress={handleOnPress}>
-            <Icon name="chevron-left" size={scale(25)} color={colors.white} />
-          </TouchableOpacity>
-        }
-        center={
-          <Text type={headline5} style={styles.titleToolBar}>
-            Danh sách lịch đặt sân
-          </Text>
-        }
-      />
-    );
-  };
   return (
     <View style={styles.container}>
-      {renderToolBar()}
+      <ToolBar title="Danh sách lịch đặt sân" left={true} />
       <ScrollableTabView
         onChangeTab={onChangeTab}
         tabBarUnderlineStyle={{backgroundColor: colors.green}}
@@ -94,19 +77,6 @@ const ListOrderScreen = ({listOrder}) => {
 };
 const styles = StyleSheet.create({
   container: {flex: 1, backgroundColor: colors.backgroundScreen},
-  btnBack: {
-    height: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: scale(15),
-  },
-  toolBar: {
-    backgroundColor: colors.main,
-  },
-  titleToolBar: {
-    color: colors.white,
-    textTransform: 'uppercase',
-  },
   warpperBody: {
     flex: 1,
     paddingHorizontal: scale(10),

@@ -18,6 +18,7 @@ import StadiumCollageDetailScreen from '../screens/stadium/stadium-collage-detai
 import StadiumDetailScreen from '../screens/stadium/stadium-detail.screen';
 import CreateTeamScreen from '../screens/team/create-team.screen';
 import TeamDetailScreen from '../screens/team/team-detail.screen';
+import TeamScreen from '../screens/team/team.screen';
 import TestScreen from '../screens/test.screen';
 import BottomTab from './bottom-tab.navigator';
 import {navigationRef} from './root.navigator';
@@ -40,6 +41,7 @@ import {
   ORDER_DETAIL_SCREEN,
   CREATE_GAME_SCREEN,
   GAME_DETAIL_SCREEN,
+  TEAM_SCREEN,
 } from './route-name';
 
 const Stack = createStackNavigator();
@@ -96,6 +98,7 @@ const MainRouter = ({isLogedIn}) => {
         />
         <Stack.Screen name={CREATE_GAME_SCREEN} component={CreateGameScreen} />
         <Stack.Screen name={GAME_DETAIL_SCREEN} component={GameDetailScreen} />
+        <Stack.Screen name={TEAM_SCREEN} component={TeamScreen} />
       </>
     );
   };

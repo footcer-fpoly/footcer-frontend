@@ -5,6 +5,7 @@ import {connect} from 'react-redux';
 import {headline5, Text} from '../../components/common/Text';
 import ToolBar from '../../components/common/Toolbar';
 import {listImageBanner} from '../../helpers/data-local.helper';
+import {scale} from '../../helpers/size.helper';
 import {getListOrder} from '../../redux/actions/auth.action';
 import {getListTeam} from '../../redux/actions/teams.action';
 import colors from '../../theme/colors';
@@ -19,17 +20,10 @@ const HomeScreen = ({getListOrder, getListTeam}) => {
   };
   return (
     <View style={styles.container}>
-      <ToolBar
-        style={{backgroundColor: colors.main}}
-        center={
-          <Text type={headline5} style={styles.titleToolbar}>
-            Trang chủ
-          </Text>
-        }
-      />
+      <ToolBar title="Trang chủ" />
       <ScrollView>
-        <View style={{backgroundColor: 'red', height: 250}}>
-          {/* <Swiper
+        <View style={styles.warpperSwiper}>
+          <Swiper
             activeDotColor={colors.main}
             dotColor={colors.white}
             autoplay={true}
@@ -42,7 +36,7 @@ const HomeScreen = ({getListOrder, getListTeam}) => {
                 resizeMode="cover"
               />
             ))}
-          </Swiper> */}
+          </Swiper>
         </View>
       </ScrollView>
     </View>
@@ -52,11 +46,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     zIndex: 10,
-    backgroundColor: '#EDEDED',
+    backgroundColor: colors.viewBackground,
   },
-  titleToolbar: {
-    color: colors.white,
-    textTransform: 'uppercase',
+  warpperSwiper: {
+    height: scale(250),
   },
   slideImage: {
     height: '100%',

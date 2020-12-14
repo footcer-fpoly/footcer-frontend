@@ -5,30 +5,34 @@ import {
   StatusBar,
   StyleSheet,
   View,
+  TouchableOpacity,
 } from 'react-native';
 import dimens from '../../theme/dimens';
+import Icon from 'react-native-vector-icons/Octicons';
+import {scale} from '../../helpers/size.helper';
+import colors from '../../theme/colors';
+import rootNavigator from '../../navigations/root.navigator';
+import {headline5, Text} from './Text';
 
-const ToolBar = ({
-  left,
-  center,
-  right,
-  style,
-  leftStyle,
-  rightStyle,
-  barStyle,
-}) => {
+const ToolBar = ({left, right, style, backgroundColor, barStyle, title}) => {
   const {TOOL_BAR_HEIGHT} = dimens;
-
+  const handleOnPress = () => {
+    rootNavigator.back();
+  };
   return (
-    <SafeAreaView style={style}>
+    <SafeAreaView style={[styles.container(backgroundColor), style]}>
       <StatusBar barStyle={barStyle} />
       <View style={styles.statusbar} />
-      <View style={styles.container(TOOL_BAR_HEIGHT)}>
-        <View style={[styles.iconStyle, styles.left, leftStyle]}>{left}</View>
-        <View style={styles.center}>{center}</View>
-        <View style={[styles.iconStyle, styles.right, rightStyle]}>
-          {right}
-        </View>
+      <View style={styles.containerToolbar(TOOL_BAR_HEIGHT)}>
+        <TouchableOpacity style={styles.iconLeft} onPress={handleOnPress}>
+          {left && (
+            <Icon name="chevron-left" size={scale(25)} color={colors.black} />
+          )}
+        </TouchableOpacity>
+        <Text style={styles.center} type={headline5}>
+          {`  ${title}`}
+        </Text>
+        <View style={styles.iconRight}>{right}</View>
       </View>
     </SafeAreaView>
   );
@@ -37,12 +41,17 @@ const ToolBar = ({
 export default ToolBar;
 
 const styles = StyleSheet.create({
-  container: TOOL_BAR_HEIGHT => ({
+  container: bg => ({
+    backgroundColor: bg ? bg : colors.white,
+  }),
+  containerToolbar: TOOL_BAR_HEIGHT => ({
     height: TOOL_BAR_HEIGHT,
     flexDirection: 'row',
     justifyContent: 'space-between',
     backgroundColor: 'transparent',
-    alignItems: 'stretch',
+    alignItems: 'center',
+    borderBottomWidth: scale(0.5),
+    borderBottomColor: colors.grayOpacity,
   }),
   statusbar: {
     height: Platform.select({
@@ -51,20 +60,21 @@ const styles = StyleSheet.create({
       default: 0,
     }),
   },
-  iconStyle: {
+  iconLeft: {
+    height: '100%',
+    alignItems: 'center',
     justifyContent: 'center',
-    minWidth: '15%',
-    maxWidth: '40%',
+    width: scale(50),
   },
-  left: {
-    alignItems: 'flex-start',
-  },
-  right: {
-    alignItems: 'flex-end',
+  iconRight: {
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: scale(50),
   },
   center: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    textAlign: 'center',
+    textTransform: 'uppercase',
   },
 });

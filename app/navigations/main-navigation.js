@@ -19,7 +19,7 @@ const MainNavigation = ({requestPermissionLocation}) => {
   return (
     <View style={styles.container}>
       <StatusBar
-        barStyle={'light-content'}
+        barStyle={'dark-content'}
         backgroundColor="transparent"
         translucent
       />

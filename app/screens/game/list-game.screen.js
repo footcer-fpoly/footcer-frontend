@@ -93,14 +93,7 @@ const ListGameScreen = ({getListGame, listGameUser}) => {
   };
   return (
     <View style={styles.container}>
-      <ToolBar
-        style={{backgroundColor: colors.main}}
-        center={
-          <Text type={headline5} style={styles.titleToolbar}>
-            Trận đấu
-          </Text>
-        }
-      />
+      <ToolBar title="Trận đấu" />
       <DateTimePickerModal
         isVisible={listGame.visbaleModal}
         mode="date"
