@@ -30,6 +30,6 @@ export default function ListLoadingComponent({
 }
 
 const styles = StyleSheet.create({
-  container: {width: scale(344)},
+  container: {width: scale(344), marginTop: scale(10)},
   spacing: {height: 20},
 });

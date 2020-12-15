@@ -286,19 +286,6 @@ const styles = StyleSheet.create({
   txtErr: {
     marginTop: scale(5),
   },
-  toolBar: {
-    backgroundColor: colors.main,
-  },
-  titleToolBar: {
-    color: colors.white,
-    textTransform: 'uppercase',
-  },
-  btnBack: {
-    height: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: scale(15),
-  },
   container: {
     flex: 1,
     resizeMode: 'cover',

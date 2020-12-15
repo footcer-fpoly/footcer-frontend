@@ -41,40 +41,23 @@ export default function orderDetail({route}) {
   const showModal = () => {
     modalAddRef.current.show();
   };
-  const handleOnPress = () => {
-    rootNavigator.back();
-  };
   const navigateToScreen = () => {
     rootNavigator.navigate(HOME_SCREEN);
-  };
-  const renderToolBar = () => {
-    return (
-      <ToolBar
-        style={styles.toolBar}
-        left={
-          <TouchableOpacity style={styles.btnBack} onPress={handleOnPress}>
-            <Icon name="chevron-left" size={scale(25)} color={colors.white} />
-          </TouchableOpacity>
-        }
-        center={
-          <Text type={headline5} style={styles.titleToolBar}>
-            Chi tiết lịch đặt sân
-          </Text>
-        }
-        right={
-          <TouchableOpacity style={styles.btnBack} onPress={navigateToScreen}>
-            <Icon name="home" size={scale(25)} color={colors.white} />
-          </TouchableOpacity>
-        }
-      />
-    );
   };
   if (!state.onReady) {
     return <ActivityIndicator size="large" color={colors.red} />;
   }
   return (
     <View>
-      {renderToolBar()}
+      <ToolBar
+        title="Chi tiết đặt sân"
+        left={true}
+        right={
+          <TouchableOpacity onPress={navigateToScreen}>
+            <Icon name="home" size={scale(25)} color={colors.black} />
+          </TouchableOpacity>
+        }
+      />
       {state?.data?.order_status?.status === 'WAITING' && (
         <PrimaryButton
           onPress={showModal}
@@ -86,18 +69,4 @@ export default function orderDetail({route}) {
     </View>
   );
 }
-const styles = StyleSheet.create({
-  toolBar: {
-    backgroundColor: colors.main,
-  },
-  titleToolBar: {
-    color: colors.white,
-    textTransform: 'uppercase',
-  },
-  btnBack: {
-    height: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: scale(15),
-  },
-});
+const styles = StyleSheet.create({});

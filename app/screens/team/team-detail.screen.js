@@ -38,13 +38,7 @@ import {hideLoading, showLoading} from '../../redux/actions/loading.action';
 import colors from '../../theme/colors';
 import spacing from '../../theme/spacing';
 
-const TeamDetailScreen = ({
-  route,
-  showLoading,
-  hideLoading,
-  getListTeam,
-  profile,
-}) => {
+const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
   const {teamDetail} = route.params;
   const listMember = [...teamDetail?.member];
   const leader = listMember.shift();
@@ -327,7 +321,6 @@ const TeamDetailScreen = ({
       const res = await deleteTeamService(data?.teamId);
       console.log('deleteTeamService -->res: ', res);
       if (res && res.code === StatusCode.SUCCESS) {
-        getListTeam();
         rootNavigator.back();
         ToastHelper.showToast('Xóa đội bóng thành công');
       } else {
@@ -541,7 +534,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapDispatchToProps = {showLoading, hideLoading, getListTeam};
+const mapDispatchToProps = {showLoading, hideLoading};
 function mapStateToProps(state) {
   return {
     profile: state.authState.profile,

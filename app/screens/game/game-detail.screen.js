@@ -10,50 +10,26 @@ import rootNavigator from '../../navigations/root.navigator';
 import {HOME_SCREEN} from '../../navigations/route-name';
 
 export default function GameDetailScreen() {
-  const handleOnPress = () => {
-    rootNavigator.back();
-  };
   const navigateToScreen = () => {
     rootNavigator.navigate(HOME_SCREEN);
   };
-  const renderToolBar = () => {
-    return (
+  return (
+    <View>
       <ToolBar
-        style={styles.toolBar}
-        left={
-          <TouchableOpacity style={styles.btnBack} onPress={handleOnPress}>
-            <Icon name="chevron-left" size={scale(25)} color={colors.white} />
-          </TouchableOpacity>
-        }
-        center={
-          <Text type={headline5} style={styles.titleToolBar}>
-            Chi tiết trân đấu
-          </Text>
-        }
+        left={true}
+        title="Chi tiết trận đấu"
         right={
           <TouchableOpacity style={styles.btnBack} onPress={navigateToScreen}>
             <Icon name="home" size={scale(25)} color={colors.white} />
           </TouchableOpacity>
         }
       />
-    );
-  };
-  return (
-    <View>
-      {renderToolBar()}
       <Text> game-detail.screen </Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  toolBar: {
-    backgroundColor: colors.main,
-  },
-  titleToolBar: {
-    color: colors.white,
-    textTransform: 'uppercase',
-  },
   btnBack: {
     height: '100%',
     alignItems: 'center',

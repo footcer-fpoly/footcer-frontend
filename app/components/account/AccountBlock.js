@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     paddingVertical: scale(10),
+    paddingHorizontal: scale(5),
     backgroundColor: colors.white,
     borderRadius: scale(5),
     shadowColor: colors.grayLight,
@@ -51,6 +52,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: spacing.tiny,
     fontSize: scale(11),
+    flex: 1,
   },
   icon: {
     color: colors.greenDark,

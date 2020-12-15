@@ -194,15 +194,16 @@ const styles = StyleSheet.create({
   mrRight: {marginRight: scale(10)},
   mrLeft: {marginLeft: scale(10)},
   scrollContainer: {
-    paddingVertical: spacing.large,
     paddingHorizontal: scale(10),
+    paddingTop: scale(10),
+    paddingBottom: scale(40),
   },
   container: {
     ...Styles.flex1,
     backgroundColor: colors.viewBackground,
   },
   section: {
-    marginTop: spacing.large,
+    marginTop: scale(10),
   },
   block: {
     width: '100%',

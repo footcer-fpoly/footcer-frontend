@@ -62,10 +62,6 @@ export default function StadiumCollageDetailScreen({route}) {
 
   const [visibleModal, setVisibleModal] = useState(false);
 
-  const handleOnPress = () => {
-    rootNavigator.back();
-  };
-
   const toggleModalCreateOrder = () => {
     if (!order.timeOrder) {
       scrollRef.current.scrollToEnd();

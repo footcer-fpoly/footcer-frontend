@@ -85,9 +85,8 @@ const styles = StyleSheet.create({
     marginBottom: spacing.small,
   },
   container: width => ({
-    marginRight: spacing.medium,
     height: scale(200),
-    width: width,
+    width: '100%',
     overflow: 'hidden',
     borderRadius: 10,
     marginTop: spacing.medium,
