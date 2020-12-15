@@ -6,7 +6,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {connect} from 'react-redux';
 import {scale, verticalScale} from '../../helpers/size.helper';
 import colors from '../../theme/colors';
-import CardMyTeam from '../account/CardMyTeam';
+import CardMyTeam from '../team/CardMyTeam';
 import {body2, headline3, Text} from '../common/Text';
 
 const ModalPickerTeams = React.forwardRef(({onSelectItem, listTeam}, ref) => {

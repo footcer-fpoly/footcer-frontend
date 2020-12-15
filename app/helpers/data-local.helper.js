@@ -105,19 +105,19 @@ export const listSeviceStadium = [
 
 export const listImageBanner = [
   {
-    url: require('../assets/images/banner1.jpg'),
+    url: require('../assets/images/banner1.png'),
   },
   {
     url: require('../assets/images/banner2.png'),
   },
   {
-    url: require('../assets/images/banner3.jpg'),
+    url: require('../assets/images/banner3.png'),
   },
   {
-    url: require('../assets/images/banner4.jpg'),
+    url: require('../assets/images/banner4.png'),
   },
   {
-    url: require('../assets/images/banner5.jpg'),
+    url: require('../assets/images/banner5.png'),
   },
 ];
 

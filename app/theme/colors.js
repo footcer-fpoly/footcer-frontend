@@ -27,5 +27,6 @@ const colors = {
   blueDarkGradient: ['#95a5a6', '#576574', '#2c3e50'],
   blueGradient: ['#82ccdd', '#60a3bc', '#3c6382'],
   blackGradient: ['#00000000', '#00000070', '#00000090'],
+  blackGradientRevres: ['#00000090', '#00000070', '#00000000'],
 };
 export default colors;

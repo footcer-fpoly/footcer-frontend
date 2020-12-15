@@ -41,7 +41,7 @@ export default function CardGame({item}) {
           </Text>
         </View>
         <View style={styles.wrapperTeam}>
-          {item?.teamGuest?.teamAvatarGuest !== 'null' ? (
+          {item?.teamGuest?.teamAvatarGuest ? (
             <Avatar image={item?.teamHost?.teamAvatarGuest} size={scale(70)} />
           ) : (
             <TouchableOpacity>
@@ -52,7 +52,7 @@ export default function CardGame({item}) {
               />
             </TouchableOpacity>
           )}
-          {item?.teamGuest?.teamNameGuest !== 'null' ? (
+          {item?.teamGuest?.teamNameGuest ? (
             <Text type={headline6} style={styles.txtNameTeam} numberOfLines={1}>
               {item?.teamHost?.teamNameGuest}
             </Text>

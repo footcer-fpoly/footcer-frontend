@@ -21,7 +21,9 @@ export const UPDATE_TEAM = `${ROOT_API_URL}/team/update`;
 export const DELETE_TEAM = idTeam =>
   `${ROOT_API_URL}/team/delete-team/${idTeam}`;
 export const ADD_MEMBER_TEAM = `${ROOT_API_URL}/team/add-member`;
-export const DELETE_MEMBER_TEAM = `${ROOT_API_URL}/team/add-member`;
+export const DELETE_MEMBER_TEAM = `${ROOT_API_URL}/team/delete-member`;
+export const GET_LIST_TEAM = `${ROOT_API_URL}/team/for-user-reject`;
+export const ACCEPT_INVITE_TEAM = `${ROOT_API_URL}/team/accept-invite`;
 
 //API STADIUM
 export const GET_LIST_STADIUM = ({latitude, longitude}) =>

@@ -1,12 +1,13 @@
 import React from 'react';
-import {StyleSheet, TouchableOpacity, View, Image} from 'react-native';
-import {scale} from '../../helpers/size.helper';
-import colors from '../../theme/colors';
-import {body3, headline5, Text} from '../common/Text';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {scale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
+import useText from '../../hooks/useText';
+import colors from '../../theme/colors';
 import spacing from '../../theme/spacing';
 import Avatar from '../common/Avatar';
+import {body3, headline5, Text} from '../common/Text';
 
 export default function ItemTeamMember({
   image,
@@ -17,7 +18,28 @@ export default function ItemTeamMember({
   position,
   onPressImage,
   disabledImage,
+  me,
 }) {
+  const t = useText();
+  const renderPosition = () => {
+    if (status) {
+      if (position === t.leader) {
+        return {
+          text: position || t.leader,
+          color: colors.yellowDark,
+        };
+      }
+      return {
+        text: position || t.member,
+        color: colors.greenDark,
+      };
+    } else {
+      return {
+        text: 'Chờ xác nhận',
+        color: colors.orange,
+      };
+    }
+  };
   return (
     <View style={styles.warpperItemMem}>
       <View>
@@ -25,8 +47,8 @@ export default function ItemTeamMember({
           image={image}
           size={size}
           disabledImage={disabledImage}
-          borderWidth={2}
-          borderColor={colors.black}
+          borderWidth={3}
+          borderColor={me ? colors.main : colors.black}
           onPressImage={onPressImage}
         />
         {onPress && (
@@ -41,8 +63,8 @@ export default function ItemTeamMember({
       <Text
         type={body3}
         numberOfLines={1}
-        style={styles.txtStatus(status == 1 ? colors.black : colors.orange)}>
-        {status == 1 ? position : 'Chờ xác nhận'}
+        style={styles.txtStatus(renderPosition().color)}>
+        {renderPosition().text}
       </Text>
     </View>
   );

@@ -6,7 +6,9 @@ import {connect} from 'react-redux';
 import * as Yup from 'yup';
 import {StatusCode} from '../../api/status-code';
 import {
+  acceptInviteTeamService,
   addMemberTeamService,
+  deleteMemberService,
   deleteTeamService,
   updateAvatarTeamService,
   updateBackgroundTeamService,
@@ -33,19 +35,18 @@ import Styles from '../../helpers/styles.helper';
 import {ToastHelper} from '../../helpers/ToastHelper';
 import {validatePhoneNumber} from '../../helpers/validate.helper';
 import rootNavigator from '../../navigations/root.navigator';
-import {getListTeam} from '../../redux/actions/teams.action';
 import {hideLoading, showLoading} from '../../redux/actions/loading.action';
+import {getListTeam} from '../../redux/actions/teams.action';
 import colors from '../../theme/colors';
 import spacing from '../../theme/spacing';
 
 const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
   const {teamDetail} = route.params;
+  const flag = route?.params?.flag;
   const listMember = [...teamDetail?.member];
   const leader = listMember.shift();
-  const isLeader = leader?.user.userId === profile.userId;
-  console.log('isLeader: ', isLeader);
-  console.log('profile: ', profile);
-  console.log('teamDetail: ', teamDetail);
+  const isLeader = leader?.user?.userId === profile.userId;
+
   const modalizeRef = useRef();
   const [data, setData] = useState({
     teamId: teamDetail.teamId,
@@ -70,18 +71,21 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
   const [modalInfoMember, setModalInfoMember] = useState({
     visible: false,
     data: null,
+    index: 0,
   });
 
-  const showModalInfoMember = data => () => {
+  const showModalInfoMember = (data, index) => () => {
     setModalInfoMember({
       visible: true,
       data,
+      index,
     });
   };
   const hideModalInfoMember = () => {
     setModalInfoMember({
       visible: false,
       data: null,
+      index: 0,
     });
   };
   const toogleEditable = () => {
@@ -95,6 +99,34 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
   const toggleModalAddMember = () => {
     setVisibleModal(!visibleModal);
     setMember({...member, status: 0});
+  };
+
+  const acceptInvite = async () => {
+    try {
+      showLoading();
+      const res = await acceptInviteTeamService({
+        userId: profile?.userId,
+        teamId: teamDetail?.teamId,
+        nameUser: profile?.displayName,
+        nameTeam: teamDetail?.name,
+      });
+      if (res && res.code === StatusCode.SUCCESS) {
+        ToastHelper.showToast(
+          `Bạn đã là thành viên của đội bóng ${teamDetail?.name}`,
+        );
+        rootNavigator.back();
+      } else {
+        ToastHelper.showToast('Lỗi', colors.red);
+      }
+      hideLoading();
+    } catch (error) {
+      console.log(
+        'LOG -> file: team-detail.screen.js -> line 109 -> acceptInvite -> error',
+        error,
+      );
+      ToastHelper.showToast('Lỗi', colors.red);
+      hideLoading();
+    }
   };
   const searchPhone = async () => {
     try {
@@ -131,7 +163,7 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
         } else {
           setMember({
             ...member,
-            phoneError: 'Số điện thoại đã có trong team',
+            phoneError: 'Thành viên đã có trong team',
             onReady: true,
           });
         }
@@ -144,20 +176,21 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
   const addMember = async () => {
     try {
       const res = await addMemberTeamService({
-        userId: member.userId,
-        teamId: data.teamId,
+        userId: member?.userId,
+        teamId: data?.teamId,
+        nameTeam: data?.name,
       });
       console.log('addMemberTeamService -->res: ', res);
       if (res && res.code === StatusCode.SUCCESS) {
         console.log('member: ', member);
-        const newListMemBer = data.member.concat(member);
+        const newListMemBer = data.member.push(member);
         setData({
           ...data,
           member: newListMemBer,
         });
         setMember({...member, status: 0});
-        getListTeam();
-        ToastHelper.showToast('Gữi lời mời thành công');
+        ToastHelper.showToast('Gữi lời mời thành công', colors.greenDark);
+        toggleModalAddMember();
       }
     } catch (error) {}
   };
@@ -332,6 +365,57 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
       console.log('deleteTeam -->err: ', error);
     }
   };
+  const deleteMember = (userId, name) => async () => {
+    try {
+      const res = await deleteMemberService({
+        userId,
+        teamId: teamDetail.teamId,
+        nameTeam: teamDetail.name,
+      });
+      if (res && res.code === StatusCode.SUCCESS) {
+        const newListMembers = data?.member.filter(
+          el => el?.user?.userId !== userId,
+        );
+        setData({
+          ...data,
+          member: newListMembers,
+        });
+        hideModalInfoMember();
+        ToastHelper.showToast(
+          `Bạn đã loại ${name} ra khỏi đội thành công`,
+          colors.orange,
+        );
+      }
+    } catch (error) {
+      console.log(
+        'LOG -> file: team-detail.screen.js -> line 370 -> deleteMember -> error',
+        error,
+      );
+    }
+  };
+
+  const renderButtonConfirm = () => {
+    if (flag === 1) {
+      return (
+        <>
+          <Text type={headline5} style={styles.txtConfirm}>
+            Phản hồi lời mời
+          </Text>
+          <View style={styles.warpperButtonEdit}>
+            <PrimaryButton
+              title="Từ chối"
+              style={[styles.flex49, {backgroundColor: colors.grayOpacity}]}
+            />
+            <PrimaryButton
+              title="Xác nhận"
+              style={[styles.flex49, {backgroundColor: colors.greenDark}]}
+              onPress={acceptInvite}
+            />
+          </View>
+        </>
+      );
+    }
+  };
 
   const keyExtractor = (item, index) => index.toString();
   const renderItemMember = ({item, index}) => {
@@ -340,11 +424,12 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
         image={item?.user?.avatar || item?.avatar}
         size={scale(80)}
         name={item?.user?.displayName || item?.displayName}
-        status={item?.accept}
+        status={Number(item?.accept)}
         position={
           !index ? 'Đội trưởng' : item?.user?.position || item?.position
         }
-        onPressImage={showModalInfoMember(item)}
+        onPressImage={showModalInfoMember(item, index)}
+        me={item?.user?.userId === profile?.userId}
       />
     );
   };
@@ -371,6 +456,7 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
         />
         <View style={styles.body}>
           <View style={styles.section}>
+            {renderButtonConfirm()}
             <View style={styles.rowBetween}>
               <Text type={headline5}>Thành viên</Text>
               {isLeader && (
@@ -408,7 +494,7 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
               editable={false}
             />
             <RowProflie
-              label="Trình độ"
+              label="Trình độ đội bóng"
               value={data?.level ? data?.level : 'Chọn trình độ của đội bóng'}
               iconType={IconType.MaterialCommunityIcons}
               iconName="chess-queen"
@@ -470,15 +556,16 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
         <ConfirmDialog
           visible={visibleModalDele}
           imageSVG={imageDelete}
-          sizeImage={scale(200)}
+          sizeImage={scale(150)}
           confirmText="Xác nhận"
           cancelText="Hủy"
           colorsCancel={colors.grayDark}
           colorsConfirm={colors.red}
-          title="Xóa đội bóng"
+          title="Bạn có chắc muốn xóa đội bóng?"
           subTitle={data?.name}
           onCancelClick={toggleModalDelete}
           onConfirmClick={deleteTeam}
+          colorTitle={colors.red}
         />
         <ModalAddMember
           dismiss={toggleModalAddMember}
@@ -500,7 +587,12 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
           dismiss={hideModalInfoMember}
           visible={modalInfoMember.visible}
           data={modalInfoMember.data}
+          index={modalInfoMember.index}
           isLeader={isLeader}
+          deleteMember={deleteMember(
+            modalInfoMember.data?.user?.userId,
+            modalInfoMember.data?.user?.displayName,
+          )}
         />
       </ScrollView>
     </Host>
@@ -531,6 +623,12 @@ const styles = StyleSheet.create({
   },
   warpperButtonEdit: {
     ...Styles.rowBetween,
+    marginBottom: scale(10),
+  },
+  txtConfirm: {
+    textAlign: 'center',
+    marginBottom: scale(10),
+    color: colors.orange,
   },
 });
 

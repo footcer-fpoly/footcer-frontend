@@ -1,41 +1,97 @@
-import React from 'react';
+import {useFocusEffect} from '@react-navigation/native';
+import React, {useRef, useState} from 'react';
+import {RefreshControl} from 'react-native';
 import {FlatList, StyleSheet, View} from 'react-native';
 import ScrollableTabView, {
-  ScrollableTabBar,
+  DefaultTabBar,
 } from 'react-native-scrollable-tab-view';
 import {connect} from 'react-redux';
-import CardMyTeam from '../../components/account/CardMyTeam';
+import {StatusCode} from '../../api/status-code';
+import {getListTeamService} from '../../api/team.api';
 import ListLoadingComponent from '../../components/common/ListLoadingComponent';
-import {Text} from '../../components/common/Text';
 import ToolBar from '../../components/common/Toolbar';
-import {scale} from '../../helpers/size.helper';
-import colors from '../../theme/colors';
-import {getListTeam} from '../../redux/actions/teams.action';
-import {useFocusEffect} from '@react-navigation/native';
+import CardMyTeam from '../../components/team/CardMyTeam';
 import FloatingActionButton from '../../components/team/FLoatingActionCreateTeam';
+import {scale} from '../../helpers/size.helper';
+import {getListTeam} from '../../redux/actions/teams.action';
+import colors from '../../theme/colors';
 
 export const TeamScreen = ({getListTeam, listTeam}) => {
+  const scrollableRef = useRef();
+  const [state, setState] = useState({
+    listTeamConfirm: [],
+    onReady: false,
+    isRefreshing: false,
+  });
+
   useFocusEffect(
     React.useCallback(() => {
-      getListTeam();
+      fechData();
+      if (scrollableRef && scrollableRef?.current?.state?.currentPage) {
+        scrollableRef?.current?.goToPage(0);
+      }
     }, []),
   );
+
+  const fechData = async () => {
+    await Promise.all([getListTeam(), getListTeamConfirm()]);
+  };
+
+  const onRefresh = () => {
+    setState({...state, isRefreshing: true});
+    fechData();
+  };
+
+  const getListTeamConfirm = async () => {
+    try {
+      const res = await getListTeamService();
+      console.log(
+        'LOG -> file: team.screen.js -> line 32 -> getListTeamConfirm -> res',
+        res,
+      );
+      if (res && res.code === StatusCode.SUCCESS) {
+        setState({
+          ...state,
+          listTeamConfirm: res?.data,
+          onReady: true,
+          isRefreshing: false,
+        });
+      }
+    } catch (error) {
+      console.log(
+        'LOG -> file: team.screen.js -> line 37 -> getListTeamConfirm -> error',
+        error,
+      );
+    }
+  };
   const keyExtractor = (item, index) => index.toString();
   const renderItem = ({item}) => {
     return <CardMyTeam width={'100%'} item={item} />;
+  };
+  const renderItemConfirm = ({item}) => {
+    return <CardMyTeam confirm={true} width={'100%'} item={item} />;
   };
   return (
     <View style={styles.container}>
       <ToolBar left={true} title="Quản lý đội bóng" />
       <ScrollableTabView
+        ref={scrollableRef}
         tabBarUnderlineStyle={{backgroundColor: colors.green}}
         tabBarActiveTextColor={colors.greenDark}
         tabBarBackgroundColor={colors.white}
         initialPage={0}
-        renderTabBar={() => <ScrollableTabBar />}>
-        <View style={styles.warpperContent} tabLabel="Đội bóng của bạn">
+        renderTabBar={() => <DefaultTabBar />}>
+        <View
+          style={styles.warpperContent}
+          tabLabel={`Đội bóng của bạn (${listTeam?.length})`}>
           <FlatList
             data={listTeam}
+            refreshControl={
+              <RefreshControl
+                refreshing={state.isRefreshing}
+                onRefresh={onRefresh}
+              />
+            }
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.listMember}
             keyExtractor={keyExtractor}
@@ -49,7 +105,29 @@ export const TeamScreen = ({getListTeam, listTeam}) => {
           />
           <FloatingActionButton />
         </View>
-        <Text tabLabel="Đội bóng đang chờ xác nhận">favorite</Text>
+        <View
+          style={styles.warpperContent}
+          tabLabel={`Chờ xác nhận (${state?.listTeamConfirm?.length})`}>
+          <FlatList
+            data={state.listTeamConfirm}
+            refreshControl={
+              <RefreshControl
+                refreshing={state.isRefreshing}
+                onRefresh={onRefresh}
+              />
+            }
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.listMember}
+            keyExtractor={keyExtractor}
+            renderItem={renderItemConfirm}
+            ListEmptyComponent={
+              <ListLoadingComponent
+                onReady={listTeam !== null}
+                text={'Bạn chưa có đội bóng. Hãy tạo đội bóng'}
+              />
+            }
+          />
+        </View>
       </ScrollableTabView>
     </View>
   );

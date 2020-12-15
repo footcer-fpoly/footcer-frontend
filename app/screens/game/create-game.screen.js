@@ -1,48 +1,43 @@
 import React, {useRef, useState} from 'react';
 import {
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  TouchableHighlight,
+  ImageBackground,
   LayoutAnimation,
-  UIManager,
   Platform,
   ScrollView,
+  StyleSheet,
   TextInput,
-  ImageBackground,
+  TouchableOpacity,
+  UIManager,
+  View,
 } from 'react-native';
-import {headline4, headline5, Text} from '../../components/common/Text';
-import ToolBar from '../../components/common/Toolbar';
-import {scale} from '../../helpers/size.helper';
-import rootNavigator from '../../navigations/root.navigator';
-import {HOME_SCREEN} from '../../navigations/route-name';
-import colors from '../../theme/colors';
+import LinearGradient from 'react-native-linear-gradient';
+import {Host} from 'react-native-portalize';
 import Icon from 'react-native-vector-icons/Octicons';
+import {connect} from 'react-redux';
+import {createGameService} from '../../api/game.api';
+import {StatusCode} from '../../api/status-code';
+import {bgStadiumImage} from '../../assets/Images';
+import CardMyTeam from '../../components/team/CardMyTeam';
 import RowProflie from '../../components/account/RowProflie';
 import {IconType} from '../../components/common/IconMaterialOrSvg';
-import ModalPickerTeams from '../../components/game/ModalPickerTeams';
-import {Host} from 'react-native-portalize';
-import ModalPickerOrder from '../../components/game/ModalPickerOrder';
 import PrimaryButton from '../../components/common/PrimaryButton';
-import Styles from '../../helpers/styles.helper';
+import {headline4, headline5, Text} from '../../components/common/Text';
+import TextError from '../../components/common/TextError';
+import ToolBar from '../../components/common/Toolbar';
+import ModalPickerOrder from '../../components/game/ModalPickerOrder';
+import ModalPickerTeams from '../../components/game/ModalPickerTeams';
 import {
   converSecondsToTime,
   formatDateTime,
   formatToDate,
 } from '../../helpers/format.helper';
-import TitleTextInputField from '../../components/common/TitleTextInputField';
-import CardMyTeam from '../../components/account/CardMyTeam';
-import TextError from '../../components/common/TextError';
-import {createIconSetFromFontello} from 'react-native-vector-icons';
-import {createGameService} from '../../api/game.api';
-import {StatusCode} from '../../api/status-code';
+import {scale} from '../../helpers/size.helper';
+import Styles from '../../helpers/styles.helper';
 import {ToastHelper} from '../../helpers/ToastHelper';
-import {connect} from 'react-redux';
-import {showLoading, hideLoading} from '../../redux/actions/loading.action';
-import {bgStadiumImage} from '../../assets/Images';
-import dimens from '../../theme/dimens';
-import {color} from 'react-native-reanimated';
-import LinearGradient from 'react-native-linear-gradient';
+import rootNavigator from '../../navigations/root.navigator';
+import {HOME_SCREEN} from '../../navigations/route-name';
+import {hideLoading, showLoading} from '../../redux/actions/loading.action';
+import colors from '../../theme/colors';
 
 if (
   Platform.OS === 'android' &&

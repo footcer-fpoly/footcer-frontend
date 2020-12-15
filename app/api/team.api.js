@@ -1,9 +1,12 @@
 import {convertImageToFormData} from '../helpers/convertImageToFormData';
 import RequestHelper from '../helpers/request.helper';
 import {
+  ACCEPT_INVITE_TEAM,
   ADD_MEMBER_TEAM,
   CREATE_TEAM,
+  DELETE_MEMBER_TEAM,
   DELETE_TEAM,
+  GET_LIST_TEAM,
   GET_LIST_TEAM_FOR_USER,
   UPDATE_TEAM,
 } from './api-url';
@@ -31,8 +34,34 @@ export const getListTeamForUserService = () => {
   return RequestHelper.get(GET_LIST_TEAM_FOR_USER);
 };
 
+export const getListTeamService = () => {
+  return RequestHelper.get(GET_LIST_TEAM);
+};
+
+export const acceptInviteTeamService = ({
+  userId,
+  teamId,
+  nameUser,
+  nameTeam,
+}) => {
+  return RequestHelper.put(ACCEPT_INVITE_TEAM, {
+    userId,
+    teamId,
+    nameUser,
+    nameTeam,
+  });
+};
+
 export const deleteTeamService = idTeam => {
   return RequestHelper.delete(DELETE_TEAM(idTeam));
+};
+
+export const deleteMemberService = ({userId, teamId, nameTeam}) => {
+  return RequestHelper.delete(DELETE_MEMBER_TEAM, {
+    userId,
+    teamId,
+    name: nameTeam,
+  });
 };
 
 export const updateAvatarTeamService = ({avatar, teamId}) => {
@@ -65,6 +94,6 @@ export const updateInfoTeamService = data => {
   return RequestHelper.put(UPDATE_TEAM, formData);
 };
 
-export const addMemberTeamService = ({userId, teamId}) => {
-  return RequestHelper.post(ADD_MEMBER_TEAM, {userId, teamId});
+export const addMemberTeamService = ({userId, teamId, nameTeam}) => {
+  return RequestHelper.post(ADD_MEMBER_TEAM, {userId, teamId, name: nameTeam});
 };

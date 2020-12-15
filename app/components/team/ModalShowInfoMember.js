@@ -4,6 +4,7 @@ import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {scale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
+import useText from '../../hooks/useText';
 import colors from '../../theme/colors';
 import spacing from '../../theme/spacing';
 import RowProflie from '../account/RowProflie';
@@ -12,16 +13,23 @@ import {IconType} from '../common/IconMaterialOrSvg';
 import PrimaryButton from '../common/PrimaryButton';
 import {body1, body3, headline4, Text} from '../common/Text';
 
-const ModalShowInfoMember = ({visible, dismiss, data, isLeader}) => {
-  console.log('data :', data);
-  console.log('isLeader :', isLeader);
+const ModalShowInfoMember = ({
+  visible,
+  dismiss,
+  data,
+  isLeader,
+  index,
+  deleteMember,
+}) => {
+  const t = useText();
   const renderButtonDelete = () => {
-    if (data?.role != 1 || !isLeader) {
+    if (isLeader && index) {
       return (
         <PrimaryButton
           style={styles.btn}
           title="Loại khỏi đội"
           textStyle={styles.txtBtn}
+          onPress={deleteMember}
         />
       );
     }
@@ -60,10 +68,10 @@ const ModalShowInfoMember = ({visible, dismiss, data, isLeader}) => {
             label="Trạng thái"
             value={
               data?.role == 1
-                ? 'Đội trưởng'
+                ? t.leader
                 : data?.accept == 1
-                ? 'Thành viên'
-                : 'Chờ xác nhận'
+                ? t.member
+                : t.wait_confirm
             }
             iconType={IconType.MaterialCommunityIcons}
             iconName="bell"
