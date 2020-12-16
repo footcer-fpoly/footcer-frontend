@@ -48,6 +48,7 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
   const isLeader = leader?.user?.userId === profile.userId;
 
   const modalizeRef = useRef();
+  const modalAddMemberRef = useRef();
   const [data, setData] = useState({
     teamId: teamDetail.teamId,
     avatar: teamDetail.avatar,
@@ -61,13 +62,6 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
   });
   const [editable, setEditable] = useState(false);
   const [visibleModalDele, setVisibleModalDele] = useState(false);
-  const [visibleModal, setVisibleModal] = useState(false);
-  const [member, setMember] = useState({
-    phone: '',
-    status: 0,
-    phoneError: null,
-    onReady: true,
-  });
   const [modalInfoMember, setModalInfoMember] = useState({
     visible: false,
     data: null,
@@ -96,9 +90,28 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
     setVisibleModalDele(!visibleModalDele);
   };
 
-  const toggleModalAddMember = () => {
-    setVisibleModal(!visibleModal);
-    setMember({...member, status: 0});
+  const showModalAddMember = () => {
+    if (editable) {
+      ToastHelper.showToast(
+        'Hãy hoàn tất chỉnh sửa trước khi thêm thành viên',
+        colors.orange,
+      );
+    } else {
+      if (modalAddMemberRef.current) {
+        modalAddMemberRef.current.showDialog();
+      }
+    }
+  };
+
+  const addMember = dataMember => {
+    if (dataMember) {
+      const newListMember = [...data.member];
+      newListMember.push(dataMember);
+      setData({
+        ...data,
+        member: newListMember,
+      });
+    }
   };
 
   const acceptInvite = async () => {
@@ -127,72 +140,6 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
       ToastHelper.showToast('Lỗi', colors.red);
       hideLoading();
     }
-  };
-  const searchPhone = async () => {
-    try {
-      const err = validatePhoneNumber(member.phone);
-      if (err) {
-        setMember({
-          ...member,
-          phoneError: err,
-        });
-      } else {
-        const checkPhone = data?.member.find(
-          item => item?.user?.phone === member.phone,
-        );
-        if (!checkPhone) {
-          setMember({
-            ...member,
-            phoneError: null,
-            onReady: false,
-          });
-          const res = await searchPhoneUserService(member.phone);
-          if (res && res.code === StatusCode.SUCCESS) {
-            setMember({
-              ...res.data,
-              status: 1,
-              onReady: true,
-            });
-          } else {
-            setMember({
-              ...member,
-              status: 2,
-              onReady: true,
-            });
-          }
-        } else {
-          setMember({
-            ...member,
-            phoneError: 'Thành viên đã có trong team',
-            onReady: true,
-          });
-        }
-      }
-    } catch (error) {
-      console.log('searchPhoneUserService -->err: ', error);
-    }
-  };
-
-  const addMember = async () => {
-    try {
-      const res = await addMemberTeamService({
-        userId: member?.userId,
-        teamId: data?.teamId,
-        nameTeam: data?.name,
-      });
-      console.log('addMemberTeamService -->res: ', res);
-      if (res && res.code === StatusCode.SUCCESS) {
-        console.log('member: ', member);
-        const newListMemBer = data.member.push(member);
-        setData({
-          ...data,
-          member: newListMemBer,
-        });
-        setMember({...member, status: 0});
-        ToastHelper.showToast('Gữi lời mời thành công', colors.greenDark);
-        toggleModalAddMember();
-      }
-    } catch (error) {}
   };
 
   const showLevel = () => {
@@ -383,7 +330,7 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
         hideModalInfoMember();
         ToastHelper.showToast(
           `Bạn đã loại ${name} ra khỏi đội thành công`,
-          colors.orange,
+          colors.greenDark,
         );
       }
     } catch (error) {
@@ -463,7 +410,7 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
                 <SecondaryButton
                   title="Thêm thành viên"
                   style={{width: scale(160)}}
-                  onPress={toggleModalAddMember}
+                  onPress={showModalAddMember}
                 />
               )}
             </View>
@@ -568,20 +515,11 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
           colorTitle={colors.red}
         />
         <ModalAddMember
-          dismiss={toggleModalAddMember}
-          visible={visibleModal}
-          status={member.status}
-          onChangeText={text => setMember({...member, phone: text})}
-          member={member}
-          onPressSearchPhone={searchPhone}
+          ref={modalAddMemberRef}
           onPresSendInvitation={addMember}
-          onPressInvitationToJoin={toggleModalAddMember}
-          onPressChangePhone={() =>
-            setMember({...member, phoneError: null, status: 0})
-          }
-          phone={member.phone}
-          phoneError={member.phoneError}
-          onReady={member.onReady}
+          listMember={data?.member}
+          teamId={data?.teamId}
+          nameTeam={data?.name}
         />
         <ModalShowInfoMember
           dismiss={hideModalInfoMember}

@@ -28,7 +28,12 @@ export default function PrimaryButton({
 }
 
 const styles = StyleSheet.create({
-  titleStyle: {color: colors.white, paddingHorizontal: scale(5)},
+  titleStyle: {
+    color: colors.white,
+    paddingHorizontal: scale(5),
+    textAlign: 'center',
+    flex: 1,
+  },
   container: {
     backgroundColor: colors.green,
     width: '100%',

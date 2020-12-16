@@ -1,4 +1,6 @@
 import React from 'react';
+import {useState} from 'react';
+import {ActivityIndicator} from 'react-native';
 import {StyleSheet, View} from 'react-native';
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -22,6 +24,16 @@ const ModalShowInfoMember = ({
   deleteMember,
 }) => {
   const t = useText();
+  const [onReady, setOnReady] = useState(true);
+  const remove = () => {
+    if (deleteMember) {
+      setOnReady(false);
+      deleteMember();
+      setTimeout(function() {
+        setOnReady(true);
+      }, 1000);
+    }
+  };
   const renderButtonDelete = () => {
     if (isLeader && index) {
       return (
@@ -29,7 +41,10 @@ const ModalShowInfoMember = ({
           style={styles.btn}
           title="Loại khỏi đội"
           textStyle={styles.txtBtn}
-          onPress={deleteMember}
+          onPress={remove}
+          right={
+            !onReady && <ActivityIndicator size="small" color={colors.white} />
+          }
         />
       );
     }
@@ -160,6 +175,7 @@ const styles = StyleSheet.create({
   btn: {
     backgroundColor: colors.red,
     marginTop: spacing.extraLarge,
+    paddingHorizontal: scale(15),
   },
   txtBtn: {
     fontWeight: 'normal',

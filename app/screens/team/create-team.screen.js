@@ -13,7 +13,6 @@ import {connect} from 'react-redux';
 import * as Yup from 'yup';
 import {StatusCode} from '../../api/status-code';
 import {createTeamService} from '../../api/team.api';
-import {searchPhoneUserService} from '../../api/user.api';
 import Avatar from '../../components/common/Avatar';
 import BackgroudImage from '../../components/common/BackgroudImage';
 import BackIcon from '../../components/common/BackIcon';
@@ -28,7 +27,6 @@ import {ListLevel, ListProvince} from '../../helpers/data-local.helper';
 import {scale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
 import {ToastHelper} from '../../helpers/ToastHelper';
-import {validatePhoneNumber} from '../../helpers/validate.helper';
 import rootNavigation from '../../navigations/root.navigator';
 import {hideLoading, showLoading} from '../../redux/actions/loading.action';
 import {getListTeam} from '../../redux/actions/teams.action';
@@ -37,14 +35,9 @@ import spacing from '../../theme/spacing';
 
 const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
   const modalizeRef = useRef();
-  const [visibleModal, setVisibleModal] = useState(false);
+  const modalAddMemberRef = useRef();
+
   const [listMember, setListMember] = useState([profile]);
-  const [member, setMember] = useState({
-    phone: '',
-    status: 0,
-    phoneError: null,
-    onReady: true,
-  });
   const [dataTeam, setDataTeam] = useState({
     background: null,
     avatar: null,
@@ -55,10 +48,12 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
     level: '',
     errorYup: null,
   });
+
   const [modalDeleteMember, setModalDeleteMember] = useState({
     visible: false,
     member: {},
   });
+
   const showModalDeleteMember = member => () => {
     clearError();
     setModalDeleteMember({
@@ -66,17 +61,28 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
       member: member,
     });
   };
+
   const hideModalDeleteMember = () => {
     setModalDeleteMember({
       visible: false,
       member: {},
     });
   };
-  const toggleModal = () => {
-    clearError();
-    setVisibleModal(!visibleModal);
-    setMember({...member, status: 0});
+
+  const showModalAddMember = () => {
+    if (modalAddMemberRef.current) {
+      modalAddMemberRef.current.showDialog();
+    }
   };
+
+  const addMember = dataMember => {
+    if (dataMember) {
+      const newListMember = [...listMember];
+      newListMember.push(dataMember.user);
+      setListMember(newListMember);
+    }
+  };
+
   const showProvince = () => {
     showDialog({
       type: 'place',
@@ -123,6 +129,7 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
       });
     }
   };
+
   const onPressPickImage = type => async () => {
     clearError();
     try {
@@ -139,55 +146,6 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
     clearError();
   };
 
-  const searchPhone = async () => {
-    try {
-      const err = validatePhoneNumber(member.phone);
-      if (err) {
-        setMember({
-          ...member,
-          phoneError: err,
-        });
-      } else {
-        const checkPhone = listMember.find(item => item.phone === member.phone);
-        if (!checkPhone) {
-          setMember({
-            ...member,
-            onReady: false,
-          });
-          const res = await searchPhoneUserService(member.phone);
-          if (res && res.code === StatusCode.SUCCESS) {
-            setMember({
-              ...res.data,
-              status: 1,
-              onReady: true,
-            });
-          } else {
-            setMember({
-              ...member,
-              status: 2,
-              onReady: true,
-            });
-          }
-        } else {
-          setMember({
-            ...member,
-            phoneError: 'Số điện thoại đã có trong team',
-          });
-        }
-      }
-    } catch (error) {}
-  };
-
-  const addMember = () => {
-    const newListmember = listMember.concat(member);
-    ToastHelper.showToast('Gữi lời mời thành công!');
-    setListMember(newListmember);
-    setMember({...member, status: 0});
-    let strMember = '';
-    strMember += member.userId + ',';
-    setDataTeam({...dataTeam, member: strMember});
-  };
-
   const clearError = () => {
     if (dataTeam.errorYup) {
       setDataTeam({...dataTeam, errorYup: null});
@@ -198,6 +156,7 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
     name: Yup.string().required('Họ và tên không được để trống'),
     place: Yup.string().required('Vui lòng chọn khu vực thi đấu'),
   });
+
   const generatorMessageError = async data => {
     try {
       await validationSchema.validate(data, {abortEarly: false});
@@ -208,12 +167,14 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
       }, {});
     }
   };
+
   const getValue = () => {
     return {
       name: dataTeam.name,
       place: dataTeam.place,
     };
   };
+
   const createTeam = async () => {
     try {
       clearError();
@@ -223,15 +184,12 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
         setDataTeam({...dataTeam, errorYup: errorValidate});
       } else {
         showLoading();
-        let str = '';
-        listMember.slice(1).map(item => {
-          return (str += item.userId + ',');
-        });
-        const members = str.slice(0, str.lastIndexOf(','));
+        const members = listMember.map(mem => mem.userId);
+        members.shift();
         const res = await createTeamService({
           avatar: dataTeam.avatar,
           background: dataTeam.background,
-          members: members,
+          members: members.toString(),
           data: dataTeam,
         });
         console.log('createTeamService --> res: ', res);
@@ -249,6 +207,7 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
       hideLoading();
     }
   };
+
   const removeMember = id => () => {
     const newList = listMember.filter(item => item.userId !== id);
     setListMember(newList);
@@ -269,10 +228,11 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
       />
     );
   };
+
   const renderCreateMember = () => {
     return (
       <View style={styles.warpperCreateMember}>
-        <TouchableOpacity onPress={toggleModal} style={styles.btnCreate}>
+        <TouchableOpacity onPress={showModalAddMember} style={styles.btnCreate}>
           <Icon name="plus" size={40} color={colors.white} />
         </TouchableOpacity>
         <FlatList
@@ -286,6 +246,7 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
       </View>
     );
   };
+
   return (
     <Host>
       <ScrollView
@@ -371,22 +332,10 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
         </View>
         <ModalPicker ref={modalizeRef} onSelectItem={onSelectItem} />
         <ModalAddMember
-          dismiss={toggleModal}
-          visible={visibleModal}
-          status={member.status}
-          onChangeText={text => {
-            setMember({...member, phone: text, phoneError: null});
-          }}
-          member={member}
-          onPressSearchPhone={searchPhone}
+          ref={modalAddMemberRef}
           onPresSendInvitation={addMember}
-          onPressInvitationToJoin={toggleModal}
-          onPressChangePhone={() =>
-            setMember({...member, phoneError: null, status: 0})
-          }
-          phone={member.phone}
-          phoneError={member.phoneError}
-          onReady={member?.onReady}
+          listMember={listMember}
+          create={true}
         />
         <ConfirmDialog
           visible={modalDeleteMember.visible}

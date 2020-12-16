@@ -1,4 +1,5 @@
 export const validatePhoneNumber = phone => {
+  console.log('LOG -> file: validate.helper.js -> line 2 -> phone', phone);
   if (phone.length === 10) {
     var regexp = /^(03|07|08|09|01[2|6|8|9])+([0-9]{8})$/;
     if (regexp.test(phone)) {
