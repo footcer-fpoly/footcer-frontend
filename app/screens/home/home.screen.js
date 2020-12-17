@@ -9,11 +9,53 @@ import {scale} from '../../helpers/size.helper';
 import {getListOrder} from '../../redux/actions/auth.action';
 import {getListTeam} from '../../redux/actions/teams.action';
 import colors from '../../theme/colors';
+import {notificationManager} from '../../utils/NotificationManager';
+import {fcmService} from '../../utils/FCMService'
 
 const HomeScreen = ({getListOrder, getListTeam}) => {
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+
+    fcmService.registerAppWithFCM();
+    fcmService.register(onRegister, onNotification, onOpenNotification);
+    notificationManager.configure(onOpenNotification);
+    
+
+    function onRegister(token) {
+      console.log("[App] onRegistered: ", token);
+    }
+
+    function onNotification(notify) {
+      console.log("[App] onNotification: ", notify);
+      const options = {
+        soundName: 'default',
+        playSound: true
+      }
+      notificationManager.showNotification(
+        0,
+        notify.title,
+        notify.body,
+        notify,
+        options
+      )
+    }
+
+    function onOpenNotification(notify) {
+      console.log("[App] onOpenNotification: ", notify);
+      alert("Open Notification ", notify.body);
+    }
+
+    return () => {
+      console.log("[App] unRegister");
+      fcmService.unRegister();
+      notificationManager.unRegister();
+    }
+
+
+  }, [])
 
   const fetchData = async () => {
     await Promise.all([getListOrder(), getListTeam()]);

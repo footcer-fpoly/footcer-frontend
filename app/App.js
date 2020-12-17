@@ -4,6 +4,7 @@ import {persistStore} from 'redux-persist';
 import {PersistGate} from 'redux-persist/integration/react';
 import MainNavigation from './navigations/main-navigation';
 import configureStore from './redux/store/configure-store';
+import messaging from '@react-native-firebase/messaging';
 
 const store = configureStore();
 const persistor = persistStore(store);
