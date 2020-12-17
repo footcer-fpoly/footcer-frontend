@@ -1,8 +1,7 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Image, ScrollView, StyleSheet, View} from 'react-native';
 import Swiper from 'react-native-swiper';
 import {connect} from 'react-redux';
-import {headline5, Text} from '../../components/common/Text';
 import ToolBar from '../../components/common/Toolbar';
 import {listImageBanner} from '../../helpers/data-local.helper';
 import {scale} from '../../helpers/size.helper';

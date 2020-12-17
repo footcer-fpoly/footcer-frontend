@@ -25,7 +25,7 @@ import {logout} from '../../redux/actions/auth.action';
 import colors from '../../theme/colors';
 import spacing from '../../theme/spacing';
 
-const AccountScreen = ({profile, listTeam, listOrder, logout}) => {
+const AccountScreen = ({profile, listTeam, listOrder, logout, domain}) => {
   const [visibleModal, setVisibleModal] = useState(false);
 
   const navigateToScreen = (routeName, params) => () => {
@@ -184,6 +184,7 @@ const AccountScreen = ({profile, listTeam, listOrder, logout}) => {
         onCancelClick={toggleModal}
         onConfirmClick={logout}
       />
+      <Text>{domain}</Text>
     </View>
   );
 };
@@ -259,6 +260,7 @@ function mapStateToProps(state) {
     profile: state.authState.profile,
     listTeam: state.teamsState.listTeam,
     listOrder: state.authState.listOrder,
+    domain: state.appState.domain,
   };
 }
 

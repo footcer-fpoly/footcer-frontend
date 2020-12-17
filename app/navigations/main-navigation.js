@@ -7,11 +7,19 @@ import {ToastHelper} from '../helpers/ToastHelper';
 import {checkIsLogin} from '../redux/actions/auth.action';
 import MainRouter from './app-navigation';
 import {requestPermissionLocation} from '../redux/actions/auth.action';
+import {getDomain} from '../redux/actions/app.action';
+import database from '@react-native-firebase/database';
+import {saveDomain} from '../helpers/storage.helper';
 
-const MainNavigation = ({requestPermissionLocation}) => {
+const MainNavigation = ({requestPermissionLocation, getDomain}) => {
   const init = async () => {};
   useEffect(() => {
     requestPermissionLocation();
+    database()
+      .ref('/settings/domain')
+      .on('value', snapshot => {
+        getDomain(snapshot.val());
+      });
     init().finally(() => {
       RNBootSplash.hide({duration: 250});
     });
@@ -38,6 +46,7 @@ const styles = StyleSheet.create({
 
 const mapDispatchToProps = {
   requestPermissionLocation,
+  getDomain,
 };
 
 export default connect(
