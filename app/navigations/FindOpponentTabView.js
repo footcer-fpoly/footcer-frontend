@@ -13,7 +13,7 @@ export default function FindOpponentTabView() {
     find: TabFindOpponent,
     match: TabYourMatch,
   });
-  const renderTabBar = props => (
+  const renderTabBar = (props) => (
     <TabBar
       {...props}
       activeColor={'0AB134'}

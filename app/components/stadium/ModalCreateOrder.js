@@ -91,7 +91,7 @@ export default function ModalCreateOrder({dismiss, visible, data}) {
             style={styles.inputField}
             lable="Ghi chú thêm"
             sizeIcon={scale(22)}
-            onChangeText={text => setdescription(text)}
+            onChangeText={(text) => setdescription(text)}
             otherTextInputProps={{
               multiline: true,
               placeholder: 'Thêm ghi chú cho chủ sân',

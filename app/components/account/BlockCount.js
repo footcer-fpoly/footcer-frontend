@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     borderRadius: scale(10),
     paddingVertical: scale(20),
   },
-  txtCount: color => ({
+  txtCount: (color) => ({
     color: color,
     marginTop: scale(5),
   }),

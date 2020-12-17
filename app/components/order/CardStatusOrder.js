@@ -66,7 +66,7 @@ export default function CardStatusOrder({item, onPress}) {
   );
 }
 const styles = StyleSheet.create({
-  container: color => ({
+  container: (color) => ({
     ...Styles.borderView(colors.grayOpacity, scale(1), scale(5)),
     backgroundColor: colors.white,
     marginBottom: scale(10),
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   }),
 
-  status: backgroundColor => {
+  status: (backgroundColor) => {
     return {
       backgroundColor: backgroundColor,
       textTransform: 'capitalize',

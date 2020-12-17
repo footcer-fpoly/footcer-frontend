@@ -81,11 +81,11 @@ const CreateGameScreen = ({showLoading, hideLoading, listGameUser}) => {
     }
   };
 
-  const onSelectItemTeam = itemData => {
+  const onSelectItemTeam = (itemData) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setDataTeam(itemData.item);
   };
-  const onSelectItemOrder = itemData => {
+  const onSelectItemOrder = (itemData) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setDataOrder(itemData.item);
   };
@@ -110,9 +110,7 @@ const CreateGameScreen = ({showLoading, hideLoading, listGameUser}) => {
           )} - ${converSecondsToTime(
             dataOrder?.stadium_details?.endTimeDetail,
           )}`,
-          type: `${dataOrder?.stadium_collage?.amountPeople} vs ${
-            dataOrder?.stadium_collage?.amountPeople
-          }`,
+          type: `${dataOrder?.stadium_collage?.amountPeople} vs ${dataOrder?.stadium_collage?.amountPeople}`,
           description,
           stadiumId: dataOrder.stadium.stadiumId,
           teamIdHost: dataTeam.teamId,
@@ -220,9 +218,7 @@ const CreateGameScreen = ({showLoading, hideLoading, listGameUser}) => {
                   />
                   <RowProflie
                     label="Kiểu thi đấu"
-                    value={`${dataOrder?.stadium_collage?.amountPeople} vs ${
-                      dataOrder?.stadium_collage?.amountPeople
-                    }`}
+                    value={`${dataOrder?.stadium_collage?.amountPeople} vs ${dataOrder?.stadium_collage?.amountPeople}`}
                     iconType={IconType.MaterialIcons}
                     iconName="6-ft-apart"
                     editable={false}
@@ -247,7 +243,7 @@ const CreateGameScreen = ({showLoading, hideLoading, listGameUser}) => {
               <View style={styles.wrapperInput}>
                 <TextInput
                   multiline={true}
-                  onChangeText={text => setDescription(text)}
+                  onChangeText={(text) => setDescription(text)}
                   placeholderTextColor={colors.gray}
                   placeholder="Nhập lời nhắn đến đối thủ"
                   style={styles.textInput}
@@ -349,7 +345,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(CreateGameScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(CreateGameScreen);

@@ -6,7 +6,7 @@ export const getListTeam = () => {
   };
 };
 
-export const getListTeamSuccess = data => {
+export const getListTeamSuccess = (data) => {
   return {
     type: GET_LIST_TEAM_SUCCESS,
     data,

@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
     color: '#48dbfb',
     marginBottom: spacing.small,
   },
-  container: width => ({
+  container: (width) => ({
     height: scale(200),
     width: '100%',
     overflow: 'hidden',
@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
     top: scale(-2),
     left: scale(10),
   },
-  warpperListMem: bottom => ({
+  warpperListMem: (bottom) => ({
     flex: 1,
     position: 'absolute',
     left: scale(10),
@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingLeft: spacing.small,
   },
-  imgMem: isLeader => ({
+  imgMem: (isLeader) => ({
     ...Styles.borderRadiusCircle(scale(50)),
     // ...Styles.borderView(
     //   isLeader ? colors.yellow : colors.white,
@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
     top: 10,
     right: 10,
   },
-  txtTeamName: isLeader => ({
+  txtTeamName: (isLeader) => ({
     color: colors.white,
     position: 'absolute',
     top: scale(10),
@@ -178,7 +178,4 @@ function mapStateToProps(state) {
     profile: state.authState.profile,
   };
 }
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(CardMyTeam);
+export default connect(mapStateToProps, mapDispatchToProps)(CardMyTeam);

@@ -50,7 +50,7 @@ const SignInScreen = ({navigation, showLoading, hideLoading, login}) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [flag, setFlag] = useState(null);
 
-  const changeInputPhone = phone => {
+  const changeInputPhone = (phone) => {
     setData({
       ...data,
       phone,
@@ -60,7 +60,7 @@ const SignInScreen = ({navigation, showLoading, hideLoading, login}) => {
       text: '',
     });
   };
-  const changeInputPassword = password => {
+  const changeInputPassword = (password) => {
     setData({
       ...data,
       password,
@@ -71,7 +71,7 @@ const SignInScreen = ({navigation, showLoading, hideLoading, login}) => {
     });
   };
 
-  const checkTxtPhone = phone => {
+  const checkTxtPhone = (phone) => {
     const err = validatePhoneNumber(phone);
     if (err) {
       setValidError({
@@ -86,7 +86,7 @@ const SignInScreen = ({navigation, showLoading, hideLoading, login}) => {
       return true;
     }
   };
-  const checkTxtPassword = password => {
+  const checkTxtPassword = (password) => {
     const err = validatePassword(password);
     if (err) {
       setValidError({
@@ -102,7 +102,7 @@ const SignInScreen = ({navigation, showLoading, hideLoading, login}) => {
     }
   };
 
-  const checkExistPhone = async phone => {
+  const checkExistPhone = async (phone) => {
     try {
       if (checkTxtPhone(phone)) {
         showLoading();
@@ -201,7 +201,7 @@ const SignInScreen = ({navigation, showLoading, hideLoading, login}) => {
                   keyboardType="numeric"
                   returnKeyType="next"
                   value={data.phone}
-                  onChangeText={val => changeInputPhone(val)}
+                  onChangeText={(val) => changeInputPhone(val)}
                   style={styles.input}
                 />
 
@@ -244,7 +244,7 @@ const SignInScreen = ({navigation, showLoading, hideLoading, login}) => {
                     secureTextEntry={true}
                     value={data.password}
                     // autoFocus={true}
-                    onChangeText={val => changeInputPassword(val)}
+                    onChangeText={(val) => changeInputPassword(val)}
                     style={styles.input}
                   />
                   <TouchableOpacity
@@ -295,7 +295,4 @@ const mapDispatchToProps = {
   login,
 };
 
-export default connect(
-  null,
-  mapDispatchToProps,
-)(SignInScreen);
+export default connect(null, mapDispatchToProps)(SignInScreen);

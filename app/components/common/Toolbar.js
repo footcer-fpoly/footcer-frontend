@@ -45,10 +45,10 @@ const ToolBar = ({left, right, style, backgroundColor, barStyle, title}) => {
 export default ToolBar;
 
 const styles = StyleSheet.create({
-  container: bg => ({
+  container: (bg) => ({
     backgroundColor: bg ? bg : colors.white,
   }),
-  containerToolbar: TOOL_BAR_HEIGHT => ({
+  containerToolbar: (TOOL_BAR_HEIGHT) => ({
     height: TOOL_BAR_HEIGHT,
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: scale(50),
   },
-  center: bg => ({
+  center: (bg) => ({
     flex: 1,
     textAlign: 'center',
     textTransform: 'uppercase',

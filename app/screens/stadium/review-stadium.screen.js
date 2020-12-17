@@ -85,7 +85,7 @@ const ReviewStadiumScreen = ({route, showLoading, hideLoading}) => {
           disabled={false}
           maxStars={5}
           rating={review.star}
-          selectedStar={rating => setReview({...review, star: rating})}
+          selectedStar={(rating) => setReview({...review, star: rating})}
           fullStarColor={colors.yellow}
         />
         <View style={styles.warpperInput}>
@@ -93,7 +93,7 @@ const ReviewStadiumScreen = ({route, showLoading, hideLoading}) => {
             Đánh giá của bạn
           </Text>
           <TextInput
-            onChangeText={value => setReview({...review, content: value})}
+            onChangeText={(value) => setReview({...review, content: value})}
             placeholder="Hãy nhập đánh giá của bạn"
             multiline={true}
             underlineColorAndroid={colors.transparent}
@@ -186,7 +186,4 @@ const mapDispatchToProps = {
   hideLoading,
 };
 
-export default connect(
-  null,
-  mapDispatchToProps,
-)(ReviewStadiumScreen);
+export default connect(null, mapDispatchToProps)(ReviewStadiumScreen);

@@ -13,7 +13,7 @@ export default function TeamTabView() {
     profileTeam: TabProfileTeam,
     history: TabTeams,
   });
-  const renderTabBar = props => (
+  const renderTabBar = (props) => (
     <TabBar
       {...props}
       indicatorStyle={{backgroundColor: '#0AB134'}}

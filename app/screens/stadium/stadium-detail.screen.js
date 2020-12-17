@@ -50,11 +50,11 @@ const HEADER_MIN_HEIGHT = 60;
 const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
 export const StadiumDetailScreen = ({route, listOrder, getListOrder}) => {
   const {stadiumId} = route.params;
-  const listOrderComplete = listOrder.filter(item => {
+  const listOrderComplete = listOrder.filter((item) => {
     return item?.order_status?.status === listStatusOrder[3].key;
   });
   const isHasOrder = listOrderComplete.find(
-    item => item?.stadium?.stadiumId === stadiumId,
+    (item) => item?.stadium?.stadiumId === stadiumId,
   );
   const [data, setData] = useState(null);
   const [review, setReview] = useState({
@@ -371,7 +371,7 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.gray,
     zIndex: 1,
   }),
-  textTitleToolBar: opacity => ({
+  textTitleToolBar: (opacity) => ({
     textTransform: 'uppercase',
     opacity,
     flex: 1,

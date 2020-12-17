@@ -52,7 +52,7 @@ export const acceptInviteTeamService = ({
   });
 };
 
-export const deleteTeamService = idTeam => {
+export const deleteTeamService = (idTeam) => {
   return RequestHelper.delete(DELETE_TEAM(idTeam));
 };
 
@@ -83,7 +83,7 @@ export const updateBackgroundTeamService = ({background, teamId}) => {
   return RequestHelper.put(UPDATE_TEAM, formData);
 };
 
-export const updateInfoTeamService = data => {
+export const updateInfoTeamService = (data) => {
   const formData = new FormData();
   formData.append('folder', 'team');
   formData.append('teamId', data.teamId);

@@ -11,7 +11,7 @@ import spacing from '../../theme/spacing';
 import {body3, headline5, headline6, Text} from '../common/Text';
 
 export default function TimeItem({item, key, onPress}) {
-  const colorItemTime = hasOrder => {
+  const colorItemTime = (hasOrder) => {
     switch (hasOrder) {
       case false:
         return {
@@ -56,7 +56,7 @@ export default function TimeItem({item, key, onPress}) {
   );
 }
 const styles = StyleSheet.create({
-  itemTime: backgroundColor => ({
+  itemTime: (backgroundColor) => ({
     ...Styles.borderView(colors.grayLight, 2, 5),
     ...Styles.columnCenter,
     backgroundColor: backgroundColor,
@@ -64,10 +64,10 @@ const styles = StyleSheet.create({
     marginTop: scale(5),
     paddingVertical: scale(10),
   }),
-  txtTitleTimeItem: color => ({
+  txtTitleTimeItem: (color) => ({
     color: color,
   }),
-  txtPriceTimeItem: color => ({
+  txtPriceTimeItem: (color) => ({
     color: color,
     marginTop: spacing.tiny,
   }),

@@ -18,13 +18,13 @@ import {
 export const logout = () => {
   return {type: LOGOUT};
 };
-export const login = data => {
+export const login = (data) => {
   return {type: LOGIN, data};
 };
 export const checkIsLogin = () => {
   return {type: CHECK_LOGIN};
 };
-export const register = data => {
+export const register = (data) => {
   return {type: REGISTER, data};
 };
 export const requestLogin = ({authType, phone, password}) => {
@@ -34,14 +34,14 @@ export const requestLogin = ({authType, phone, password}) => {
   };
 };
 
-export const updateAvatarUser = avatar => {
+export const updateAvatarUser = (avatar) => {
   return {
     type: UPDATE_AVATAR_USER,
     avatar,
   };
 };
 
-export const updateInfoUser = data => {
+export const updateInfoUser = (data) => {
   return {
     type: UPDATE_INFO_USER,
     data,
@@ -63,7 +63,7 @@ export const refusePermissionLocation = () => ({
 export const getListOrder = () => ({
   type: GET_LIST_ORDER,
 });
-export const getListOrderSuccess = data => ({
+export const getListOrderSuccess = (data) => ({
   type: GET_LIST_ORDER_SUCCESS,
   data,
 });
@@ -71,7 +71,7 @@ export const getListOrderSuccess = data => ({
 export const getListGame = () => ({
   type: GET_LIST_GAME,
 });
-export const getListGameSuccess = data => ({
+export const getListGameSuccess = (data) => ({
   type: GET_LIST_GAME_SUCCESS,
   data,
 });

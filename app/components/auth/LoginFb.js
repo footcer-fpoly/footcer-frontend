@@ -1,5 +1,10 @@
 import React, {useState} from 'react';
-import {ActivityIndicator, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {
+  ActivityIndicator,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {Button} from 'react-native-elements';
 import {
   AccessToken,
@@ -23,12 +28,12 @@ const LoginFb = ({navigation, login, showLoading, hideLoading}) => {
       setLoading(true);
 
       LoginManager.logInWithPermissions(['public_profile', 'email']).then(
-        result => {
+        (result) => {
           if (result.isCancelled) {
             console.log('Login cancelled');
             setLoading(false);
           } else {
-            AccessToken.getCurrentAccessToken().then(data => {
+            AccessToken.getCurrentAccessToken().then((data) => {
               const accessToken = data.accessToken;
               const responseInfoCallback = (error, result) => {
                 if (error) {
@@ -124,7 +129,4 @@ const mapDispatchToProps = {
   login,
 };
 
-export default connect(
-  null,
-  mapDispatchToProps,
-)(LoginFb);
+export default connect(null, mapDispatchToProps)(LoginFb);

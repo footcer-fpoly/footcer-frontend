@@ -155,7 +155,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(TeamScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(TeamScreen);

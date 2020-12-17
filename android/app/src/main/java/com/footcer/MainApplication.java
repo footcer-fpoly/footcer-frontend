@@ -31,6 +31,7 @@ import com.swmansion.reanimated.ReanimatedPackage;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import com.airbnb.android.react.maps.MapsPackage;
 import com.airbnb.android.react.lottie.LottiePackage;
+import com.microsoft.codepush.react.CodePush;
 
 
 public class MainApplication extends Application implements ReactApplication {
@@ -54,6 +55,14 @@ public class MainApplication extends Application implements ReactApplication {
                 @Override
                 protected String getJSMainModuleName() {
                     return "index";
+                }
+
+                // 2. Override the getJSBundleFile method to let
+                // the CodePush runtime determine where to get the JS
+                // bundle location from on each app start
+                @Override
+                protected String getJSBundleFile() {
+                    return CodePush.getJSBundleFile();
                 }
             };
 

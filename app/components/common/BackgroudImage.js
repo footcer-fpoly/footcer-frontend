@@ -51,7 +51,7 @@ export default function BackgroudImage({
 }
 
 const styles = StyleSheet.create({
-  header: height => ({
+  header: (height) => ({
     width: '100%',
     height: height,
     resizeMode: 'cover',

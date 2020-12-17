@@ -17,7 +17,7 @@ const MainNavigation = ({requestPermissionLocation, getDomain}) => {
     requestPermissionLocation();
     database()
       .ref('/settings/domain')
-      .on('value', snapshot => {
+      .on('value', (snapshot) => {
         getDomain(snapshot.val());
       });
     init().finally(() => {
@@ -49,7 +49,4 @@ const mapDispatchToProps = {
   getDomain,
 };
 
-export default connect(
-  null,
-  mapDispatchToProps,
-)(MainNavigation);
+export default connect(null, mapDispatchToProps)(MainNavigation);

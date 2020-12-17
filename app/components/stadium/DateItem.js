@@ -15,7 +15,7 @@ export default function DateItem({item, onPress}) {
   );
 }
 const styles = StyleSheet.create({
-  container: choose => {
+  container: (choose) => {
     return {
       backgroundColor: choose ? colors.green : colors.grayOpacity,
       marginRight: scale(10),
@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
       alignItems: 'center',
     };
   },
-  txt: choose => {
+  txt: (choose) => {
     return {
       color: choose ? colors.white : colors.gray,
     };

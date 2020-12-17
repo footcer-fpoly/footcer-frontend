@@ -47,7 +47,7 @@ const Styles = {
   flexRow: {
     flexDirection: 'row',
   },
-  borderRadiusCircle: diameter => {
+  borderRadiusCircle: (diameter) => {
     return {
       width: diameter,
       height: diameter,

@@ -18,7 +18,7 @@ export class ToastHelper {
   static ToastContainer() {
     return (
       <Toast
-        ref={ref => ToastHelper.setToast(ref)}
+        ref={(ref) => ToastHelper.setToast(ref)}
         positionValue={100}
         fadeInDuration={750}
         fadeOutDuration={2000}

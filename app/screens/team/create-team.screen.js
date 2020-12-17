@@ -54,7 +54,7 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
     member: {},
   });
 
-  const showModalDeleteMember = member => () => {
+  const showModalDeleteMember = (member) => () => {
     clearError();
     setModalDeleteMember({
       visible: true,
@@ -75,7 +75,7 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
     }
   };
 
-  const addMember = dataMember => {
+  const addMember = (dataMember) => {
     if (dataMember) {
       const newListMember = [...listMember];
       newListMember.push(dataMember.user);
@@ -110,7 +110,7 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
     }
   };
 
-  const onSelectItem = itemData => {
+  const onSelectItem = (itemData) => {
     let keyState = null;
     switch (itemData.type) {
       case 'place':
@@ -130,7 +130,7 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
     }
   };
 
-  const onPressPickImage = type => async () => {
+  const onPressPickImage = (type) => async () => {
     clearError();
     try {
       const image = await ImagePicker.openPicker({
@@ -157,7 +157,7 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
     place: Yup.string().required('Vui lòng chọn khu vực thi đấu'),
   });
 
-  const generatorMessageError = async data => {
+  const generatorMessageError = async (data) => {
     try {
       await validationSchema.validate(data, {abortEarly: false});
     } catch (error) {
@@ -180,11 +180,11 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
       clearError();
       const value = getValue();
       const errorValidate = await generatorMessageError(value);
-      if (!!errorValidate) {
+      if (errorValidate) {
         setDataTeam({...dataTeam, errorYup: errorValidate});
       } else {
         showLoading();
-        const members = listMember.map(mem => mem.userId);
+        const members = listMember.map((mem) => mem.userId);
         members.shift();
         const res = await createTeamService({
           avatar: dataTeam.avatar,
@@ -208,8 +208,8 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
     }
   };
 
-  const removeMember = id => () => {
-    const newList = listMember.filter(item => item.userId !== id);
+  const removeMember = (id) => () => {
+    const newList = listMember.filter((item) => item.userId !== id);
     setListMember(newList);
     hideModalDeleteMember();
   };
@@ -278,7 +278,7 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
             lable="Tên đội bóng của bạn (*)"
             typeLeft={IconType.MaterialCommunityIcons}
             iconNameLeft="account-group"
-            onChangeText={value => changeFormData('name', value)}
+            onChangeText={(value) => changeFormData('name', value)}
             otherTextInputProps={{
               placeholder: 'Nhập tên đội bóng của bạn',
             }}
@@ -312,7 +312,7 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
             style={styles.inputField}
             lable="Mô tả đội bóng"
             sizeIcon={scale(22)}
-            onChangeText={text => changeFormData('description', text)}
+            onChangeText={(text) => changeFormData('description', text)}
             otherTextInputProps={{
               multiline: true,
               placeholder: 'Mô tả',
@@ -399,7 +399,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(CreateTeamScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(CreateTeamScreen);

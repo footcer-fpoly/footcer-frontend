@@ -8,8 +8,8 @@ const [shortDimension, longDimension] =
 const guidelineBaseWidth = 375;
 const guidelineBaseHeight = 812;
 
-export const scale = size => (shortDimension / guidelineBaseWidth) * size;
-export const verticalScale = size =>
+export const scale = (size) => (shortDimension / guidelineBaseWidth) * size;
+export const verticalScale = (size) =>
   (longDimension / guidelineBaseHeight) * size;
 export const moderateScale = (size, factor = 0.5) =>
   size + (scale(size) - size) * factor;

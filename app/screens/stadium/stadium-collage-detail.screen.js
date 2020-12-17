@@ -83,7 +83,7 @@ export default function StadiumCollageDetailScreen({route}) {
           setState({
             ...state,
             listTime: res?.data?.stadiumDetails?.filter(
-              el => diffHours(el.startTimeDetail) > 0,
+              (el) => diffHours(el.startTimeDetail) > 0,
             ),
             data: res.data,
             onReady: true,
@@ -110,7 +110,7 @@ export default function StadiumCollageDetailScreen({route}) {
   const onPressChooseDate = (item, index) => async () => {
     item.choose = true;
     const newList = [...state.listDate];
-    newList.map(e => {
+    newList.map((e) => {
       if (e.choose === true && e !== item) {
         e.choose = false;
       }
@@ -127,10 +127,10 @@ export default function StadiumCollageDetailScreen({route}) {
     getData(index, item.date);
   };
 
-  const onPressChooseTime = item => () => {
+  const onPressChooseTime = (item) => () => {
     item.hasOrder = 'choose';
     const newList = [...state.listTime];
-    newList.map(e => {
+    newList.map((e) => {
       if (e.hasOrder === 'choose' && e !== item) {
         e.hasOrder = false;
       }
@@ -179,7 +179,7 @@ export default function StadiumCollageDetailScreen({route}) {
     );
   };
 
-  const render = arr => {
+  const render = (arr) => {
     return arr.map((item, index) => (
       <TimeItem
         onPress={onPressChooseTime(item)}
@@ -189,7 +189,7 @@ export default function StadiumCollageDetailScreen({route}) {
     ));
   };
   const renderSectionTime = () => {
-    if (!!state?.data?.stadiumDetails) {
+    if (state?.data?.stadiumDetails) {
       const newList = [...state.listTime];
       const subList = detachedArray(newList, 4);
       return (

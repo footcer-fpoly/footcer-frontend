@@ -41,13 +41,13 @@ const ListGameScreen = ({getListGame, listGameUser, getListOrder}) => {
   const fechData = async () => {
     await Promise.all([getData('all'), getListGame(), getListOrder()]);
   };
-  const getData = async params => {
+  const getData = async (params) => {
     try {
       const res = await getGameService(params);
       if (res && res.code === StatusCode.SUCCESS) {
         setListGame({
           ...listGame,
-          data: res.data.filter(item =>
+          data: res.data.filter((item) =>
             compareDateTime(item?.date, new Date()),
           ),
           onReady: true,
@@ -79,7 +79,7 @@ const ListGameScreen = ({getListGame, listGameUser, getListOrder}) => {
       visbaleModal: !listGame.visbaleModal,
     });
   };
-  const handleConfirmDatePicker = date => {
+  const handleConfirmDatePicker = (date) => {
     getData(formatToDate(date));
     setListGame({
       ...listGame,
@@ -217,7 +217,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(ListGameScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(ListGameScreen);

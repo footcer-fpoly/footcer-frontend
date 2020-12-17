@@ -28,7 +28,7 @@ const ListOrderScreen = ({listOrder}) => {
   const onChangeTab = ({i}) => {
     let newList = [...initialListOrder];
     if (i) {
-      const matchedSatus = newList.filter(item => {
+      const matchedSatus = newList.filter((item) => {
         return item?.order_status?.status === listStatusOrder[i].key;
       });
       setdata({...data, list: matchedSatus});
@@ -90,7 +90,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  null,
-)(ListOrderScreen);
+export default connect(mapStateToProps, null)(ListOrderScreen);

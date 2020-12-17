@@ -9,10 +9,10 @@ const instance = axios.create({
 });
 
 instance.interceptors.response.use(
-  config => config,
-  error => Promise.reject(error),
+  (config) => config,
+  (error) => Promise.reject(error),
 );
-const preprocessResponse = data => {
+const preprocessResponse = (data) => {
   if (data.success === false) {
     throw {response: {message: data.message, code: data.code}};
   }
@@ -51,18 +51,18 @@ export default class RequestHelper {
       .get(url, {
         headers: header,
         params: {...params},
-        paramsSerializer: params => {
+        paramsSerializer: (params) => {
           return qs.stringify(params, {arrayFormat: 'repeat'});
         },
         cancelToken: source.token,
       })
-      .then(data => {
+      .then((data) => {
         return data.data;
       })
-      .then(data => {
+      .then((data) => {
         return data;
       })
-      .catch(e => {
+      .catch((e) => {
         throw e;
       });
   }
@@ -76,13 +76,13 @@ export default class RequestHelper {
       headers: await this.getHeader(),
       data: data,
     })
-      .then(data => {
+      .then((data) => {
         return data.data;
       })
-      .then(data => {
+      .then((data) => {
         return data;
       })
-      .catch(e => {
+      .catch((e) => {
         throw e;
       });
   }
@@ -102,13 +102,13 @@ export default class RequestHelper {
       },
       {cancelToken: source.token},
     )
-      .then(data => {
+      .then((data) => {
         return data.data;
       })
-      .then(data => {
+      .then((data) => {
         return preprocessResponse(data);
       })
-      .catch(e => {
+      .catch((e) => {
         throw e;
       });
   }
@@ -129,13 +129,13 @@ export default class RequestHelper {
       },
       {cancelToken: source.token},
     )
-      .then(data => {
+      .then((data) => {
         return data.data;
       })
-      .then(data => {
+      .then((data) => {
         return preprocessResponse(data);
       })
-      .catch(e => {
+      .catch((e) => {
         throw e;
       });
   }
@@ -156,13 +156,13 @@ export default class RequestHelper {
       },
       {cancelToken: source.token},
     )
-      .then(data => {
+      .then((data) => {
         return data.data;
       })
-      .then(data => {
+      .then((data) => {
         return preprocessResponse(data);
       })
-      .catch(e => {
+      .catch((e) => {
         throw e;
       });
   }

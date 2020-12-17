@@ -77,15 +77,15 @@ const SignUpPhoneScreen = ({
     });
   };
 
-  const changeTxtName = val => {
+  const changeTxtName = (val) => {
     setData({...data, name: val});
     setErrName({...errName, visible: false});
   };
-  const changeTxtPass = val => {
+  const changeTxtPass = (val) => {
     setData({...data, password: val});
     setErrPassword({...errPassword, visible: false});
   };
-  const changeTxtRePass = val => {
+  const changeTxtRePass = (val) => {
     setData({...data, rePassword: val});
     setErrRePassword({...errRePassword, visible: false});
   };
@@ -116,7 +116,7 @@ const SignUpPhoneScreen = ({
     return true;
   };
 
-  const registerPhone = async data => {
+  const registerPhone = async (data) => {
     try {
       if (checkValidName() && checkValidPass() && checkValidRePass()) {
         showLoading();
@@ -187,7 +187,7 @@ const SignUpPhoneScreen = ({
                   keyboardType="default"
                   returnKeyType="next"
                   autoCorrect={false}
-                  onChangeText={val => changeTxtName(val)}
+                  onChangeText={(val) => changeTxtName(val)}
                   style={styles.textInput}
                 />
                 {data.name.length ? (
@@ -214,7 +214,7 @@ const SignUpPhoneScreen = ({
                   keyboardType="numeric"
                   secureTextEntry={secureTextEntry.password}
                   returnKeyType="next"
-                  onChangeText={val => changeTxtPass(val)}
+                  onChangeText={(val) => changeTxtPass(val)}
                   style={styles.textInput}
                 />
                 <TouchableOpacity onPress={() => toggleSecurePass()}>
@@ -243,7 +243,7 @@ const SignUpPhoneScreen = ({
                   keyboardType="numeric"
                   returnKeyType="next"
                   secureTextEntry={secureTextEntry.rePassword}
-                  onChangeText={val => changeTxtRePass(val)}
+                  onChangeText={(val) => changeTxtRePass(val)}
                   style={styles.textInput}
                 />
                 <TouchableOpacity onPress={() => toggleSecureRePass()}>
@@ -279,7 +279,4 @@ const mapDispatchToProps = {
   register,
 };
 
-export default connect(
-  null,
-  mapDispatchToProps,
-)(SignUpPhoneScreen);
+export default connect(null, mapDispatchToProps)(SignUpPhoneScreen);

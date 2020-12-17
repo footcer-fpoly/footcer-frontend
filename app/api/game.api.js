@@ -22,7 +22,7 @@ export const createGameService = ({
   });
 };
 
-export const getGameService = params => {
+export const getGameService = (params) => {
   return RequestHelper.get(GET_GAME(params));
 };
 export const getGameForUserService = () => {

@@ -10,7 +10,7 @@ import {
 export const getListStadiumService = ({latitude, longitude}) => {
   return RequestHelper.get(GET_LIST_STADIUM({latitude, longitude}));
 };
-export const getStadiumDetailService = stadiumId => {
+export const getStadiumDetailService = (stadiumId) => {
   return RequestHelper.get(GET_STADIUM_DETAIL(stadiumId));
 };
 
@@ -20,7 +20,7 @@ export const getStadiumCollageDetailService = ({stadiumCollageId, date}) => {
   );
 };
 
-export const searchStadiumNameService = name => {
+export const searchStadiumNameService = (name) => {
   return RequestHelper.get(SEARCH_STADIUM_NAME(name));
 };
 

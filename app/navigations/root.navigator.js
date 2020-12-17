@@ -45,16 +45,14 @@ export function setParams(params) {
   return navigationRef.current?.setParams(params);
 }
 
-const removeSomeStack = (
-  listRouteNameRemove = [],
-  routeName,
-  params,
-) => state => {
+const removeSomeStack = (listRouteNameRemove = [], routeName, params) => (
+  state,
+) => {
   try {
     console.log('resetStoreStack state', state);
     const routes = [
       ...state.routes.filter(
-        route => !listRouteNameRemove.includes(route.name),
+        (route) => !listRouteNameRemove.includes(route.name),
       ),
       {key: `${routeName}-success`, name: routeName, params},
     ];

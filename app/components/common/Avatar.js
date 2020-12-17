@@ -58,7 +58,7 @@ export default function Avatar({
 }
 
 const styles = StyleSheet.create({
-  avatar: size => ({
+  avatar: (size) => ({
     ...Styles.borderRadiusCircle(size),
   }),
   hitSlop: {top: 10, left: 10, right: 10, bottom: 10},

@@ -74,7 +74,7 @@ const TabProfile = ({
     }
   };
 
-  const onSelectItem = itemData => {
+  const onSelectItem = (itemData) => {
     let keyState = null;
     switch (itemData.type) {
       case 'level':
@@ -94,7 +94,7 @@ const TabProfile = ({
     }
   };
 
-  const handleConfirm = date => {
+  const handleConfirm = (date) => {
     setData({
       ...data,
       birthday: formatBirthday(date),
@@ -116,7 +116,7 @@ const TabProfile = ({
   const validationSchema = Yup.object().shape({
     displayName: Yup.string().required('Họ và tên không được để trống'),
   });
-  const generatorMessageError = async data => {
+  const generatorMessageError = async (data) => {
     try {
       await validationSchema.validate(data, {abortEarly: false});
     } catch (error) {
@@ -136,7 +136,7 @@ const TabProfile = ({
       clearError();
       const value = getValue();
       const errorValidate = await generatorMessageError(value);
-      if (!!errorValidate) {
+      if (errorValidate) {
         setData({...data, errorYup: errorValidate});
       } else {
         showLoading();
@@ -179,7 +179,7 @@ const TabProfile = ({
               iconType={IconType.MaterialIcons}
               iconName="account-circle"
               editable={editable}
-              onChangeText={value => changeFormData('displayName', value)}
+              onChangeText={(value) => changeFormData('displayName', value)}
               textError={data.errorYup?.displayName}
             />
             <RowProflie
@@ -316,7 +316,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(TabProfile);
+export default connect(mapStateToProps, mapDispatchToProps)(TabProfile);

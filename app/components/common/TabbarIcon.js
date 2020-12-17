@@ -25,11 +25,11 @@ const styles = StyleSheet.create({
   imageIconStyle: {
     ...Styles.borderRadiusCircle(scale(25)),
   },
-  iconStyle: focused => ({
+  iconStyle: (focused) => ({
     fontSize: scale(25),
     color: focused ? colors.green : colors.grayDark + '80',
   }),
-  iconWrapper: focused => ({
+  iconWrapper: (focused) => ({
     // backgroundColor: focused ? colors.main : colors.main + '33',
     // borderRadius: 999,
     // padding: 5,

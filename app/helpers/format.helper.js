@@ -20,7 +20,7 @@ export const regexPhoneOrEmail = /^(?:0[0-9]{9}|(([^<>()\[\]\\.,;:\s@"]+(\.[^<>(
  * @param mixed   c: decimal delimiter
  */
 
-export const converSecondsToTime = seconds => {
+export const converSecondsToTime = (seconds) => {
   if (seconds) {
     return new Date(Number(seconds)).toUTCString().substring(16, 22);
   }
@@ -38,15 +38,15 @@ export const detachedArray = (arr, size) => {
   return arr;
 };
 
-export const numberWithCommas = value => {
-  if (!!value) {
+export const numberWithCommas = (value) => {
+  if (value) {
     const str = value.toString();
     return str.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
   }
   return value;
 };
 
-export const renderNextDays = nextDays => {
+export const renderNextDays = (nextDays) => {
   let tempArr = [];
   for (let i = 0; i <= nextDays; i++) {
     const date = new Date();
@@ -56,33 +56,27 @@ export const renderNextDays = nextDays => {
   return tempArr;
 };
 
-export const formatDateTime = date => {
-  return dayjs(date)
-    .locale(locale_vi)
-    .format('dddd, DD/MM/YYYY');
+export const formatDateTime = (date) => {
+  return dayjs(date).locale(locale_vi).format('dddd, DD/MM/YYYY');
 };
 
-export const formatToDate = date => {
-  return dayjs(date)
-    .locale(locale_vi)
-    .format('YYYY-MM-DD');
+export const formatToDate = (date) => {
+  return dayjs(date).locale(locale_vi).format('YYYY-MM-DD');
 };
 
-export const formatBirthday = date => {
+export const formatBirthday = (date) => {
   return dayjs(date).format('DD/MM/YYYY');
 };
 
-export const formatToHours = date => {
-  return dayjs(date)
-    .locale(locale_vi)
-    .format('HH:mm');
+export const formatToHours = (date) => {
+  return dayjs(date).locale(locale_vi).format('HH:mm');
 };
 
-export const convertMilisecondsToMinutes = miliseconds => {
+export const convertMilisecondsToMinutes = (miliseconds) => {
   return Number(miliseconds) / 60000;
 };
 
-export const diffHours = hour => {
+export const diffHours = (hour) => {
   let date = new Date();
   const nowHours = date.getHours();
   const myHours = new Date(Number(hour)).toUTCString().substring(16, 19);

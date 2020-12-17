@@ -16,7 +16,7 @@ export default function ProfileTabView() {
     profile: TabProfile,
     teams: TabTeams,
   });
-  const renderTabBar = props => (
+  const renderTabBar = (props) => (
     <TabBar
       {...props}
       indicatorStyle={{backgroundColor: colors.greenDark}}

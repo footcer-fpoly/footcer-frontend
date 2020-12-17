@@ -25,7 +25,7 @@ export const addOrderService = ({
 export const getListOrderService = () => {
   return RequestHelper.get(GET_LIST_ORDER);
 };
-export const getOrderDetailService = orderId => {
+export const getOrderDetailService = (orderId) => {
   return RequestHelper.get(GET_ORDER_DETAIL(orderId));
 };
 export const cancelOrderService = (orderId, reason) => {

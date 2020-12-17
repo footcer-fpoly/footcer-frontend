@@ -33,7 +33,7 @@ const ModalAddMember = forwardRef(
   ({onPresSendInvitation, listMember, teamId, nameTeam, create}, ref) => {
     const [state, setState] = useState(initialState);
 
-    const onChangeText = value => {
+    const onChangeText = (value) => {
       setState({...state, phoneNumber: value, error: null});
     };
 
@@ -45,7 +45,7 @@ const ModalAddMember = forwardRef(
       showDialog,
     }));
 
-    const onPressSend = user => async () => {
+    const onPressSend = (user) => async () => {
       try {
         if (onPresSendInvitation) {
           setState({
@@ -108,7 +108,7 @@ const ModalAddMember = forwardRef(
           });
         } else {
           const checkPhone = listMember.find(
-            item => item?.user?.phone === state.phoneNumber,
+            (item) => item?.user?.phone === state.phoneNumber,
           );
           if (!checkPhone) {
             setState({
@@ -162,7 +162,7 @@ const ModalAddMember = forwardRef(
                 style={styles.input}
                 value={state.phoneNumber}
                 placeholder="Nhập số điện thoại"
-                onChangeText={value => onChangeText(value)}
+                onChangeText={(value) => onChangeText(value)}
                 keyboardType="numeric"
                 maxLength={10}
               />
@@ -299,7 +299,7 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     fontWeight: 'normal',
   },
-  warpperInput: color => ({
+  warpperInput: (color) => ({
     ...Styles.rowAlignCenter,
     borderBottomWidth: 2,
     borderBottomColor: color,

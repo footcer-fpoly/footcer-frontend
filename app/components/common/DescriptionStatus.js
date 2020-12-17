@@ -16,7 +16,7 @@ export default function DescriptionStatus({color, lable}) {
   );
 }
 const styles = StyleSheet.create({
-  status: bg => ({
+  status: (bg) => ({
     ...Styles.borderView(colors.grayOpacity, scale(0.5), 3),
     width: scale(20),
     height: scale(20),

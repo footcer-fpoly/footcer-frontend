@@ -79,7 +79,7 @@ const OTPScreen = ({route, navigation, showLoading, hideLoading, register}) => {
       firebase
         .auth()
         .signInWithPhoneNumber(phone84)
-        .then(confirmResult => {
+        .then((confirmResult) => {
           setConfirmResult(confirmResult);
           countDownTime = setInterval(() => {
             setTimer(--timer);
@@ -89,7 +89,7 @@ const OTPScreen = ({route, navigation, showLoading, hideLoading, register}) => {
           }, 1000);
           hideLoading();
         })
-        .catch(error => {
+        .catch((error) => {
           hideLoading();
           console.log(error);
         });
@@ -99,7 +99,7 @@ const OTPScreen = ({route, navigation, showLoading, hideLoading, register}) => {
     }
   };
 
-  const handleVerifyCode = confirmResult => {
+  const handleVerifyCode = (confirmResult) => {
     if (pin1 && pin2 && pin3 && pin4 && pin5 && pin6) {
       const pin = pin1 + pin2 + pin3 + pin4 + pin5 + pin6;
       console.log(pin);
@@ -110,7 +110,7 @@ const OTPScreen = ({route, navigation, showLoading, hideLoading, register}) => {
           hideLoading();
           _goToNext(flag, data, phone);
         })
-        .catch(error => {
+        .catch((error) => {
           setAlertError({visible: true, text: 'Mã xác thực không đúng'});
           hideLoading();
         });
@@ -202,7 +202,7 @@ const OTPScreen = ({route, navigation, showLoading, hideLoading, register}) => {
                   ref={pin1ref}
                   keyboardType="numeric"
                   maxLength={1}
-                  onChangeText={val =>
+                  onChangeText={(val) =>
                     focusInput(setPin1(val), pin1, pin2ref, null)
                   }
                   value={pin1}
@@ -212,7 +212,7 @@ const OTPScreen = ({route, navigation, showLoading, hideLoading, register}) => {
                   ref={pin2ref}
                   keyboardType="numeric"
                   maxLength={1}
-                  onChangeText={val =>
+                  onChangeText={(val) =>
                     focusInput(setPin2(val), pin2, pin3ref, pin1ref)
                   }
                   value={pin2}
@@ -222,7 +222,7 @@ const OTPScreen = ({route, navigation, showLoading, hideLoading, register}) => {
                   ref={pin3ref}
                   keyboardType="numeric"
                   maxLength={1}
-                  onChangeText={val =>
+                  onChangeText={(val) =>
                     focusInput(setPin3(val), pin3, pin4ref, pin2ref)
                   }
                   value={pin3}
@@ -232,7 +232,7 @@ const OTPScreen = ({route, navigation, showLoading, hideLoading, register}) => {
                   ref={pin4ref}
                   maxLength={1}
                   keyboardType="numeric"
-                  onChangeText={val =>
+                  onChangeText={(val) =>
                     focusInput(setPin4(val), pin4, pin5ref, pin3ref)
                   }
                   value={pin4}
@@ -242,7 +242,7 @@ const OTPScreen = ({route, navigation, showLoading, hideLoading, register}) => {
                   ref={pin5ref}
                   maxLength={1}
                   keyboardType="numeric"
-                  onChangeText={val =>
+                  onChangeText={(val) =>
                     focusInput(setPin5(val), pin5, pin6ref, pin4ref)
                   }
                   value={pin5}
@@ -252,7 +252,7 @@ const OTPScreen = ({route, navigation, showLoading, hideLoading, register}) => {
                   ref={pin6ref}
                   maxLength={1}
                   keyboardType="numeric"
-                  onChangeText={val =>
+                  onChangeText={(val) =>
                     focusInput(setPin6(val), pin6, null, pin5ref)
                   }
                   value={pin6}
@@ -308,7 +308,4 @@ const mapDispatchToProps = {
   register,
 };
 
-export default connect(
-  null,
-  mapDispatchToProps,
-)(OTPScreen);
+export default connect(null, mapDispatchToProps)(OTPScreen);

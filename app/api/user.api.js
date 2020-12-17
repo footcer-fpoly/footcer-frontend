@@ -27,6 +27,6 @@ export const updateAvatarUserService = ({avatar, phone}) => {
   return RequestHelper.put(UPDATE_USER, formData);
 };
 
-export const searchPhoneUserService = phone => {
+export const searchPhoneUserService = (phone) => {
   return RequestHelper.post(SEARCH_PHONE_USER, {phone});
 };

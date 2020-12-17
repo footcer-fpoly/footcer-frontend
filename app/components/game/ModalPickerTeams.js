@@ -21,7 +21,7 @@ const ModalPickerTeams = React.forwardRef(({onSelectItem, listTeam}, ref) => {
   useImperativeHandle(ref, () => ({
     openModal,
   }));
-  const onPressItem = item => () => {
+  const onPressItem = (item) => () => {
     if (onSelectItem) {
       onSelectItem({item});
     }
@@ -68,18 +68,13 @@ const ModalPickerTeams = React.forwardRef(({onSelectItem, listTeam}, ref) => {
   );
 });
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   listTeam: state.teamsState.listTeam,
 });
 
-export default connect(
-  mapStateToProps,
-  null,
-  null,
-  {
-    forwardRef: true,
-  },
-)(ModalPickerTeams);
+export default connect(mapStateToProps, null, null, {
+  forwardRef: true,
+})(ModalPickerTeams);
 
 const styles = StyleSheet.create({
   headerContent: {

@@ -1,5 +1,6 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
+import CodePush from 'react-native-code-push';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {connect} from 'react-redux';
 import AccountBlock from '../../components/account/AccountBlock';
@@ -25,8 +26,27 @@ import {logout} from '../../redux/actions/auth.action';
 import colors from '../../theme/colors';
 import spacing from '../../theme/spacing';
 
+var pjson = require('../../../package.json');
+async function getAppVersion() {
+  const [{appVersion}, update] = await Promise.all([
+    CodePush.getConfiguration(),
+    CodePush.getUpdateMetadata(),
+  ]);
+
+  if (!update) {
+    return `${appVersion}`;
+  }
+  const label = update?.label?.substring(1);
+  return `${appVersion} rev. ${label}`;
+}
+
 const AccountScreen = ({profile, listTeam, listOrder, logout, domain}) => {
   const [visibleModal, setVisibleModal] = useState(false);
+  const [isVersionCodePush, setisVersionCodePush] = useState('');
+
+  useEffect(() => {
+    getAppVersion().then((v) => setisVersionCodePush(v));
+  }, []);
 
   const navigateToScreen = (routeName, params) => () => {
     rootNavigation.navigate(routeName, params);
@@ -34,7 +54,7 @@ const AccountScreen = ({profile, listTeam, listOrder, logout, domain}) => {
   const commingSoon = () => {
     ToastHelper.showToast('Tính năng đang phát triển', colors.orange);
   };
-  const toggleModal = () => {
+  const toggleModal = (a) => {
     setVisibleModal(!visibleModal);
   };
 
@@ -185,6 +205,17 @@ const AccountScreen = ({profile, listTeam, listOrder, logout, domain}) => {
         onConfirmClick={logout}
       />
       <Text>{domain}</Text>
+      <Text
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          right: 4,
+          fontSize: 12,
+        }}>{`Phiên bản Ver. ${
+        pjson.version === isVersionCodePush
+          ? `${pjson.version}`
+          : isVersionCodePush
+      }`}</Text>
     </View>
   );
 };
@@ -264,7 +295,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(AccountScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(AccountScreen);

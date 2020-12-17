@@ -79,7 +79,7 @@ const SectionChooseTime = forwardRef(({}, ref) => {
       updated_at: '0001-01-01T00:00:00Z',
     },
   ];
-  const render = arr => {
+  const render = (arr) => {
     return arr.map((item, index) => (
       <TimeItem
         // onPress={onPressChooseTime(item)}

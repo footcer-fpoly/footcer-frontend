@@ -71,7 +71,7 @@ const UpdatePassScreen = ({
     getData();
   }, []);
 
-  const changeTxtPass = val => {
+  const changeTxtPass = (val) => {
     setUser({
       ...user,
       password: val,
@@ -81,7 +81,7 @@ const UpdatePassScreen = ({
       password: false,
     });
   };
-  const changeTxtRePass = val => {
+  const changeTxtRePass = (val) => {
     setUser({
       ...user,
       rePassword: val,
@@ -221,7 +221,7 @@ const UpdatePassScreen = ({
                   returnKeyType="next"
                   autoCorrect={false}
                   secureTextEntry={true}
-                  onChangeText={val => changeTxtPass(val)}
+                  onChangeText={(val) => changeTxtPass(val)}
                   style={styles.inputBorder}
                 />
                 {error.password && (
@@ -240,7 +240,7 @@ const UpdatePassScreen = ({
                   returnKeyType="next"
                   autoCorrect={false}
                   secureTextEntry={true}
-                  onChangeText={val => changeTxtRePass(val)}
+                  onChangeText={(val) => changeTxtRePass(val)}
                   style={styles.inputBorder}
                 />
                 {error.rePassword && (
@@ -270,7 +270,4 @@ const mapDispatchToProps = {
   logout,
 };
 
-export default connect(
-  null,
-  mapDispatchToProps,
-)(UpdatePassScreen);
+export default connect(null, mapDispatchToProps)(UpdatePassScreen);

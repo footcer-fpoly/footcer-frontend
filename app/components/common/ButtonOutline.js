@@ -28,13 +28,13 @@ export default function ButtonOutline({
   );
 }
 const styles = StyleSheet.create({
-  container: color => ({
+  container: (color) => ({
     ...Styles.borderView(color, scale(2), scale(5)),
     ...Styles.rowCenter,
     height: scale(40),
     paddingHorizontal: scale(10),
   }),
-  titleStyle: color => ({
+  titleStyle: (color) => ({
     paddingHorizontal: scale(10),
     color,
   }),

@@ -13,7 +13,7 @@
     "adb": "adb reverse tcp:8081 tcp:8081",
     "postinstall": "npx patch-package",
     "version": "react-native-version",
-    "codepush": "appcenter codepush release-react -a duonghaidang2k-gmail.com/Footcer  -d \"Production\" -m  -t \"0.0.1\""
+    "codepush": "appcenter codepush release-react -a duonghaidang2k-gmail.com/Footcer  -d \"Production\" -m  -t \"0.0.2\""
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.12.0",

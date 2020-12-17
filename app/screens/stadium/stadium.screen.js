@@ -74,7 +74,7 @@ const StadiumScreen = ({isPermissionLocation, showLoading, hideLoading}) => {
 
   const getData = async () => {
     Geolocation.getCurrentPosition(
-      async position => {
+      async (position) => {
         const resListStadium = await getListStadiumService({
           latitude: position?.coords?.latitude,
           longitude: position?.coords?.longitude,
@@ -93,7 +93,7 @@ const StadiumScreen = ({isPermissionLocation, showLoading, hideLoading}) => {
           });
         }
       },
-      error => {
+      (error) => {
         console.log('code:', error.code, 'message:', error.message);
       },
     );
@@ -145,7 +145,7 @@ const StadiumScreen = ({isPermissionLocation, showLoading, hideLoading}) => {
 
     return {scaleAni};
   });
-  const onMarkerPress = mapEventData => {
+  const onMarkerPress = (mapEventData) => {
     const markerID = mapEventData._targetInst.return.key;
 
     let x = markerID * CARD_WIDTH + markerID * 20;
@@ -191,7 +191,7 @@ const StadiumScreen = ({isPermissionLocation, showLoading, hideLoading}) => {
         {search.show && (
           <View style={styles.warpperSearch}>
             <SearchInput
-              onChangeText={value => setSearch({...search, text: value})}
+              onChangeText={(value) => setSearch({...search, text: value})}
               onPress={searchStadium}
             />
           </View>
@@ -248,7 +248,7 @@ const StadiumScreen = ({isPermissionLocation, showLoading, hideLoading}) => {
           return (
             <MapView.Marker
               key={index}
-              onPress={e => onMarkerPress(e)}
+              onPress={(e) => onMarkerPress(e)}
               coordinate={{
                 latitude: item?.latitude,
                 longitude: item?.longitude,
@@ -366,7 +366,4 @@ const mapDispatchToProps = {
   hideLoading,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(StadiumScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(StadiumScreen);

@@ -17,7 +17,7 @@ export default function ImagePlaceholder({size}) {
 }
 
 const styles = StyleSheet.create({
-  iconContainer: size => ({fontSize: size, color: '#FFFFFF'}),
+  iconContainer: (size) => ({fontSize: size, color: '#FFFFFF'}),
   imageContainer: {
     position: 'absolute',
     top: 0,

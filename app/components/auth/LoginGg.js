@@ -98,7 +98,4 @@ const mapDispatchToProps = {
   login,
 };
 
-export default connect(
-  null,
-  mapDispatchToProps,
-)(LoginGg);
+export default connect(null, mapDispatchToProps)(LoginGg);

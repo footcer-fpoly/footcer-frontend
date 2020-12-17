@@ -122,7 +122,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  null,
-)(MainRouter);
+export default connect(mapStateToProps, null)(MainRouter);

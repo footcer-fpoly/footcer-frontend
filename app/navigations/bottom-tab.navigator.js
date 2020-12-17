@@ -20,7 +20,7 @@ import {
 const Tab = createBottomTabNavigator();
 
 const BottomTab = ({profile}) => {
-  const generatorIconName = routeName => {
+  const generatorIconName = (routeName) => {
     switch (routeName) {
       case HOME_SCREEN:
         return {type: 'icon', name: 'home-outline'};
@@ -48,7 +48,7 @@ const BottomTab = ({profile}) => {
 
   return (
     <Tab.Navigator
-      tabBar={props => <TabbarComponent {...props} />}
+      tabBar={(props) => <TabbarComponent {...props} />}
       backBehavior={'initialRoute'}
       initialRouteName={HOME_SCREEN}
       screenOptions={({route}) => ({
@@ -102,7 +102,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  null,
-)(BottomTab);
+export default connect(mapStateToProps, null)(BottomTab);

@@ -14,7 +14,7 @@ const ModalPickerOrder = React.forwardRef(
     const [err, setErr] = useState(false);
     const modalizeRef = useRef();
     const newListOrder = listOrder.filter(
-      item =>
+      (item) =>
         item?.order_status?.status === 'WAITING' ||
         item?.order_status?.status === 'ACCEPT',
     );
@@ -28,9 +28,9 @@ const ModalPickerOrder = React.forwardRef(
     useImperativeHandle(ref, () => ({
       openModal,
     }));
-    const onPressItem = item => () => {
+    const onPressItem = (item) => () => {
       if (onSelectItem) {
-        const find = listGameUser.find(el => el.orderId === item.orderId);
+        const find = listGameUser.find((el) => el.orderId === item.orderId);
         if (find) {
           setErr(true);
         } else {
@@ -89,19 +89,14 @@ const ModalPickerOrder = React.forwardRef(
   },
 );
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   listOrder: state.authState.listOrder,
   listGameUser: state.authState.listGame,
 });
 
-export default connect(
-  mapStateToProps,
-  null,
-  null,
-  {
-    forwardRef: true,
-  },
-)(ModalPickerOrder);
+export default connect(mapStateToProps, null, null, {
+  forwardRef: true,
+})(ModalPickerOrder);
 
 const styles = StyleSheet.create({
   mrTop: {marginTop: scale(10)},

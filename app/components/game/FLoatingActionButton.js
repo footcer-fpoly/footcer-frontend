@@ -19,10 +19,10 @@ import {
 
 const FloatingActionButton = ({listTeam, listOrder}) => {
   const listOrderWaitting = listOrder.filter(
-    item => item?.order_status?.status === 'WAITING',
+    (item) => item?.order_status?.status === 'WAITING',
   );
   const listOrderAccept = listOrder.filter(
-    item => item?.order_status?.status === 'ACCEPT',
+    (item) => item?.order_status?.status === 'ACCEPT',
   );
   const [contentModal, setContentModal] = useState({
     visible: false,
@@ -114,7 +114,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  null,
-)(FloatingActionButton);
+export default connect(mapStateToProps, null)(FloatingActionButton);

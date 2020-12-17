@@ -29,7 +29,7 @@ const ModalShowInfoMember = ({
     if (deleteMember) {
       setOnReady(false);
       deleteMember();
-      setTimeout(function() {
+      setTimeout(function () {
         setOnReady(true);
       }, 1000);
     }

@@ -56,7 +56,7 @@ const SignUpFbGgScreen = ({navigation, route, showLoading, hideLoading}) => {
     setData();
   }, []);
 
-  const checkPhone = async phone => {
+  const checkPhone = async (phone) => {
     const err = validatePhoneNumber(phone);
     if (err) {
       setValidError({visible: true, text: err});
@@ -159,7 +159,7 @@ const SignUpFbGgScreen = ({navigation, route, showLoading, hideLoading}) => {
                   returnKeyType="next"
                   autoCorrect={false}
                   style={styles.inputBorder}
-                  onChangeText={val => {
+                  onChangeText={(val) => {
                     setDataUser({
                       ...dataUser,
                       phone: val,
@@ -197,7 +197,4 @@ const mapDispatchToProps = {
   hideLoading,
 };
 
-export default connect(
-  null,
-  mapDispatchToProps,
-)(SignUpFbGgScreen);
+export default connect(null, mapDispatchToProps)(SignUpFbGgScreen);

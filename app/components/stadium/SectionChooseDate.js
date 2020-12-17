@@ -10,7 +10,7 @@ import {headline5, Text} from '../common/Text';
 import DateItem from './DateItem';
 
 const SectionChooseDate = forwardRef(({}, ref) => {
-  const listDate = renderNextDays(14).map(e => ({
+  const listDate = renderNextDays(14).map((e) => ({
     choose: false,
     date: e,
   }));

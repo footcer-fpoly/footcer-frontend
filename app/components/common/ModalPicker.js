@@ -17,7 +17,7 @@ const ModalPicker = React.forwardRef(({onSelectItem}, ref) => {
 
   const modalizeRef = useRef();
 
-  const onPressItem = item => () => {
+  const onPressItem = (item) => () => {
     console.log('onPressItem -> item', item);
     if (onSelectItem) {
       onSelectItem({type: data.type, item});
@@ -27,7 +27,7 @@ const ModalPicker = React.forwardRef(({onSelectItem}, ref) => {
     }
   };
 
-  const setDataAndOpenModal = data => {
+  const setDataAndOpenModal = (data) => {
     setData(data);
     if (modalizeRef.current) {
       modalizeRef.current.open();
@@ -88,16 +88,11 @@ const ModalPicker = React.forwardRef(({onSelectItem}, ref) => {
   );
 });
 
-const mapStateToProps = state => ({});
+const mapStateToProps = (state) => ({});
 
-export default connect(
-  mapStateToProps,
-  null,
-  null,
-  {
-    forwardRef: true,
-  },
-)(ModalPicker);
+export default connect(mapStateToProps, null, null, {
+  forwardRef: true,
+})(ModalPicker);
 
 const styles = StyleSheet.create({
   itemContainer: {

@@ -103,7 +103,7 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
     }
   };
 
-  const addMember = dataMember => {
+  const addMember = (dataMember) => {
     if (dataMember) {
       const newListMember = [...data.member];
       newListMember.push(dataMember);
@@ -165,7 +165,7 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
       });
     }
   };
-  const onSelectItem = itemData => {
+  const onSelectItem = (itemData) => {
     let keyState = null;
     switch (itemData.type) {
       case 'level':
@@ -184,7 +184,7 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
       });
     }
   };
-  const onPressPickImage = type => async () => {
+  const onPressPickImage = (type) => async () => {
     try {
       showLoading();
       const image = await ImagePicker.openPicker({
@@ -253,7 +253,7 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
   const validationSchema = Yup.object().shape({
     name: Yup.string().required('Tên đội bóng không được để trống'),
   });
-  const generatorMessageError = async data => {
+  const generatorMessageError = async (data) => {
     try {
       await validationSchema.validate(data, {abortEarly: false});
     } catch (error) {
@@ -273,7 +273,7 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
       clearError();
       const value = getValue();
       const errorValidate = await generatorMessageError(value);
-      if (!!errorValidate) {
+      if (errorValidate) {
         setData({...data, errorYup: errorValidate});
       } else {
         showLoading();
@@ -321,7 +321,7 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
       });
       if (res && res.code === StatusCode.SUCCESS) {
         const newListMembers = data?.member.filter(
-          el => el?.user?.userId !== userId,
+          (el) => el?.user?.userId !== userId,
         );
         setData({
           ...data,
@@ -430,7 +430,7 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
               iconType={IconType.MaterialCommunityIcons}
               iconName="account-group"
               editable={editable}
-              onChangeText={text => changeFormData('name', text)}
+              onChangeText={(text) => changeFormData('name', text)}
               textError={data.errorYup?.name}
             />
             <RowProflie
@@ -464,7 +464,7 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
               value={data?.description}
               placeholder="Nhập lời giới thiệu đội bóng"
               editable={editable}
-              onChangeText={text => changeFormData('description', text)}
+              onChangeText={(text) => changeFormData('description', text)}
             />
           </View>
           {isLeader && (
@@ -576,7 +576,4 @@ function mapStateToProps(state) {
     profile: state.authState.profile,
   };
 }
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(TeamDetailScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(TeamDetailScreen);

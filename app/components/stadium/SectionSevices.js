@@ -14,7 +14,7 @@ export default function SectionSevices() {
         style={{marginTop: 10}}
         data={listSeviceStadium}
         renderItem={renderItemService}
-        keyExtractor={item => item.id}
+        keyExtractor={(item) => item.id}
         horizontal
         showsHorizontalScrollIndicator={false}
       />

@@ -54,7 +54,7 @@ const ModalCancelOrder = forwardRef(({orderId}, ref) => {
             style={styles.inputField}
             lable="Lý do"
             sizeIcon={scale(22)}
-            onChangeText={text => setReason(text)}
+            onChangeText={(text) => setReason(text)}
             otherTextInputProps={{
               multiline: true,
               placeholder: 'Thêm lý do hủy',
