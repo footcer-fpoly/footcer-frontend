@@ -127,13 +127,24 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
+    
     defaultConfig {
         applicationId "com.footcer"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode 4
+        versionName "1.4"
+        vectorDrawables.useSupportLibrary = true
+    }
+    signingConfigs {
+        release {
+            if (project.hasProperty('MYAPP_UPLOAD_STORE_FILE')) {
+                storeFile file(MYAPP_UPLOAD_STORE_FILE)
+                storePassword MYAPP_UPLOAD_STORE_PASSWORD
+                keyAlias MYAPP_UPLOAD_KEY_ALIAS
+                keyPassword MYAPP_UPLOAD_KEY_PASSWORD
+            }
+        }
     }
     splits {
         abi {
@@ -158,9 +169,10 @@ android {
         release {
             // Caution! In production, you need to generate your own keystore file.
             // see https://facebook.github.io/react-native/docs/signed-apk-android.
-            signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
+            signingConfig signingConfigs.debug
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            signingConfig signingConfigs.release
         }
     }
 
@@ -188,19 +200,34 @@ android {
 }
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
+apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     compile project(':react-native-spinkit')
+    compile project(':react-native-vector-icons')
     implementation 'com.facebook.android:facebook-android-sdk:[4,5)'
     implementation 'com.facebook.android:facebook-login:[5,6)'
     implementation project(':react-native-svg')
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
+    implementation project(':@react-native-community_async-storage')
     implementation(project(":react-native-google-signin"))
+    implementation project(':lottie-react-native')
+    //reCAPCHA
+    implementation 'com.google.android.gms:play-services-safetynet:15.0.1'
+    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
     //firebase
-    implementation 'com.google.firebase:firebase-analytics:17.2.2'
+    implementation platform('com.google.firebase:firebase-bom:26.1.1')
+    implementation 'com.google.firebase:firebase-analytics'
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
+    implementation(project(':react-native-maps')){
+        exclude group: 'com.google.android.gms', module: 'play-services-base'
+        exclude group: 'com.google.android.gms', module: 'play-services-maps'
+    }
+    implementation 'com.google.android.gms:play-services-base:17.2.1'
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 
@@ -221,8 +248,8 @@ dependencies {
         debugImplementation files(hermesPath + "hermes-debug.aar")
         releaseImplementation files(hermesPath + "hermes-release.aar")
     } else {
-        implementation jscFlavor
-    }
+implementation jscFlavor
+}
 }
 
 // Run this once to be able to run the application with BUCK

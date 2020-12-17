@@ -1,0 +1,62 @@
+diff --git a/node_modules/react-native-easy-toast/index.js b/node_modules/react-native-easy-toast/index.js
+index 043b55f..cae0476 100755
+--- a/node_modules/react-native-easy-toast/index.js
++++ b/node_modules/react-native-easy-toast/index.js
+@@ -10,12 +10,11 @@ import React, {Component} from 'react';
+ import {
+     StyleSheet,
+     View,
+-    Animated,
+     Dimensions,
+     Text,
+     ViewPropTypes as RNViewPropTypes,
+ } from 'react-native'
+-
++import Animated, { Easing } from 'react-native-reanimated';
+ import PropTypes from 'prop-types';
+ const ViewPropTypes = RNViewPropTypes || View.propTypes;
+ export const DURATION = { 
+@@ -33,15 +32,17 @@ export default class Toast extends Component {
+             isShow: false,
+             text: '',
+             opacityValue: new Animated.Value(this.props.opacity),
++            backgroundColor: 'black'
+         }
+     }
+ 
+-    show(text, duration, callback) {
++    show(text, duration, backgroundColor = 'black', callback) {
+         this.duration = typeof duration === 'number' ? duration : DURATION.LENGTH_SHORT;
+         this.callback = callback;
+         this.setState({
+             isShow: true,
+             text: text,
++            backgroundColor
+         });
+ 
+         this.animation = Animated.timing(
+@@ -49,6 +50,7 @@ export default class Toast extends Component {
+             {
+                 toValue: this.props.opacity,
+                 duration: this.props.fadeInDuration,
++                easing: Easing.inOut(Easing.ease),
+             }
+         )
+         this.animation.start(() => {
+@@ -70,6 +72,7 @@ export default class Toast extends Component {
+                 {
+                     toValue: 0.0,
+                     duration: this.props.fadeOutDuration,
++                    easing: Easing.inOut(Easing.ease)
+                 }
+             )
+             this.animation.start(() => {
+@@ -109,7 +112,7 @@ export default class Toast extends Component {
+                 pointerEvents="none"
+             >
+                 <Animated.View
+-                    style={[styles.content, { opacity: this.state.opacityValue }, this.props.style]}
++                    style={[styles.content, { opacity: this.state.opacityValue, backgroundColor: this.state.backgroundColor }, this.props.style]}
+                 >
+                     {React.isValidElement(this.state.text) ? this.state.text : <Text style={this.props.textStyle}>{this.state.text}</Text>}
+                 </Animated.View>
