@@ -58,14 +58,14 @@ export default function ItemTeamMember({
           </TouchableOpacity>
         )}
       </View>
-      <Text type={headline5} numberOfLines={1} style={styles.txtName}>
+      <Text type={headline5} numberOfLines={2} style={styles.txtName}>
         {name}
       </Text>
       <Text
         type={body3}
         numberOfLines={1}
         style={styles.txtStatus(renderPosition().color)}>
-        {position && renderPosition().text}
+        {position !== 0 && renderPosition().text}
       </Text>
     </View>
   );
@@ -85,6 +85,7 @@ const styles = StyleSheet.create({
   txtName: {
     marginTop: spacing.small,
     maxWidth: scale(100),
+    textAlign: 'center',
   },
   txtStatus: (color = colors.black) => ({
     marginTop: spacing.tiny,

@@ -48,3 +48,4 @@ export const GET_GAME_DETAIL = (gameId) => `/game/get/${gameId}`;
 export const JOIN_GAME = '/game/join';
 export const ACCEPT_INVITE_GAME = '/game/accept';
 export const REFUSE_INVITE_GAME = '/game/refuse';
+export const DELETE_GAME = (gameId) => `/game/delete/${gameId}`;

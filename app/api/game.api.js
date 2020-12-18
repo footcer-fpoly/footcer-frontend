@@ -2,6 +2,7 @@ import RequestHelper from '../helpers/request.helper';
 import {
   ACCEPT_INVITE_GAME,
   CREATE_GAME,
+  DELETE_GAME,
   GET_GAME,
   GET_GAME_DETAIL,
   GET_GAME_FOR_USER,
@@ -38,6 +39,9 @@ export const getGameForUserService = () => {
 };
 export const getGameDetailService = (gameId) => {
   return RequestHelper.get(GET_GAME_DETAIL(gameId));
+};
+export const deleteGameService = (gameId) => {
+  return RequestHelper.delete(DELETE_GAME(gameId));
 };
 export const joinGameService = ({
   gameId,

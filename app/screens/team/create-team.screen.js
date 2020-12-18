@@ -289,7 +289,7 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
             style={styles.inputField}
             lable="Khu vực thi đấu của bạn (*)"
             typeLeft={IconType.MaterialIcons}
-            iconNameLeft="location-pin"
+            iconNameLeft="location-on"
             value={dataTeam.place ? dataTeam.place : 'Chọn khu vực thi đấu'}
             typeRigth={IconType.MaterialIcons}
             iconNameRigth="keyboard-arrow-down"

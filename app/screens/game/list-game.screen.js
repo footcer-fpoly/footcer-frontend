@@ -55,10 +55,9 @@ const ListGameScreen = ({getListGame, listGameUser, getListOrder}) => {
       if (res && res.code === StatusCode.SUCCESS) {
         setListGame({
           ...listGame,
-          // data: res.data.filter((item) =>
-          //   compareDateTime(item?.date, new Date()),
-          // ),
-          data: res.data,
+          data: res.data.filter((item) =>
+            compareDateTime(item?.date, new Date()),
+          ),
           onReady: true,
           isRefreshing: false,
         });

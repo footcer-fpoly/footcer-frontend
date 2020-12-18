@@ -193,6 +193,7 @@ const ModalAddMember = forwardRef(
             size={scale(120)}
             disabledImage={true}
           />
+          <Text />
           <Text style={styles.subText}>Lời mời gia nhập đội của bạn tới</Text>
           <Text type={headline4}>{state?.data?.displayName}</Text>
           <PrimaryButton
@@ -314,7 +315,6 @@ const styles = StyleSheet.create({
   subText: {
     color: colors.placeHolder,
     textAlign: 'center',
-    marginTop: 20,
   },
   iconClose: {
     position: 'absolute',

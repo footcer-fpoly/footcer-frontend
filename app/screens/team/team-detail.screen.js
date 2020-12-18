@@ -591,7 +591,7 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
               label="Khu vực thi đấu"
               value={data?.place ? data?.place : 'Chọn khu vực'}
               iconType={IconType.MaterialIcons}
-              iconName="location-pin"
+              iconName="location-on"
               onPress={showPlace}
               editable={editable}
             />

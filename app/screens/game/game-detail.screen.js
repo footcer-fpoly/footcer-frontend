@@ -1,9 +1,20 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {FlatList, LayoutAnimation, StyleSheet, View} from 'react-native';
+import {
+  FlatList,
+  LayoutAnimation,
+  Linking,
+  Platform,
+  StyleSheet,
+  View,
+} from 'react-native';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import {Host} from 'react-native-portalize';
 import Icon from 'react-native-vector-icons/Octicons';
-import {getGameDetailService, joinGameService} from '../../api/game.api';
+import {
+  deleteGameService,
+  getGameDetailService,
+  joinGameService,
+} from '../../api/game.api';
 import {StatusCode} from '../../api/status-code';
 import ListLoadingComponent from '../../components/common/ListLoadingComponent';
 import PrimaryButton from '../../components/common/PrimaryButton';
@@ -25,6 +36,9 @@ import spacing from '../../theme/spacing';
 import {converSecondsToTime, formatToDate} from '../../helpers/format.helper';
 import RowProflie from '../../components/account/RowProflie';
 import {IconType} from '../../components/common/IconMaterialOrSvg';
+import RowInfo from '../../components/common/RowInfo';
+import ButtonOutline from '../../components/common/ButtonOutline';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const GameDetailScreen = ({route, showLoading, hideLoading, profile}) => {
   const {gameId} = route.params;
@@ -34,10 +48,12 @@ const GameDetailScreen = ({route, showLoading, hideLoading, profile}) => {
     onReady: false,
     team: null,
     isLeader: false,
+    editable: false,
   });
   useEffect(() => {
     getData();
   }, []);
+
   const getData = async () => {
     try {
       const res = await getGameDetailService(gameId);
@@ -58,6 +74,11 @@ const GameDetailScreen = ({route, showLoading, hideLoading, profile}) => {
     }
   };
 
+  const toggleEdit = () => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setState({...state, editable: !state.editable});
+  };
+
   const navigateToScreen = (name, params) => () => {
     rootNavigator.navigate(name, params);
   };
@@ -71,10 +92,9 @@ const GameDetailScreen = ({route, showLoading, hideLoading, profile}) => {
         nameHost: state?.data?.teamHost?.teamNameHost,
         nameInvite: state?.team?.name,
       });
-      console.log(
-        'LOG -> file: game-detail.screen.js -> line 62 -> joinGame -> res',
-        res,
-      );
+      if (res && res.code === StatusCode.SUCCESS) {
+        rootNavigator.back();
+      }
       hideLoading();
     } catch (error) {
       console.log(
@@ -93,12 +113,60 @@ const GameDetailScreen = ({route, showLoading, hideLoading, profile}) => {
   };
   const onSelectItemTeam = (itemData) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    setState({...state, team: itemData.item});
+    const hasInvite = state?.data?.teamInvite?.filter(
+      (item) => item?.teamIdTemp === itemData.item?.teamId,
+    );
+    if (!hasInvite) {
+      setState({...state, team: itemData.item});
+    } else {
+      ToastHelper.showToast('Đội bóng đã tham gia trận đấu', colors.yellowDark);
+    }
   };
+
   const changeTeam = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setState({...state, team: null});
   };
+
+  const deleteGame = async () => {
+    try {
+      showLoading();
+      const res = await deleteGameService(gameId);
+      console.log('LOG -> deleteGame -> res', res);
+      if (res && res.code === StatusCode.SUCCESS) {
+        rootNavigator.back();
+        ToastHelper.showToast('Hủy trận đấu thành công', colors.greenDark);
+      } else {
+        ToastHelper.showToast('Lỗi', colors.red);
+      }
+      hideLoading();
+    } catch (error) {
+      hideLoading();
+      ToastHelper.showToast('Lỗi', colors.red);
+      console.log(
+        'LOG -> file: game-detail.screen.js -> line 136 -> deleteGame -> error',
+        error,
+      );
+    }
+  };
+
+  const onPressDirection = (
+    latitude = 0,
+    longitude = 0,
+    label = 'Footcer',
+  ) => async () => {
+    const url = Platform.select({
+      android: 'geo:' + latitude + ',' + longitude + '?q=' + label,
+    });
+    const isLinkingSupport = await Linking.canOpenURL(url);
+    if (isLinkingSupport) {
+      Linking.openURL(url);
+    } else {
+      const urlGoogleMap = `https://www.google.com/maps/dir/Current+Location/${latitude},${longitude}`;
+      Linking.openURL(urlGoogleMap);
+    }
+  };
+
   const renderButtonJoin = () => {
     if (state.team) {
       return <PrimaryButton onPress={joinGame} title="Tham gia trận đấu" />;
@@ -115,25 +183,25 @@ const GameDetailScreen = ({route, showLoading, hideLoading, profile}) => {
   const renderButtonFooter = () => {
     if (
       state?.isLeader &&
-      !state?.data?.teamIdGuest &&
-      !state?.data?.teamInvite
+      !state?.data?.teamInvite?.length &&
+      !state?.data?.teamIdGuest
     ) {
       return (
         <View style={styles.warpperButtonEdit}>
           <PrimaryButton
             style={[styles.flex49, {backgroundColor: colors.red}]}
-            title="Xóa đội"
-            // onPress={toggleModalDelete}
+            title="Hủy trận đấu"
+            onPress={deleteGame}
           />
           <PrimaryButton
-            // onPress={toogleEditable}
+            onPress={toggleEdit}
             style={[styles.flex49, {backgroundColor: colors.greenDark}]}
             title="chỉnh sửa"
           />
         </View>
       );
     } else {
-      <View style={styles.warpperButtonEdit}>{renderButtonJoin()}</View>;
+      return <View style={styles.warpperButtonEdit}>{renderButtonJoin()}</View>;
     }
   };
 
@@ -183,37 +251,60 @@ const GameDetailScreen = ({route, showLoading, hideLoading, profile}) => {
     <Host>
       <View style={styles.flex1}>
         {renderToolBar()}
-        <ScrollView style={styles.container}>
+        <ScrollView
+          contentContainerStyle={{paddingBottom: scale(50)}}
+          style={styles.container}>
           <View style={styles.wrapperSection}>
-            <Text style={styles.titleSection} type={headline5}>
-              THÔNG TIN TRẬN ĐẤU
-            </Text>
+            <View
+              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              <Text style={styles.titleSection} type={headline5}>
+                THÔNG TIN TRẬN ĐẤU
+              </Text>
+              {state.editable && (
+                <TouchableOpacity
+                  hitSlop={styles.hitSlop}
+                  // onPress={onPress}
+                  style={{
+                    backgroundColor: colors.gray,
+                    ...Styles.borderRadiusCircle(30),
+                    ...Styles.columnCenter,
+                  }}>
+                  <MaterialIcons color={colors.white} name="edit" size={18} />
+                </TouchableOpacity>
+              )}
+            </View>
             <RowProflie
               label="Cụm sân"
               value={state?.data?.stadium?.stadiumName}
-              iconType={IconType.MaterialIcons}
-              iconName="category"
+              iconType={IconType.MaterialCommunityIcons}
+              iconName="stadium"
               editable={false}
+              otherTextInputProps={{
+                multiline: true,
+              }}
             />
             <RowProflie
               label="Sân con"
               // value={data?.category}
-              iconType={IconType.MaterialIcons}
-              iconName="category"
+              iconType={IconType.MaterialCommunityIcons}
+              iconName="camera-metering-partial"
               editable={false}
             />
             <RowProflie
               label="Địa chỉ"
               value={state?.data?.stadium?.address}
               iconType={IconType.MaterialIcons}
-              iconName="category"
+              iconName="location-on"
               editable={false}
+              otherTextInputProps={{
+                multiline: true,
+              }}
             />
             <RowProflie
               label="Ngày"
               value={formatToDate(state?.data?.date)}
               iconType={IconType.MaterialIcons}
-              iconName="casino"
+              iconName="date-range"
               editable={false}
             />
             <RowProflie
@@ -223,17 +314,34 @@ const GameDetailScreen = ({route, showLoading, hideLoading, profile}) => {
               )} -${converSecondsToTime(
                 state?.data?.stadiumDetails?.endTimeDetail,
               )}`}
-              iconType={IconType.MaterialIcons}
-              iconName="casino"
+              iconType={IconType.MaterialCommunityIcons}
+              iconName="timelapse"
               editable={false}
             />
           </View>
+          <ButtonOutline
+            style={{backgroundColor: colors.white}}
+            title="Chỉ đường"
+            colorOutline={colors.blue}
+            titleColor={colors.blue}
+            onPress={onPressDirection(
+              state?.data?.stadium?.latitude,
+              state?.data?.stadium?.longitude,
+              state?.data?.stadium?.address,
+            )}
+            left={
+              <MaterialCommunityIcons
+                size={scale(20)}
+                color={colors.blue}
+                name="map-search-outline"
+              />
+            }
+          />
           <View style={styles.warppeMatch}>
             <View style={styles.warpperTeam}>
               <Text type={headline5} style={styles.txtTitleTeam}>
                 Đội chủ nhà
               </Text>
-
               <ItemTeamMember
                 image={state.data?.teamHost?.teamAvatarHost}
                 size={scale(80)}
@@ -244,11 +352,27 @@ const GameDetailScreen = ({route, showLoading, hideLoading, profile}) => {
                 })}
                 me={false}
                 style={styles.mr0}
+                position={0}
               />
             </View>
-            <Text type={body3} style={styles.txtType}>
-              {state?.data?.type}
-            </Text>
+            <View style={{...Styles.columnCenter}}>
+              {state.editable && (
+                <TouchableOpacity
+                  hitSlop={styles.hitSlop}
+                  // onPress={onPress}
+                  style={{
+                    backgroundColor: colors.gray,
+                    ...Styles.borderRadiusCircle(30),
+                    ...Styles.columnCenter,
+                    marginBottom: scale(20),
+                  }}>
+                  <MaterialIcons color={colors.white} name="edit" size={18} />
+                </TouchableOpacity>
+              )}
+              <Text type={body3} style={styles.txtType}>
+                {state?.data?.type}
+              </Text>
+            </View>
             <View style={styles.warpperTeam}>
               <Text type={headline5} style={styles.txtTitleTeam}>
                 Đội khách
@@ -264,18 +388,14 @@ const GameDetailScreen = ({route, showLoading, hideLoading, profile}) => {
                   })}
                   me={false}
                   style={styles.mr0}
+                  position={0}
                 />
               ) : (
-                <View
-                  style={{
-                    flex: 1,
-                    alignItems: 'center',
-                    marginTop: scale(-5),
-                  }}>
+                <View style={styles.warppeNoData}>
                   <Icon name="question" size={scale(80)} color={colors.gray} />
                   <Text
                     type={headline5}
-                    numberOfLines={1}
+                    numberOfLines={2}
                     style={[styles.txtNameTeam, {color: colors.gray}]}>
                     Chưa có đối thủ
                   </Text>
@@ -374,10 +494,15 @@ const styles = StyleSheet.create({
   },
   warppeMatch: {
     ...Styles.rowBetween,
-    marginTop: scale(5),
+    marginTop: scale(10),
     backgroundColor: colors.white,
     paddingHorizontal: scale(10),
     paddingTop: scale(15),
+  },
+  warppeNoData: {
+    flex: 1,
+    alignItems: 'center',
+    marginTop: scale(-5),
   },
   txtTitleTeam: {
     marginBottom: scale(15),
@@ -415,6 +540,7 @@ const styles = StyleSheet.create({
   txtNameTeam: {
     marginTop: spacing.small,
     maxWidth: scale(100),
+    textAlign: 'center',
   },
 });
 

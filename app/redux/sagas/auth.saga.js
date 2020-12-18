@@ -42,7 +42,7 @@ export function* getListOrderSaga() {
 export function* getListGameSaga() {
   try {
     const res = yield getGameForUserService();
-    console.log('res----', res);
+    console.log('LOG -> function*getListGameSaga -> res', res);
     if (res && res.code === StatusCode.SUCCESS) {
       yield put(getListGameSuccess(res.data));
     }

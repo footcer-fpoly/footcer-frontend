@@ -83,7 +83,7 @@ export const TeamScreen = ({getListTeam, listTeam}) => {
         renderTabBar={() => <DefaultTabBar />}>
         <View
           style={styles.warpperContent}
-          tabLabel={`Đội bóng của bạn (${listTeam?.length})`}>
+          tabLabel={`Đội bóng của bạn (${listTeam?.length || 0})`}>
           <FlatList
             data={listTeam}
             refreshControl={
@@ -107,7 +107,7 @@ export const TeamScreen = ({getListTeam, listTeam}) => {
         </View>
         <View
           style={styles.warpperContent}
-          tabLabel={`Chờ xác nhận (${state?.listTeamConfirm?.length})`}>
+          tabLabel={`Chờ xác nhận (${state?.listTeamConfirm?.length || 0})`}>
           <FlatList
             data={state.listTeamConfirm}
             refreshControl={

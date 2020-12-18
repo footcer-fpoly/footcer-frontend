@@ -194,8 +194,8 @@ const CreateGameScreen = ({showLoading, hideLoading, listGameUser}) => {
                   <RowProflie
                     label="Sân con"
                     value={dataOrder?.stadium_collage?.stadiumCollageName}
-                    iconType={IconType.MaterialIcons}
-                    iconName="sports-soccer"
+                    iconType={IconType.MaterialCommunityIcons}
+                    iconName="camera-metering-partial"
                     editable={false}
                   />
                   <RowProflie
@@ -219,15 +219,15 @@ const CreateGameScreen = ({showLoading, hideLoading, listGameUser}) => {
                   <RowProflie
                     label="Kiểu thi đấu"
                     value={`${dataOrder?.stadium_collage?.amountPeople} vs ${dataOrder?.stadium_collage?.amountPeople}`}
-                    iconType={IconType.MaterialIcons}
-                    iconName="6-ft-apart"
+                    iconType={IconType.MaterialCommunityIcons}
+                    iconName="format-list-bulleted-type"
                     editable={false}
                   />
                   <RowProflie
                     label="Địa điểm"
                     value={dataOrder?.stadium?.address}
                     iconType={IconType.MaterialIcons}
-                    iconName="location-pin"
+                    iconName="location-on"
                     editable={false}
                     otherTextInputProps={{
                       multiline: true,

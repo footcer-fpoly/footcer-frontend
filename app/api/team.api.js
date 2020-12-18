@@ -99,5 +99,5 @@ export const updateInfoTeamService = (data) => {
 };
 
 export const addMemberTeamService = ({userId, teamId, nameTeam}) => {
-  return RequestHelper.post(ADD_MEMBER_TEAM, {userId, teamId, name: nameTeam});
+  return RequestHelper.post(ADD_MEMBER_TEAM, {userId, teamId, nameTeam});
 };
