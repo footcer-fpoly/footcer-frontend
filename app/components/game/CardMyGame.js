@@ -16,6 +16,10 @@ import PrimaryButton from '../common/PrimaryButton';
 import {body3, headline5, headline6, Text} from '../common/Text';
 
 export default function YourMatch({item}) {
+  const navigateToDetail = () => {
+    rootNavigator.navigate(GAME_DETAIL_SCREEN, {gameId: item?.gameId});
+  };
+
   const renderBgTop = () => {
     if (compareDateTime(item?.date, new Date())) {
       return colors.greenDark;
@@ -44,12 +48,12 @@ export default function YourMatch({item}) {
         <Text type={body3} style={styles.txtType}>
           {item?.type}
         </Text>
-        {item?.teamGuest?.teamNameGuest !== 'null' ? (
+        {item?.teamIdGuest ? (
           <View style={styles.warpperTeam}>
             <Text type={headline5} numberOfLines={1} style={styles.txtNameTeam}>
-              {item?.teamHost?.teamNameGuest}
+              {item?.teamGuest?.teamNameGuest}
             </Text>
-            <Avatar image={item?.teamHost?.teamAvatarGuest} size={scale(80)} />
+            <Avatar image={item?.teamGuest?.teamAvatarGuest} size={scale(80)} />
           </View>
         ) : (
           <View style={styles.warpperTeam}>
@@ -77,7 +81,7 @@ export default function YourMatch({item}) {
       <PrimaryButton
         title="Xem chi tiết"
         style={{backgroundColor: colors.orange, marginTop: scale(10)}}
-        onPress={() => rootNavigator.navigate(GAME_DETAIL_SCREEN)}
+        onPress={navigateToDetail}
       />
     </View>
   );

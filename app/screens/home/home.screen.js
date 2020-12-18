@@ -46,7 +46,7 @@ const HomeScreen = ({getListOrder, getListTeam}) => {
   function onOpenNotification(notify) {
     console.log('[App] onOpenNotification: ', notify);
     const bodyNoti = JSON.parse(notify.body);
-    AlertHelper.alert('success', bodyNoti.title, bodyNoti.content, {}, 5000);
+    AlertHelper.alert('success', bodyNoti.title, bodyNoti.content, {}, 10000);
   }
 
   const onRegister = async (token) => {

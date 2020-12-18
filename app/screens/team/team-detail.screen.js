@@ -1,20 +1,27 @@
-import React, {useRef, useState} from 'react';
-import {FlatList, ScrollView, StyleSheet, TextInput, View} from 'react-native';
+import React, {useEffect, useRef, useState} from 'react';
+import {
+  FlatList,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  TextInput,
+  View,
+} from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
 import {Host} from 'react-native-portalize';
 import {connect} from 'react-redux';
 import * as Yup from 'yup';
+import {acceptInviteGameService} from '../../api/game.api';
 import {StatusCode} from '../../api/status-code';
 import {
   acceptInviteTeamService,
-  addMemberTeamService,
   deleteMemberService,
   deleteTeamService,
+  getTeamDetailService,
   updateAvatarTeamService,
   updateBackgroundTeamService,
   updateInfoTeamService,
 } from '../../api/team.api';
-import {searchPhoneUserService} from '../../api/user.api';
 import imageDelete from '../../assets/svg/img_delete.svg';
 import RowProflie from '../../components/account/RowProflie';
 import Avatar from '../../components/common/Avatar';
@@ -26,6 +33,8 @@ import ModalPicker from '../../components/common/ModalPicker';
 import PrimaryButton from '../../components/common/PrimaryButton';
 import SecondaryButton from '../../components/common/SecondaryButton';
 import {headline4, headline5, Text} from '../../components/common/Text';
+import ContentPlaceholder from '../../components/placeholder/ContentPlaceholder';
+import ImagePlaceholder from '../../components/placeholder/ImagePlaceholder';
 import ItemTeamMember from '../../components/team/ItemTeamMember';
 import ModalAddMember from '../../components/team/ModalAddMember';
 import ModalShowInfoMember from '../../components/team/ModalShowInfoMember';
@@ -33,7 +42,6 @@ import {ListLevel, ListProvince} from '../../helpers/data-local.helper';
 import {scale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
 import {ToastHelper} from '../../helpers/ToastHelper';
-import {validatePhoneNumber} from '../../helpers/validate.helper';
 import rootNavigator from '../../navigations/root.navigator';
 import {hideLoading, showLoading} from '../../redux/actions/loading.action';
 import {getListTeam} from '../../redux/actions/teams.action';
@@ -41,23 +49,24 @@ import colors from '../../theme/colors';
 import spacing from '../../theme/spacing';
 
 const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
-  const {teamDetail} = route.params;
+  const {teamID} = route.params;
   const flag = route?.params?.flag;
-  const listMember = [...teamDetail?.member];
-  const leader = listMember.shift();
-  const isLeader = leader?.user?.userId === profile.userId;
+  const dataGame = route?.params?.dataGame;
 
   const modalizeRef = useRef();
   const modalAddMemberRef = useRef();
   const [data, setData] = useState({
-    teamId: teamDetail.teamId,
-    avatar: teamDetail.avatar,
-    background: teamDetail.background,
-    place: teamDetail.place,
-    description: teamDetail.description,
-    level: teamDetail.level,
-    member: teamDetail.member,
-    name: teamDetail.name,
+    teamId: '',
+    avatar: '',
+    background: '',
+    place: '',
+    description: '',
+    level: '',
+    member: '',
+    name: '',
+    isLeader: false,
+    onReady: false,
+    isRefreshing: false,
     errorYup: null,
   });
   const [editable, setEditable] = useState(false);
@@ -67,6 +76,46 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
     data: null,
     index: 0,
   });
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const onRefresh = () => {
+    setData({...data, isRefreshing: true});
+    getData().finally(() => {
+      setData({...data, isRefreshing: false});
+    });
+  };
+
+  const getData = async () => {
+    try {
+      const res = await getTeamDetailService(teamID);
+      if (res && res.code === StatusCode.SUCCESS) {
+        const listMember = [...res?.data?.member];
+        const leader = listMember.shift();
+        const isLeader = leader?.user?.userId === profile.userId;
+        setData({
+          ...data,
+          teamId: res?.data?.teamId,
+          avatar: res?.data?.avatar,
+          background: res?.data?.background,
+          place: res?.data?.place,
+          description: res?.data?.description,
+          level: res?.data?.level,
+          member: res?.data?.member,
+          name: res?.data?.name,
+          isLeader,
+          onReady: true,
+          errorYup: null,
+        });
+      }
+    } catch (error) {
+      console.log(
+        'LOG -> file: team-detail.screen.js -> line 77 -> getData -> error',
+        error,
+      );
+    }
+  };
 
   const showModalInfoMember = (data, index) => () => {
     setModalInfoMember({
@@ -119,13 +168,13 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
       showLoading();
       const res = await acceptInviteTeamService({
         userId: profile?.userId,
-        teamId: teamDetail?.teamId,
+        teamId: data?.teamId,
         nameUser: profile?.displayName,
-        nameTeam: teamDetail?.name,
+        nameTeam: data?.name,
       });
       if (res && res.code === StatusCode.SUCCESS) {
         ToastHelper.showToast(
-          `Bạn đã là thành viên của đội bóng ${teamDetail?.name}`,
+          `Bạn đã là thành viên của đội bóng ${data?.name}`,
         );
         rootNavigator.back();
       } else {
@@ -238,10 +287,10 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
     setEditable(false);
     setData({
       ...data,
-      name: teamDetail?.name,
-      level: teamDetail?.level,
-      place: teamDetail?.place,
-      description: teamDetail?.description,
+      name: data?.name,
+      level: data?.level,
+      place: data?.place,
+      description: data?.description,
     });
   };
   const clearError = () => {
@@ -316,8 +365,8 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
     try {
       const res = await deleteMemberService({
         userId,
-        teamId: teamDetail.teamId,
-        nameTeam: teamDetail.name,
+        teamId: data.teamId,
+        nameTeam: data.name,
       });
       if (res && res.code === StatusCode.SUCCESS) {
         const newListMembers = data?.member.filter(
@@ -338,6 +387,58 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
         'LOG -> file: team-detail.screen.js -> line 370 -> deleteMember -> error',
         error,
       );
+    }
+  };
+
+  const acceptTeamInviteGame = async () => {
+    try {
+      showLoading();
+      const res = await acceptInviteGameService({
+        gameId: dataGame?.gameId,
+        teamId: data?.teamId,
+        userNotiyId: dataGame?.teamHost?.leaderIdHost,
+        name: data?.name,
+      });
+      if (res && res.code === StatusCode.SUCCESS) {
+        rootNavigator.back();
+        ToastHelper.showToast('Xác nhận đối thủ thành công', colors.greenDark);
+      } else {
+        ToastHelper.showToast('Lỗi', colors.red);
+      }
+      hideLoading();
+    } catch (error) {
+      console.log(
+        'LOG -> file: team-detail.screen.js -> line 395 -> acceptTeamInviteGame -> error',
+        error,
+      );
+      ToastHelper.showToast('Lỗi', colors.red);
+      hideLoading();
+    }
+  };
+
+  const refuseTeamInviteGame = async () => {
+    try {
+      showLoading();
+      const res = await acceptInviteGameService({
+        gameId: dataGame?.gameId,
+        teamId: data?.teamId,
+        userNotiyId: dataGame?.teamHost?.leaderIdHost,
+        name: data?.name,
+      });
+      if (res && res.code === StatusCode.SUCCESS) {
+        rootNavigator.back();
+        ToastHelper.showToast('Từ chối đối thủ thành công', colors.greenDark);
+      } else {
+        ToastHelper.showToast('Lỗi', colors.red);
+      }
+      hideLoading();
+    } catch (error) {
+      console.log(
+        'LOG -> file: team-detail.screen.js -> line 395 -> acceptTeamInviteGame -> error',
+        error,
+      );
+      ToastHelper.showToast('Lỗi', colors.red);
+      hideLoading();
     }
   };
 
@@ -362,6 +463,27 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
         </>
       );
     }
+    if (flag === 2 && !data.isLeader) {
+      return (
+        <>
+          <Text type={headline5} style={styles.txtConfirm}>
+            {`Xác nhận team ${data.name} trở thành đối thủ cho trận đấu của bạn`}
+          </Text>
+          <View style={styles.warpperButtonEdit}>
+            <PrimaryButton
+              title="Từ chối"
+              style={[styles.flex49, {backgroundColor: colors.grayOpacity}]}
+              onPress={refuseTeamInviteGame}
+            />
+            <PrimaryButton
+              title="Xác nhận"
+              style={[styles.flex49, {backgroundColor: colors.greenDark}]}
+              onPress={acceptTeamInviteGame}
+            />
+          </View>
+        </>
+      );
+    }
   };
 
   const keyExtractor = (item, index) => index.toString();
@@ -380,20 +502,37 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
       />
     );
   };
+  if (!data.onReady) {
+    return (
+      <View style={styles.flex1}>
+        <ImagePlaceholder size={scale(50)} />
+        <View style={styles.contentPlaceholder}>
+          <ContentPlaceholder />
+        </View>
+      </View>
+    );
+  }
   return (
     <Host>
-      <ScrollView style={styles.container}>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={data.isRefreshing}
+            onRefresh={onRefresh}
+          />
+        }
+        style={styles.container}>
         <BackIcon />
         <BackgroudImage
           height={scale(220)}
           image={data?.background}
-          onPress={isLeader ? onPressPickImage('background') : false}
+          onPress={data.isLeader ? onPressPickImage('background') : false}
           children={
             <>
               <Avatar
                 image={data?.avatar}
                 size={90}
-                onPress={isLeader ? onPressPickImage('avatar') : false}
+                onPress={data.isLeader ? onPressPickImage('avatar') : false}
               />
               <Text type={headline4} style={styles.txtName}>
                 {data?.name}
@@ -406,7 +545,7 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
             {renderButtonConfirm()}
             <View style={styles.rowBetween}>
               <Text type={headline5}>Thành viên</Text>
-              {isLeader && (
+              {data.isLeader && (
                 <SecondaryButton
                   title="Thêm thành viên"
                   style={{width: scale(160)}}
@@ -467,7 +606,7 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
               onChangeText={(text) => changeFormData('description', text)}
             />
           </View>
-          {isLeader && (
+          {data.isLeader && (
             <View style={styles.section}>
               {editable ? (
                 <View style={styles.warpperButtonEdit}>
@@ -526,7 +665,7 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
           visible={modalInfoMember.visible}
           data={modalInfoMember.data}
           index={modalInfoMember.index}
-          isLeader={isLeader}
+          isLeader={data.isLeader}
           deleteMember={deleteMember(
             modalInfoMember.data?.user?.userId,
             modalInfoMember.data?.user?.displayName,
@@ -537,6 +676,8 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
   );
 };
 const styles = StyleSheet.create({
+  flex1: {flex: 1, backgroundColor: colors.white},
+  contentPlaceholder: {width: scale(344), flex: 1, marginTop: scale(20)},
   listMember: {marginTop: spacing.medium},
   txtName: {
     color: colors.white,

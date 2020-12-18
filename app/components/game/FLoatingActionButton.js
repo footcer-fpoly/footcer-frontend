@@ -48,7 +48,7 @@ const FloatingActionButton = ({listTeam, listOrder}) => {
   };
 
   const check = () => {
-    if (!listTeam.length) {
+    if (!listTeam?.length) {
       setContentModal({
         ...contentModal,
         image: icAddTeam,

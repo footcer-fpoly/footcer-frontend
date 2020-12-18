@@ -5,16 +5,25 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import {converSecondsToTime, formatToDate} from '../../helpers/format.helper';
 import {scale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
+import rootNavigator, {navigate} from '../../navigations/root.navigator';
+import {GAME_DETAIL_SCREEN} from '../../navigations/route-name';
 import colors from '../../theme/colors';
 import Avatar from '../common/Avatar';
 import {body3, headline5, headline6, Text} from '../common/Text';
 
 export default function CardGame({item}) {
+  const navigateToScreen = (name, params) => () => {
+    rootNavigator.navigate(name, params);
+  };
   return (
     <LinearGradient
-      colors={item?.teamInvite ? colors.blueGradient : colors.blueDarkGradient}
+      colors={item?.teamIdGuest ? colors.blueGradient : colors.blueDarkGradient}
       style={styles.container}>
-      <Text type={headline5} style={styles.txtNameStadium}>
+      <Text
+        type={headline5}
+        style={styles.txtNameStadium(
+          item?.teamIdGuest ? colors.blueDark : '#ffdd59',
+        )}>
         {item?.stadium?.stadiumName}
       </Text>
       <Text type={body3} style={styles.txtAddress}>
@@ -44,7 +53,10 @@ export default function CardGame({item}) {
           {item?.teamGuest?.teamAvatarGuest ? (
             <Avatar image={item?.teamHost?.teamAvatarGuest} size={scale(70)} />
           ) : (
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={navigateToScreen(GAME_DETAIL_SCREEN, {
+                gameId: item?.gameId,
+              })}>
               <Icon
                 name="add-circle"
                 color={colors.grayOpacity}
@@ -54,7 +66,7 @@ export default function CardGame({item}) {
           )}
           {item?.teamGuest?.teamNameGuest ? (
             <Text type={headline6} style={styles.txtNameTeam} numberOfLines={1}>
-              {item?.teamHost?.teamNameGuest}
+              {item?.teamGuest?.teamNameGuest}
             </Text>
           ) : (
             <Text
@@ -92,12 +104,12 @@ const styles = StyleSheet.create({
   wrapperContent: {
     ...Styles.rowBetween,
   },
-  txtNameStadium: {
+  txtNameStadium: (color) => ({
     textAlign: 'center',
-    color: '#ffdd59',
+    color: color,
     marginBottom: scale(5),
     textTransform: 'uppercase',
-  },
+  }),
   wrapperTeam: {
     ...Styles.columnCenter,
     flex: 1,
@@ -117,5 +129,8 @@ const styles = StyleSheet.create({
   },
   txtNameTeam: {
     color: colors.white,
+    marginTop: scale(5),
+    maxWidth: scale(100),
+    textAlign: 'center',
   },
 });

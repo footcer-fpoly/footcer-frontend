@@ -22,6 +22,7 @@ export const ADD_MEMBER_TEAM = '/team/add-member';
 export const DELETE_MEMBER_TEAM = '/team/delete-member';
 export const GET_LIST_TEAM = '/team/for-user-reject';
 export const ACCEPT_INVITE_TEAM = '/team/accept-invite';
+export const GET_TEAM_DETAIL = (teamId) => `/team/${teamId}`;
 
 //API STADIUM
 export const GET_LIST_STADIUM = ({latitude, longitude}) =>
@@ -43,5 +44,7 @@ export const CANCEL_ORDER = '/order/update-status';
 export const GET_GAME = (params) => `/game/gets/${params}`;
 export const CREATE_GAME = '/game/add';
 export const GET_GAME_FOR_USER = '/game/for-user';
-
-//NOTI
+export const GET_GAME_DETAIL = (gameId) => `/game/get/${gameId}`;
+export const JOIN_GAME = '/game/join';
+export const ACCEPT_INVITE_GAME = '/game/accept';
+export const REFUSE_INVITE_GAME = '/game/refuse';

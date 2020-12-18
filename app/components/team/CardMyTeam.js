@@ -28,6 +28,7 @@ const CardMyTeam = ({item, onPress, width, confirm, profile}) => {
   const navigateToScreen = (routeName, params) => () => {
     rootNavigation.navigate(routeName, params);
   };
+
   const renderMember = () => {
     return (
       <View style={styles.warpperList}>
@@ -50,7 +51,7 @@ const CardMyTeam = ({item, onPress, width, confirm, profile}) => {
       onPress={
         onPress
           ? onPress
-          : navigateToScreen(TEAM_DETAIL_SCREEN, {teamDetail: item})
+          : navigateToScreen(TEAM_DETAIL_SCREEN, {teamID: item?.teamId})
       }
       disabled={confirm}
       style={styles.container(width)}>
@@ -84,7 +85,7 @@ const CardMyTeam = ({item, onPress, width, confirm, profile}) => {
             {item?.member?.length === 1 ? (
               <TouchableOpacity
                 onPress={navigateToScreen(TEAM_DETAIL_SCREEN, {
-                  teamDetail: item,
+                  teamID: item?.teamId,
                 })}>
                 <Icon name="add-circle" size={50} color={colors.greenLight} />
               </TouchableOpacity>
@@ -96,7 +97,7 @@ const CardMyTeam = ({item, onPress, width, confirm, profile}) => {
         {confirm && (
           <PrimaryButton
             onPress={navigateToScreen(TEAM_DETAIL_SCREEN, {
-              teamDetail: item,
+              teamID: item?.teamId,
               flag: 1,
             })}
             style={styles.btn}

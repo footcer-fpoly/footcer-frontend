@@ -10,6 +10,7 @@ import Avatar from '../common/Avatar';
 import {body3, headline5, Text} from '../common/Text';
 
 export default function ItemTeamMember({
+  style,
   image,
   size,
   name,
@@ -41,7 +42,7 @@ export default function ItemTeamMember({
     }
   };
   return (
-    <View style={styles.warpperItemMem}>
+    <View style={[styles.warpperItemMem, style]}>
       <View>
         <Avatar
           image={image}
@@ -64,7 +65,7 @@ export default function ItemTeamMember({
         type={body3}
         numberOfLines={1}
         style={styles.txtStatus(renderPosition().color)}>
-        {renderPosition().text}
+        {position && renderPosition().text}
       </Text>
     </View>
   );

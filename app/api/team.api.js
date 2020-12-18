@@ -8,6 +8,7 @@ import {
   DELETE_TEAM,
   GET_LIST_TEAM,
   GET_LIST_TEAM_FOR_USER,
+  GET_TEAM_DETAIL,
   UPDATE_TEAM,
 } from './api-url';
 
@@ -36,6 +37,9 @@ export const getListTeamForUserService = () => {
 
 export const getListTeamService = () => {
   return RequestHelper.get(GET_LIST_TEAM);
+};
+export const getTeamDetailService = (teamId) => {
+  return RequestHelper.get(GET_TEAM_DETAIL(teamId));
 };
 
 export const acceptInviteTeamService = ({

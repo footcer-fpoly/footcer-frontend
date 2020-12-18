@@ -71,6 +71,7 @@ export default class RequestHelper {
   }
 
   static async post(apiUrl, data) {
+    console.log('LOG -> post -> data', data);
     const domain = await getDomain();
     const url = `${domain}${apiUrl}`;
     return instance({

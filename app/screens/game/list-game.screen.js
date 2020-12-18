@@ -1,6 +1,12 @@
 import {useFocusEffect} from '@react-navigation/native';
 import React, {useState} from 'react';
-import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {
+  FlatList,
+  RefreshControl,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import ScrollableTabView, {
   DefaultTabBar,
@@ -23,21 +29,23 @@ import {ToastHelper} from '../../helpers/ToastHelper';
 import {getListGame, getListOrder} from '../../redux/actions/auth.action';
 import colors from '../../theme/colors';
 const ListGameScreen = ({getListGame, listGameUser, getListOrder}) => {
-  console.log(
-    '🚀 ~ file: list-game.screen.js ~ line 26 ~ ListGameScreen ~ getListOrder',
-    getListOrder.length,
-  );
   const [listGame, setListGame] = useState({
     data: [],
     onReady: false,
     date: '',
     visbaleModal: false,
+    isRefreshing: false,
   });
   useFocusEffect(
     React.useCallback(() => {
       fechData();
     }, []),
   );
+
+  const onRefresh = () => {
+    setListGame({...listGame, isRefreshing: true});
+    fechData();
+  };
   const fechData = async () => {
     await Promise.all([getData('all'), getListGame(), getListOrder()]);
   };
@@ -47,10 +55,12 @@ const ListGameScreen = ({getListGame, listGameUser, getListOrder}) => {
       if (res && res.code === StatusCode.SUCCESS) {
         setListGame({
           ...listGame,
-          data: res.data.filter((item) =>
-            compareDateTime(item?.date, new Date()),
-          ),
+          // data: res.data.filter((item) =>
+          //   compareDateTime(item?.date, new Date()),
+          // ),
+          data: res.data,
           onReady: true,
+          isRefreshing: false,
         });
       } else {
         setListGame({
@@ -129,6 +139,12 @@ const ListGameScreen = ({getListGame, listGameUser, getListOrder}) => {
           </View>
           <FlatList
             data={listGame.data}
+            refreshControl={
+              <RefreshControl
+                refreshing={listGame.isRefreshing}
+                onRefresh={onRefresh}
+              />
+            }
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.list}
             keyExtractor={keyExtractor}
@@ -158,6 +174,12 @@ const ListGameScreen = ({getListGame, listGameUser, getListOrder}) => {
           </View>
           <FlatList
             data={listGameUser}
+            refreshControl={
+              <RefreshControl
+                refreshing={listGame.isRefreshing}
+                onRefresh={onRefresh}
+              />
+            }
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.list}
             keyExtractor={keyExtractor}
@@ -203,7 +225,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   list: {
-    paddingBottom: scale(150),
+    paddingBottom: scale(70),
   },
 });
 
