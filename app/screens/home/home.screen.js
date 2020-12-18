@@ -30,17 +30,17 @@ const HomeScreen = ({getListOrder, getListTeam}) => {
   }, []);
   function onNotification(notify) {
     console.log('[App] onNotification: ', notify);
-    // const options = {
-    //   soundName: 'default',
-    //   playSound: true,
-    // };
-    // notificationManager.showNotification(
-    //   0,
-    //   notify.title,
-    //   notify.body,
-    //   notify,
-    //   options,
-    // );
+    const options = {
+      soundName: 'default',
+      playSound: true,
+    };
+    notificationManager.showNotification(
+      0,
+      notify.title,
+      notify.body,
+      notify,
+      options,
+    );
   }
 
   function onOpenNotification(notify) {

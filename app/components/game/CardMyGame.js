@@ -43,7 +43,12 @@ export default function YourMatch({item}) {
           <Text type={headline5} numberOfLines={1} style={styles.txtNameTeam}>
             {item?.teamHost?.teamNameHost}
           </Text>
-          <Avatar image={item?.teamHost?.teamAvatarHost} size={scale(80)} />
+          <Avatar
+            borderWidth={1}
+            borderColor={colors.gray}
+            image={item?.teamHost?.teamAvatarHost}
+            size={scale(80)}
+          />
         </View>
         <Text type={body3} style={styles.txtType}>
           {item?.type}
@@ -53,7 +58,12 @@ export default function YourMatch({item}) {
             <Text type={headline5} numberOfLines={1} style={styles.txtNameTeam}>
               {item?.teamGuest?.teamNameGuest}
             </Text>
-            <Avatar image={item?.teamGuest?.teamAvatarGuest} size={scale(80)} />
+            <Avatar
+              borderWidth={1}
+              borderColor={colors.gray}
+              image={item?.teamGuest?.teamAvatarGuest}
+              size={scale(80)}
+            />
           </View>
         ) : (
           <View style={styles.warpperTeam}>

@@ -8,6 +8,7 @@ import {
   GET_GAME_FOR_USER,
   JOIN_GAME,
   REFUSE_INVITE_GAME,
+  UPDATE_GAME,
 } from './api-url';
 
 export const createGameService = ({
@@ -20,6 +21,29 @@ export const createGameService = ({
   orderId,
 }) => {
   return RequestHelper.post(CREATE_GAME, {
+    date,
+    hour,
+    type,
+    score: '? - ?',
+    description,
+    stadiumId,
+    teamIdHost,
+    orderId,
+  });
+};
+
+export const updateGameService = ({
+  gameId,
+  date,
+  hour,
+  type,
+  description,
+  stadiumId,
+  teamIdHost,
+  orderId,
+}) => {
+  return RequestHelper.put(UPDATE_GAME, {
+    gameId,
     date,
     hour,
     type,

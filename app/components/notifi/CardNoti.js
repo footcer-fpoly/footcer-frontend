@@ -20,6 +20,12 @@ export default function CardNoti({item}) {
   const conditionItem = () => {
     switch (item?.key) {
       case keyNoti.ACCEPT_INVITE:
+        return {
+          iconName: 'account-group-outline',
+          color: colors.main,
+          navigate: TEAM_DETAIL_SCREEN,
+          params: {teamID: item?.generalId, flag: 1},
+        };
       case keyNoti.ADD_MEMBER:
         return {
           iconName: 'account-group-outline',
@@ -43,6 +49,7 @@ export default function CardNoti({item}) {
           params: {orderId: item?.generalId},
         };
       case keyNoti.ACCEPT:
+      case keyNoti.FINISH:
         return {
           iconName: 'book-open',
           color: colors.main,

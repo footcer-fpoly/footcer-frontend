@@ -95,3 +95,10 @@ export const compareDateTime = (fromDate, toDate) => {
   const date2 = dayjs(toDate).format();
   return dayjs(date1).isAfter(dayjs(date2));
 };
+
+export const convertPlayTime = (start, end) => {
+  if (start && end) {
+    return `${converSecondsToTime(start)} -${converSecondsToTime(end)}`;
+  }
+  return null;
+};

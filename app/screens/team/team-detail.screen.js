@@ -15,12 +15,14 @@ import {acceptInviteGameService} from '../../api/game.api';
 import {StatusCode} from '../../api/status-code';
 import {
   acceptInviteTeamService,
+  cancelInviteTeamService,
   deleteMemberService,
   deleteTeamService,
   getTeamDetailService,
   updateAvatarTeamService,
   updateBackgroundTeamService,
   updateInfoTeamService,
+  outTeamTeamService,
 } from '../../api/team.api';
 import imageDelete from '../../assets/svg/img_delete.svg';
 import RowProflie from '../../components/account/RowProflie';
@@ -51,6 +53,7 @@ import spacing from '../../theme/spacing';
 const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
   const {teamID} = route.params;
   const flag = route?.params?.flag;
+  console.log('LOG -> TeamDetailScreen -> flag', flag);
   const dataGame = route?.params?.dataGame;
 
   const modalizeRef = useRef();
@@ -68,6 +71,7 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
     onReady: false,
     isRefreshing: false,
     errorYup: null,
+    hasInvite: false,
   });
   const [editable, setEditable] = useState(false);
   const [visibleModalDele, setVisibleModalDele] = useState(false);
@@ -82,9 +86,7 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
 
   const onRefresh = () => {
     setData({...data, isRefreshing: true});
-    getData().finally(() => {
-      setData({...data, isRefreshing: false});
-    });
+    getData();
   };
 
   const getData = async () => {
@@ -94,6 +96,10 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
         const listMember = [...res?.data?.member];
         const leader = listMember.shift();
         const isLeader = leader?.user?.userId === profile.userId;
+        const hasInvite = listMember.find(
+          (mem) => mem?.user?.userId === profile?.userId,
+        );
+        console.log('LOG ->  hasInvite', hasInvite);
         setData({
           ...data,
           teamId: res?.data?.teamId,
@@ -107,6 +113,8 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
           isLeader,
           onReady: true,
           errorYup: null,
+          isRefreshing: false,
+          hasInvite,
         });
       }
     } catch (error) {
@@ -190,7 +198,30 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
       hideLoading();
     }
   };
-
+  const cancelInvite = async () => {
+    try {
+      showLoading();
+      const res = await cancelInviteTeamService({
+        userId: profile?.userId,
+        teamId: data?.teamId,
+        nameUser: profile?.displayName,
+        nameTeam: data?.name,
+      });
+      if (res && res.code === StatusCode.SUCCESS) {
+        ToastHelper.showToast(
+          `Bạn đã từ chối lời mời gia nhập của đội bóng ${data?.name} thành công`,
+        );
+        rootNavigator.back();
+      } else {
+        ToastHelper.showToast('Lỗi', colors.red);
+      }
+      hideLoading();
+    } catch (error) {
+      console.log('LOG -> cancelInvite -> error', error);
+      ToastHelper.showToast('Lỗi', colors.red);
+      hideLoading();
+    }
+  };
   const showLevel = () => {
     showDialog({
       type: 'level',
@@ -390,6 +421,35 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
     }
   };
 
+  const outTeam = async () => {
+    try {
+      showLoading();
+      const res = await outTeamTeamService({
+        userId: profile?.userId,
+        teamId: teamID,
+        nameUser: profile?.displayName,
+        nameTeam: data?.name,
+      });
+      if (res && res.code === StatusCode.SUCCESS) {
+        rootNavigator.back();
+        ToastHelper.showToast(
+          'Bạn đã rời khỏi đội bóng thành công',
+          colors.grayDark,
+        );
+      } else {
+        ToastHelper.showToast('Lỗi', colors.red);
+      }
+      hideLoading();
+    } catch (error) {
+      hideLoading();
+      ToastHelper.showToast('Lỗi', colors.red);
+      console.log(
+        'LOG -> file: team-detail.screen.js -> line 441 -> outTeam -> error',
+        error,
+      );
+    }
+  };
+
   const acceptTeamInviteGame = async () => {
     try {
       showLoading();
@@ -442,6 +502,20 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
     }
   };
 
+  const renderButtonOutTeam = () => {
+    if (!data.isLeader && data.hasInvite && flag !== 1) {
+      return (
+        <View style={styles.section}>
+          <PrimaryButton
+            title="Rời đội bóng"
+            style={{backgroundColor: colors.red}}
+            onPress={outTeam}
+          />
+        </View>
+      );
+    }
+  };
+
   const renderButtonConfirm = () => {
     if (flag === 1) {
       return (
@@ -453,6 +527,7 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
             <PrimaryButton
               title="Từ chối"
               style={[styles.flex49, {backgroundColor: colors.grayOpacity}]}
+              onPress={cancelInvite}
             />
             <PrimaryButton
               title="Xác nhận"
@@ -637,6 +712,7 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
               )}
             </View>
           )}
+          {renderButtonOutTeam()}
         </View>
         <ModalPicker ref={modalizeRef} onSelectItem={onSelectItem} />
         <ConfirmDialog

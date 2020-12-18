@@ -120,6 +120,7 @@ export default class RequestHelper {
   }
 
   static async put(apiUrl, data) {
+    console.log('LOG ->  put -> data', data);
     const source = axios.CancelToken.source();
     const domain = await getDomain();
     const url = `${domain}${apiUrl}`;

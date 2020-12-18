@@ -3,12 +3,14 @@ import RequestHelper from '../helpers/request.helper';
 import {
   ACCEPT_INVITE_TEAM,
   ADD_MEMBER_TEAM,
+  CANCEL_INVITE_TEAM,
   CREATE_TEAM,
   DELETE_MEMBER_TEAM,
   DELETE_TEAM,
   GET_LIST_TEAM,
   GET_LIST_TEAM_FOR_USER,
   GET_TEAM_DETAIL,
+  OUT_TEAM,
   UPDATE_TEAM,
 } from './api-url';
 
@@ -49,6 +51,28 @@ export const acceptInviteTeamService = ({
   nameTeam,
 }) => {
   return RequestHelper.put(ACCEPT_INVITE_TEAM, {
+    userId,
+    teamId,
+    nameUser,
+    nameTeam,
+  });
+};
+export const cancelInviteTeamService = ({
+  userId,
+  teamId,
+  nameUser,
+  nameTeam,
+}) => {
+  return RequestHelper.post(CANCEL_INVITE_TEAM, {
+    userId,
+    teamId,
+    nameUser,
+    nameTeam,
+  });
+};
+
+export const outTeamTeamService = ({userId, teamId, nameUser, nameTeam}) => {
+  return RequestHelper.post(OUT_TEAM, {
     userId,
     teamId,
     nameUser,

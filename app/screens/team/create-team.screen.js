@@ -197,8 +197,11 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
           getListTeam();
           rootNavigation.back();
           ToastHelper.showToast('Tạo đội bóng thành công');
-        } else {
-          alert('Tạo đội thất bại');
+        } else if (res.code === 409) {
+          setDataTeam({
+            ...dataTeam,
+            errorYup: {...dataTeam.errorYup, name: 'Tên đội bóng đã tồn tại'},
+          });
         }
       }
       hideLoading();

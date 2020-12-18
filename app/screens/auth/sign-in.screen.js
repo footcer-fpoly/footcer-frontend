@@ -15,6 +15,7 @@ import {
 import * as Animatable from 'react-native-animatable';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {connect} from 'react-redux';
 import {checkValidPhoneService, signInPhoneService} from '../../api/auth.api';
 import {StatusCode} from '../../api/status-code';
@@ -205,7 +206,11 @@ const SignInScreen = ({navigation, showLoading, hideLoading, login}) => {
           <Animatable.View animation="slideInUp" style={styles.footer}>
             {!phoneSuccess ? (
               <Animatable.View animation="fadeInLeft" style={styles.action}>
-                <Feather name="phone" color={'#7f8c8d'} size={22} />
+                <MaterialCommunityIcons
+                  name="phone-outline"
+                  color={'#7f8c8d'}
+                  size={22}
+                />
                 <TextInput
                   placeholder="Nhập số điện thoại"
                   placeholderTextColor="#95a5a6"

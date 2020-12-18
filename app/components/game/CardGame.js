@@ -77,6 +77,16 @@ export default function CardGame({item}) {
           )}
         </View>
       </View>
+      {item?.teamIdGuest && (
+        <TouchableOpacity
+          onPress={navigateToScreen(GAME_DETAIL_SCREEN, {
+            gameId: item?.gameId,
+          })}>
+          <Text type={body3} style={styles.txtSee}>
+            Xem chi tiết
+          </Text>
+        </TouchableOpacity>
+      )}
     </LinearGradient>
   );
 }
@@ -132,5 +142,10 @@ const styles = StyleSheet.create({
     marginTop: scale(5),
     maxWidth: scale(100),
     textAlign: 'center',
+  },
+  txtSee: {
+    textAlign: 'center',
+    marginTop: scale(10),
+    color: colors.grayOpacity,
   },
 });
