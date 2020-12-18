@@ -11,6 +11,7 @@ export const UPDATE_NOTI_TOKEN = '/users/update-notify';
 export const GET_USER_PROFILE = '/users/profile';
 export const SEARCH_PHONE_USER = '/team/search-phone';
 export const UPDATE_USER = '/users/update';
+export const GET_NOTI_FOR_USER = '/notification/get';
 
 //API TEAM
 export const CREATE_TEAM = '/team/add';
@@ -42,3 +43,5 @@ export const CANCEL_ORDER = '/order/update-status';
 export const GET_GAME = (params) => `/game/gets/${params}`;
 export const CREATE_GAME = '/game/add';
 export const GET_GAME_FOR_USER = '/game/for-user';
+
+//NOTI

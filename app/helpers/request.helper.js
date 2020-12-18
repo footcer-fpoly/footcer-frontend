@@ -122,10 +122,6 @@ export default class RequestHelper {
     const source = axios.CancelToken.source();
     const domain = await getDomain();
     const url = `${domain}${apiUrl}`;
-    console.log(
-      'LOG -> file: request.helper.js -> line 125 -> RequestHelper -> put -> url',
-      url,
-    );
     setTimeout(() => {
       source.cancel();
     }, configTimeOut);

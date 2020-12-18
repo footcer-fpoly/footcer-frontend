@@ -1,12 +1,14 @@
 import {all, takeLatest} from 'redux-saga/effects';
 import {
   GET_LIST_GAME,
+  GET_LIST_NOTI,
   GET_LIST_ORDER,
   GET_LIST_TEAM,
   REQUESTED_PERMISSION_LOCATION,
 } from '../actions/types';
 import {
   getListGameSaga,
+  getListNotiSaga,
   getListOrderSaga,
   requestLocationPermissionSaga,
 } from './auth.saga';
@@ -21,5 +23,6 @@ export default function* rootSaga() {
     ),
     yield takeLatest(GET_LIST_ORDER, getListOrderSaga),
     yield takeLatest(GET_LIST_GAME, getListGameSaga),
+    yield takeLatest(GET_LIST_NOTI, getListNotiSaga),
   ]);
 }

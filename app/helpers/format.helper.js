@@ -64,6 +64,13 @@ export const formatToDate = (date) => {
   return dayjs(date).locale(locale_vi).format('YYYY-MM-DD');
 };
 
+export const convertDateTime = (dateString, format) => {
+  if (!!dateString) {
+    return dayjs(dateString, format).format('DD/MM/YYYY HH:mm');
+  }
+  return '';
+};
+
 export const formatBirthday = (date) => {
   return dayjs(date).format('DD/MM/YYYY');
 };

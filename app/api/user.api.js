@@ -1,6 +1,6 @@
 import {convertImageToFormData} from '../helpers/convertImageToFormData';
 import RequestHelper from '../helpers/request.helper';
-import {SEARCH_PHONE_USER, UPDATE_USER} from './api-url';
+import {GET_NOTI_FOR_USER, SEARCH_PHONE_USER, UPDATE_USER} from './api-url';
 
 export const updateInfoUserService = ({
   displayName,
@@ -29,4 +29,8 @@ export const updateAvatarUserService = ({avatar, phone}) => {
 
 export const searchPhoneUserService = (phone) => {
   return RequestHelper.post(SEARCH_PHONE_USER, {phone});
+};
+
+export const getNotiService = () => {
+  return RequestHelper.get(GET_NOTI_FOR_USER);
 };

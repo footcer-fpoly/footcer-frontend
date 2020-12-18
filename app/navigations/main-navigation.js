@@ -4,6 +4,7 @@ import {StatusBar, StyleSheet, View} from 'react-native';
 import RNBootSplash from 'react-native-bootsplash';
 import {connect} from 'react-redux';
 import Loading from '../components/common/loadings/Loading';
+import AlertHelper from '../helpers/alert.helper';
 import {saveDomain} from '../helpers/storage.helper';
 import {ToastHelper} from '../helpers/ToastHelper';
 import {requestPermissionLocation} from '../redux/actions/auth.action';
@@ -32,6 +33,7 @@ const MainNavigation = ({requestPermissionLocation}) => {
       <MainRouter />
       <Loading />
       <ToastHelper.ToastContainer />
+      <AlertHelper.NotificationAlert />
     </View>
   );
 };

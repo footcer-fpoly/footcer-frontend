@@ -128,3 +128,17 @@ export const listStatusOrder = [
   {key: 'FINISH', name: 'Hoàn thành'},
   {key: 'REJECT', name: 'Đã hủy'},
 ];
+
+export const keyNoti = {
+  ADD_MEMBER: 'ADD_MEMBER',
+  DELETE_MEMBER: 'DELETE_MEMBER',
+  ACCEPT_INVITE: 'ACCEPT_INVITE',
+  CANCEL_MEMBER: 'CANCEL_MEMBER',
+  ADD_ORDER: 'ADD_ORDER',
+  ACCEPT: 'ACCEPT',
+  REJECT: 'REJECT',
+  FINISH: 'FINISH',
+  JOIN_GAME: 'JOIN_GAME',
+  ACCEPT_GAME: 'ACCEPT_GAME',
+  REFUSEJOIN: 'REFUSEJOIN',
+};

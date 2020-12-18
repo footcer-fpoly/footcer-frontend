@@ -3,9 +3,12 @@ import {put} from 'redux-saga/effects';
 import {getGameForUserService} from '../../api/game.api';
 import {getListOrderService} from '../../api/order.api';
 import {StatusCode} from '../../api/status-code';
+import {getNotiService} from '../../api/user.api';
 import {
   acceptPermissionLocation,
   getListGameSuccess,
+  getListNoti,
+  getListNotiSuccess,
   getListOrderSuccess,
   refusePermissionLocation,
 } from '../actions/auth.action';
@@ -42,6 +45,21 @@ export function* getListGameSaga() {
     console.log('res----', res);
     if (res && res.code === StatusCode.SUCCESS) {
       yield put(getListGameSuccess(res.data));
+    }
+  } catch (error) {
+    console.log('getListGameSaga -->error: ', error);
+  }
+}
+
+export function* getListNotiSaga() {
+  try {
+    const res = yield getNotiService();
+    console.log(
+      'LOG -> file: auth.saga.js -> line 55 -> function*getListNotiSaga -> res',
+      res,
+    );
+    if (res && res.code === StatusCode.SUCCESS) {
+      yield put(getListNotiSuccess(res.data));
     }
   } catch (error) {
     console.log('getListGameSaga -->error: ', error);

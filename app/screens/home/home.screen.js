@@ -11,6 +11,7 @@ import colors from '../../theme/colors';
 import {notificationManager} from '../../utils/NotificationManager';
 import {fcmService} from '../../utils/FCMService';
 import {updateNotiTokenService} from '../../api/auth.api';
+import AlertHelper from '../../helpers/alert.helper';
 
 const HomeScreen = ({getListOrder, getListTeam}) => {
   useEffect(() => {
@@ -21,43 +22,37 @@ const HomeScreen = ({getListOrder, getListTeam}) => {
     fcmService.registerAppWithFCM();
     fcmService.register(onRegister, onNotification, onOpenNotification);
     notificationManager.configure(onOpenNotification);
-
-    function onNotification(notify) {
-      console.log('[App] onNotification: ', notify);
-      const options = {
-        soundName: 'default',
-        playSound: true,
-      };
-      notificationManager.showNotification(
-        0,
-        notify.title,
-        notify.body,
-        notify,
-        options,
-      );
-    }
-
-    onRegister();
-    function onOpenNotification(notify) {
-      console.log('[App] onOpenNotification: ', notify);
-      alert('Open Notification ', notify.body);
-    }
-
     return () => {
       console.log('[App] unRegister');
       fcmService.unRegister();
       notificationManager.unRegister();
     };
   }, []);
+  function onNotification(notify) {
+    console.log('[App] onNotification: ', notify);
+    // const options = {
+    //   soundName: 'default',
+    //   playSound: true,
+    // };
+    // notificationManager.showNotification(
+    //   0,
+    //   notify.title,
+    //   notify.body,
+    //   notify,
+    //   options,
+    // );
+  }
+
+  function onOpenNotification(notify) {
+    console.log('[App] onOpenNotification: ', notify);
+    const bodyNoti = JSON.parse(notify.body);
+    AlertHelper.alert('success', bodyNoti.title, bodyNoti.content, {}, 5000);
+  }
 
   const onRegister = async (token) => {
     try {
       console.log('[App] onRegistered: ', token);
-      const res = await updateNotiTokenService(token);
-      console.log(
-        'LOG -> file: home.screen.js -> line 55 -> onRegister -> res',
-        res,
-      );
+      await updateNotiTokenService(token);
     } catch (error) {
       console.log(
         'LOG -> file: home.screen.js -> line 56 -> onRegister -> error',

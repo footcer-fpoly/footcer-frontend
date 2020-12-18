@@ -13,6 +13,8 @@ import {
   GET_LIST_ORDER_SUCCESS,
   GET_LIST_GAME,
   GET_LIST_GAME_SUCCESS,
+  GET_LIST_NOTI_SUCCESS,
+  GET_LIST_NOTI,
 } from './types';
 
 export const logout = () => {
@@ -73,5 +75,13 @@ export const getListGame = () => ({
 });
 export const getListGameSuccess = (data) => ({
   type: GET_LIST_GAME_SUCCESS,
+  data,
+});
+
+export const getListNoti = () => ({
+  type: GET_LIST_NOTI,
+});
+export const getListNotiSuccess = (data) => ({
+  type: GET_LIST_NOTI_SUCCESS,
   data,
 });

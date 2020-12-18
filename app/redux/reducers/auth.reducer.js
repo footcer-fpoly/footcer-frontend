@@ -3,6 +3,7 @@ import {
   ACCEPT_PERMISSION_LOCATION,
   CHECK_LOGIN,
   GET_LIST_GAME_SUCCESS,
+  GET_LIST_NOTI_SUCCESS,
   GET_LIST_ORDER_SUCCESS,
   LOGIN,
   LOGOUT,
@@ -27,6 +28,7 @@ const authState = {
   isPermissionsLocation: false,
   listOrder: [],
   listGame: [],
+  listNoti: [],
 };
 
 export const authReducer = (state = authState, action) => {
@@ -101,6 +103,11 @@ export const authReducer = (state = authState, action) => {
       return {
         ...state,
         listGame: action.data,
+      };
+    case GET_LIST_NOTI_SUCCESS:
+      return {
+        ...state,
+        listNoti: action.data,
       };
     default:
       return state;
