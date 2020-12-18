@@ -1,6 +1,6 @@
 import axios from 'axios';
 import qs from 'qs';
-import {getToken} from './storage.helper';
+import {getDomain, getToken} from './storage.helper';
 
 const configTimeOut = 20000;
 
@@ -40,9 +40,12 @@ export default class RequestHelper {
     };
   }
 
-  static async get(url, params) {
+  static async get(apiUrl, params) {
     const header = await this.getHeader();
     const source = axios.CancelToken.source();
+    const domain = await getDomain();
+    const url = `${domain}${apiUrl}`;
+
     console.log('url -->get: ', url);
     setTimeout(() => {
       source.cancel();
@@ -67,9 +70,9 @@ export default class RequestHelper {
       });
   }
 
-  static async post(url, data) {
-    console.log('post url: ', url);
-    console.log('post data: ', data);
+  static async post(apiUrl, data) {
+    const domain = await getDomain();
+    const url = `${domain}${apiUrl}`;
     return instance({
       method: 'post',
       url: url,
@@ -87,8 +90,10 @@ export default class RequestHelper {
       });
   }
 
-  static async postUrlEncode(url, data) {
+  static async postUrlEncode(apiUrl, data) {
     const source = axios.CancelToken.source();
+    const domain = await getDomain();
+    const url = `${domain}${apiUrl}`;
     setTimeout(() => {
       source.cancel();
     }, configTimeOut);
@@ -113,10 +118,14 @@ export default class RequestHelper {
       });
   }
 
-  static async put(url, data) {
+  static async put(apiUrl, data) {
     const source = axios.CancelToken.source();
-    console.log('put -->data: ', data);
-    console.log('put -->url: ', url);
+    const domain = await getDomain();
+    const url = `${domain}${apiUrl}`;
+    console.log(
+      'LOG -> file: request.helper.js -> line 125 -> RequestHelper -> put -> url',
+      url,
+    );
     setTimeout(() => {
       source.cancel();
     }, configTimeOut);
@@ -142,15 +151,15 @@ export default class RequestHelper {
 
   static async delete(apiUrl, data) {
     const source = axios.CancelToken.source();
-    console.log('delete --> apiUrl: ', apiUrl);
-    console.log('delete --> data: ', data);
+    const domain = await getDomain();
+    const url = `${domain}${apiUrl}`;
     setTimeout(() => {
       source.cancel();
     }, configTimeOut);
     return instance(
       {
         method: 'delete',
-        url: apiUrl,
+        url: url,
         headers: await this.getHeader(),
         data: data,
       },

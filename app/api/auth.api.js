@@ -6,6 +6,7 @@ import {
   SIGN_IN_PHONE,
   SIGN_UP_FB_GG,
   UPDATE_PASS,
+  UPDATE_NOTI_TOKEN,
 } from './api-url';
 
 export const checkValidPhoneService = (phone) => {
@@ -14,6 +15,7 @@ export const checkValidPhoneService = (phone) => {
 export const checkUUIDService = (userId) => {
   return RequestHelper.post(CHECK_UUID, {userId});
 };
+
 export const signUpPhoneService = (data) => {
   return RequestHelper.post(SIGN_UP_PHONE, {
     phone: data.phone,
@@ -35,4 +37,8 @@ export const signUpFbGgService = (data) => {
 };
 export const updatePassService = (phone, password) => {
   return RequestHelper.put(UPDATE_PASS, {phone, password});
+};
+
+export const updateNotiTokenService = (tokenNotify) => {
+  return RequestHelper.put(UPDATE_NOTI_TOKEN, {tokenNotify});
 };

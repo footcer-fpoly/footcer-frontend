@@ -11,7 +11,7 @@ import SignUpPhoneScreen from '../screens/auth/sign-up-phone.screen';
 import SplashScreen from '../screens/auth/splash.screen';
 import CreateGameScreen from '../screens/game/create-game.screen';
 import GameDetailScreen from '../screens/game/game-detail.screen';
-import NotificationScreen from '../screens/notification.screen';
+import NotificationScreen from '../screens/other/notification.screen';
 import ListOrderScreen from '../screens/order/list-order.screen';
 import orderDetailScreen from '../screens/order/order-detail.screen';
 import ReviewStadiumScreen from '../screens/stadium/review-stadium.screen';

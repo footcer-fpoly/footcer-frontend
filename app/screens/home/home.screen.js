@@ -10,6 +10,7 @@ import {getListTeam} from '../../redux/actions/teams.action';
 import colors from '../../theme/colors';
 import {notificationManager} from '../../utils/NotificationManager';
 import {fcmService} from '../../utils/FCMService';
+import {updateNotiTokenService} from '../../api/auth.api';
 
 const HomeScreen = ({getListOrder, getListTeam}) => {
   useEffect(() => {
@@ -20,10 +21,6 @@ const HomeScreen = ({getListOrder, getListTeam}) => {
     fcmService.registerAppWithFCM();
     fcmService.register(onRegister, onNotification, onOpenNotification);
     notificationManager.configure(onOpenNotification);
-
-    function onRegister(token) {
-      console.log('[App] onRegistered: ', token);
-    }
 
     function onNotification(notify) {
       console.log('[App] onNotification: ', notify);
@@ -40,6 +37,7 @@ const HomeScreen = ({getListOrder, getListTeam}) => {
       );
     }
 
+    onRegister();
     function onOpenNotification(notify) {
       console.log('[App] onOpenNotification: ', notify);
       alert('Open Notification ', notify.body);
@@ -51,6 +49,22 @@ const HomeScreen = ({getListOrder, getListTeam}) => {
       notificationManager.unRegister();
     };
   }, []);
+
+  const onRegister = async (token) => {
+    try {
+      console.log('[App] onRegistered: ', token);
+      const res = await updateNotiTokenService(token);
+      console.log(
+        'LOG -> file: home.screen.js -> line 55 -> onRegister -> res',
+        res,
+      );
+    } catch (error) {
+      console.log(
+        'LOG -> file: home.screen.js -> line 56 -> onRegister -> error',
+        error,
+      );
+    }
+  };
 
   const fetchData = async () => {
     await Promise.all([getListOrder(), getListTeam()]);

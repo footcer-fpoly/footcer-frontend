@@ -14,7 +14,15 @@ import colors from '../../theme/colors';
 import rootNavigator from '../../navigations/root.navigator';
 import {headline5, Text} from './Text';
 
-const ToolBar = ({left, right, style, backgroundColor, barStyle, title}) => {
+const ToolBar = ({
+  left,
+  right,
+  style,
+  backgroundColor,
+  barStyle,
+  title,
+  onPressBack,
+}) => {
   const {TOOL_BAR_HEIGHT} = dimens;
   const handleOnPress = () => {
     rootNavigator.back();
@@ -24,7 +32,9 @@ const ToolBar = ({left, right, style, backgroundColor, barStyle, title}) => {
       <StatusBar barStyle={barStyle} />
       <View style={styles.statusbar} />
       <View style={styles.containerToolbar(TOOL_BAR_HEIGHT)}>
-        <TouchableOpacity style={styles.iconLeft} onPress={handleOnPress}>
+        <TouchableOpacity
+          style={styles.iconLeft}
+          onPress={onPressBack ? onPressBack : handleOnPress}>
           {left && (
             <Icon
               name="chevron-left"

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Image,
   ImageBackground,
@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
+  Linking,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -20,6 +21,7 @@ import {StatusCode} from '../../api/status-code';
 import {backgroundImage, logoImage} from '../../assets/Images';
 import LoginFb from '../../components/auth/LoginFb';
 import LoginGg from '../../components/auth/LoginGg';
+import {getDomain} from '../../helpers/storage.helper';
 import {
   validatePassword,
   validatePhoneNumber,
@@ -32,8 +34,6 @@ import DialogConfirmSendOPT from '../../utils/dialogs/DialogConfirmSendOPT';
 
 const SignInScreen = ({navigation, showLoading, hideLoading, login}) => {
   const [data, setData] = useState({
-    // phone: '',
-    // password: '',
     phone: '',
     password: '',
   });
@@ -45,11 +45,21 @@ const SignInScreen = ({navigation, showLoading, hideLoading, login}) => {
     visible: false,
     text: '',
   });
-
+  const [domain, setdomain] = useState('');
   const [phoneSuccess, setPhoneSuccess] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [flag, setFlag] = useState(null);
 
+  useEffect(() => {
+    getDomainStorage();
+  }, []);
+  const openAboutUs = () => {
+    Linking.openURL(domain);
+  };
+  const getDomainStorage = async () => {
+    const res = await getDomain();
+    setdomain(res);
+  };
   const changeInputPhone = (phone) => {
     setData({
       ...data,
@@ -185,8 +195,11 @@ const SignInScreen = ({navigation, showLoading, hideLoading, login}) => {
           data={data}
           dismiss={() => setIsModalVisible(false)}
         />
+
         <Animatable.View animation="zoomIn" style={styles.header}>
-          <Image source={logoImage} style={styles.logo} />
+          <TouchableOpacity onPress={openAboutUs}>
+            <Image source={logoImage} style={styles.logo} />
+          </TouchableOpacity>
         </Animatable.View>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <Animatable.View animation="slideInUp" style={styles.footer}>
@@ -267,6 +280,7 @@ const SignInScreen = ({navigation, showLoading, hideLoading, login}) => {
                 </TouchableOpacity>
               </Animatable.View>
             )}
+
             {validError.visible && (
               <Animatable.Text
                 animation="fadeInLeft"

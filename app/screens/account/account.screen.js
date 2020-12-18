@@ -1,5 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  Linking,
+} from 'react-native';
 import CodePush from 'react-native-code-push';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {connect} from 'react-redux';
@@ -12,6 +18,7 @@ import {IconType} from '../../components/common/IconMaterialOrSvg';
 import {headline4, headline5, Text} from '../../components/common/Text';
 import ToolBar from '../../components/common/Toolbar';
 import {scale} from '../../helpers/size.helper';
+import {getDomain} from '../../helpers/storage.helper';
 import Styles from '../../helpers/styles.helper';
 import {ToastHelper} from '../../helpers/ToastHelper';
 import rootNavigation from '../../navigations/root.navigator';
@@ -40,13 +47,22 @@ async function getAppVersion() {
   return `${appVersion} rev. ${label}`;
 }
 
-const AccountScreen = ({profile, listTeam, listOrder, logout, domain}) => {
+const AccountScreen = ({profile, listTeam, listOrder, logout}) => {
   const [visibleModal, setVisibleModal] = useState(false);
   const [isVersionCodePush, setisVersionCodePush] = useState('');
-
+  const [domain, setdomain] = useState();
   useEffect(() => {
     getAppVersion().then((v) => setisVersionCodePush(v));
+    getDomainStorage();
   }, []);
+
+  const getDomainStorage = async () => {
+    const res = await getDomain();
+    setdomain(res);
+  };
+  const openAboutUs = () => {
+    Linking.openURL(domain);
+  };
 
   const navigateToScreen = (routeName, params) => () => {
     rootNavigation.navigate(routeName, params);
@@ -54,6 +70,7 @@ const AccountScreen = ({profile, listTeam, listOrder, logout, domain}) => {
   const commingSoon = () => {
     ToastHelper.showToast('Tính năng đang phát triển', colors.orange);
   };
+
   const toggleModal = (a) => {
     setVisibleModal(!visibleModal);
   };
@@ -176,7 +193,7 @@ const AccountScreen = ({profile, listTeam, listOrder, logout, domain}) => {
               iconType={IconType.MaterialCommunityIcons}
               iconName="alert-circle-outline"
               text="Về chúng tôi"
-              onPress={commingSoon}
+              onPress={openAboutUs}
             />
             <RowButton
               iconType={IconType.MaterialCommunityIcons}
@@ -191,6 +208,13 @@ const AccountScreen = ({profile, listTeam, listOrder, logout, domain}) => {
           <Text style={[styles.txtfooter, {marginTop: spacing.tiny}]}>
             Thiết kế và phát triển bởi Footcer Team
           </Text>
+          <Text style={[styles.txtfooter, {marginTop: spacing.tiny}]}>
+            {`Phiên bản Ver. ${
+              pjson.version === isVersionCodePush
+                ? `${pjson.version}`
+                : isVersionCodePush
+            }`}
+          </Text>
         </View>
       </ScrollView>
       <ConfirmDialog
@@ -204,21 +228,10 @@ const AccountScreen = ({profile, listTeam, listOrder, logout, domain}) => {
         onCancelClick={toggleModal}
         onConfirmClick={logout}
       />
-      <Text>{domain}</Text>
-      <Text
-        style={{
-          position: 'absolute',
-          bottom: 0,
-          right: 4,
-          fontSize: 12,
-        }}>{`Phiên bản Ver. ${
-        pjson.version === isVersionCodePush
-          ? `${pjson.version}`
-          : isVersionCodePush
-      }`}</Text>
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   flex47: {
     ...Styles.flex32,
