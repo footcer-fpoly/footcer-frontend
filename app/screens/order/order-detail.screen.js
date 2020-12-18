@@ -17,6 +17,7 @@ import ModalCancelOrder from '../../components/order/ModalCancelOrder';
 import {scale} from '../../helpers/size.helper';
 import rootNavigator from '../../navigations/root.navigator';
 import {HOME_SCREEN} from '../../navigations/route-name';
+import {converSecondsToTime, formatDateTime} from '../../helpers/format.helper';
 import colors from '../../theme/colors';
 
 export default function orderDetail({route}) {
@@ -49,6 +50,7 @@ export default function orderDetail({route}) {
   if (!state.onReady) {
     return <ActivityIndicator size="large" color={colors.red} />;
   }
+
   return (
     <View>
       <ToolBar
@@ -62,39 +64,39 @@ export default function orderDetail({route}) {
       />
 
         <Image 
-        source={avatar} 
+        source={{
+            uri: state?.data?.stadium?.image,
+          }} 
         style={{
           width:'100%', height:'40%',
           borderBottomLeftRadius:20, 
           borderBottomRightRadius:20,
-          marginBottom:10
           }}/>
           <View style={styles.container}>
-            <Text style={styles.nameDetail}>Sân bóng Chảo Lửa</Text>
+            <Text style={styles.nameDetail}>{state?.data?.stadium?.stadiumName}</Text>
             <View style={styles.marginView}>
               <View style={styles.inContainer}>
                 <Text>Ngày:</Text>
-                <Text>17/12/2020</Text>
+                <Text>{formatDateTime(state.data.time)}</Text>
               </View>
               <View style={styles.textDetail}>
                 <Text>Thời gian:</Text>
-                <Text>17:00 - 20:00</Text>
+                <Text>
+                  {converSecondsToTime(state?.data?.stadium_details?.startTimeDetail)} - 
+                  {converSecondsToTime(state?.data?.stadium_details?.endTimeDetail)}
+                </Text>
               </View>
               <View style={styles.textDetail}>
                 <Text>Loại sân:</Text>
-                <Text>Sân 5</Text>
+                <Text>{state?.data?.stadium_collage?.stadiumCollageName}</Text>
               </View>
               <View style={styles.textDetail}>
                 <Text>Địa chỉ:</Text>
-                <Text>2 Phan Thúc Duyện, Tân Bình</Text>
-              </View>
-              <View style={styles.textDetail}>
-                <Text>Trạng thái:</Text>
-                <Text>Đang chờ xác nhận</Text>
+                <Text>{state?.data?.stadium?.address}</Text>
               </View>
               <View style={styles.textDetail}>
                 <Text>Giá tiền:</Text>
-                <Text>1200000</Text>
+                <Text>{state?.data?.stadium_details?.price}</Text>
               </View>
             </View>
           </View>
