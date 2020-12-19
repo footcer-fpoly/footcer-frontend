@@ -48,7 +48,10 @@ export default class AlertHelper {
   // };
 
   static onTapAlert = (data) => {
-    rootNavigator.navigate(NOTIFICATION_SCREEN);
+    if (!AlertHelper.getDropDown().lertData?.type === 'warn') {
+      rootNavigator.navigate(NOTIFICATION_SCREEN);
+    }
+    return;
   };
 
   static renderImage = (props, message) => {

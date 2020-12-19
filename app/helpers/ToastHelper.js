@@ -2,6 +2,7 @@ import React from 'react';
 import {StyleSheet} from 'react-native';
 import Toast from 'react-native-easy-toast';
 import colors from '../theme/colors';
+import {scale} from './size.helper';
 
 export class ToastHelper {
   static toast;
@@ -31,8 +32,6 @@ export class ToastHelper {
 }
 
 const styles = StyleSheet.create({
-  // toast: {
-  //   backgroundColor: colors.green,
-  // },
-  toastText: {color: colors.white},
+  toast: {marginHorizontal: scale(10)},
+  toastText: {color: colors.white, textAlign: 'center'},
 });

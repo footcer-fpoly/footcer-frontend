@@ -350,7 +350,7 @@ const GameDetailScreen = ({route, showLoading, hideLoading, profile}) => {
         status={0}
         onPressImage={navigateToScreen(TEAM_DETAIL_SCREEN, {
           teamID: item?.teamIdTemp,
-          flag: 2,
+          flag: state.isLeader ? 2 : 0,
           dataGame: state.data,
         })}
         position={true}
@@ -381,9 +381,109 @@ const GameDetailScreen = ({route, showLoading, hideLoading, profile}) => {
           }
           contentContainerStyle={{paddingBottom: scale(50)}}
           style={styles.container}>
+          <View style={styles.warppeMatch}>
+            <View style={styles.warpperTeam}>
+              <Text type={headline5} style={styles.txtTitleTeam}>
+                Đội chủ nhà
+              </Text>
+              <ItemTeamMember
+                image={
+                  newTeam
+                    ? newTeam?.avatar
+                    : state.data?.teamHost?.teamAvatarHost
+                }
+                size={scale(80)}
+                name={
+                  newTeam ? newTeam?.name : state.data?.teamHost?.teamNameHost
+                }
+                status={0}
+                onPressImage={navigateToScreen(TEAM_DETAIL_SCREEN, {
+                  teamID: newTeam ? newTeam?.teamId : state.data?.teamIdHost,
+                })}
+                me={false}
+                style={styles.mr0}
+                position={0}
+              />
+            </View>
+            <View style={{...Styles.columnCenter}}>
+              {state.editable && (
+                <TouchableOpacity
+                  hitSlop={styles.hitSlop}
+                  onPress={showDialogTeams}
+                  style={{
+                    backgroundColor: colors.gray,
+                    ...Styles.borderRadiusCircle(30),
+                    ...Styles.columnCenter,
+                    marginBottom: scale(20),
+                  }}>
+                  <MaterialIcons color={colors.white} name="edit" size={18} />
+                </TouchableOpacity>
+              )}
+              <Text type={body3} style={styles.txtType}>
+                {newOrder
+                  ? `${newOrder?.stadium_collage?.amountPeople} vs ${newOrder?.stadium_collage?.amountPeople}`
+                  : state?.data?.type}
+              </Text>
+            </View>
+            <View style={styles.warpperTeam}>
+              <Text type={headline5} style={styles.txtTitleTeam}>
+                Đội khách
+              </Text>
+              {state.data?.teamIdGuest ? (
+                <ItemTeamMember
+                  image={state.data?.teamGuest?.teamAvatarGuest}
+                  size={scale(80)}
+                  name={state.data?.teamGuest?.teamNameGuest}
+                  status={0}
+                  onPressImage={navigateToScreen(TEAM_DETAIL_SCREEN, {
+                    teamID: state.data?.teamIdGuest,
+                  })}
+                  me={false}
+                  style={styles.mr0}
+                  position={0}
+                />
+              ) : (
+                <View style={styles.warppeNoData}>
+                  <Icon name="question" size={scale(80)} color={colors.gray} />
+                  <Text
+                    type={headline5}
+                    numberOfLines={2}
+                    style={[styles.txtNameTeam, {color: colors.gray}]}>
+                    Chưa có đối thủ
+                  </Text>
+                </View>
+              )}
+            </View>
+          </View>
+          {!state?.data?.teamIdGuest && (
+            <View style={styles.wrapperListTeamInvite}>
+              <View style={styles.warppeTitleList}>
+                <Text type={headline5} style={styles.flex1}>
+                  Danh sách đội bóng đang chờ xác nhận tham gia trận đấu
+                </Text>
+                <View style={styles.warppeCountList}>
+                  <Text type={headline5} style={{marginRight: scale(5)}}>
+                    {state?.data?.teamInvite?.length || 0}
+                  </Text>
+                  <MaterialCommunityIcons
+                    size={scale(20)}
+                    color={colors.green}
+                    name="account-group"
+                  />
+                </View>
+              </View>
+              <FlatList
+                data={state?.data?.teamInvite}
+                showsHorizontalScrollIndicator={false}
+                horizontal
+                contentContainerStyle={styles.listTeam}
+                keyExtractor={keyExtractor}
+                renderItem={renderItemMember}
+              />
+            </View>
+          )}
           <View style={styles.wrapperSection}>
-            <View
-              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <View style={styles.warppeTitleInfo}>
               <Text style={styles.titleSection} type={headline5}>
                 THÔNG TIN TRẬN ĐẤU
               </Text>
@@ -475,11 +575,19 @@ const GameDetailScreen = ({route, showLoading, hideLoading, profile}) => {
               title="Chỉ đường"
               colorOutline={colors.blue}
               titleColor={colors.blue}
-              onPress={onPressDirection(
-                state?.data?.stadium?.latitude,
-                state?.data?.stadium?.longitude,
-                state?.data?.stadium?.address,
-              )}
+              onPress={
+                newOrder
+                  ? onPressDirection(
+                      newOrder?.stadium?.latitude,
+                      newOrder?.stadium?.longitude,
+                      newOrder?.stadium?.address,
+                    )
+                  : onPressDirection(
+                      state?.data?.stadium?.latitude,
+                      state?.data?.stadium?.longitude,
+                      state?.data?.stadium?.address,
+                    )
+              }
               left={
                 <MaterialCommunityIcons
                   size={scale(20)}
@@ -489,80 +597,7 @@ const GameDetailScreen = ({route, showLoading, hideLoading, profile}) => {
               }
             />
           </View>
-          <View style={styles.warppeMatch}>
-            <View style={styles.warpperTeam}>
-              <Text type={headline5} style={styles.txtTitleTeam}>
-                Đội chủ nhà
-              </Text>
-              <ItemTeamMember
-                image={
-                  newTeam
-                    ? newTeam?.avatar
-                    : state.data?.teamHost?.teamAvatarHost
-                }
-                size={scale(80)}
-                name={
-                  newTeam ? newTeam?.name : state.data?.teamHost?.teamNameHost
-                }
-                status={0}
-                onPressImage={navigateToScreen(TEAM_DETAIL_SCREEN, {
-                  teamID: newTeam ? newTeam?.teamId : state.data?.teamIdHost,
-                })}
-                me={false}
-                style={styles.mr0}
-                position={0}
-              />
-            </View>
-            <View style={{...Styles.columnCenter}}>
-              {state.editable && (
-                <TouchableOpacity
-                  hitSlop={styles.hitSlop}
-                  onPress={showDialogTeams}
-                  style={{
-                    backgroundColor: colors.gray,
-                    ...Styles.borderRadiusCircle(30),
-                    ...Styles.columnCenter,
-                    marginBottom: scale(20),
-                  }}>
-                  <MaterialIcons color={colors.white} name="edit" size={18} />
-                </TouchableOpacity>
-              )}
-              <Text type={body3} style={styles.txtType}>
-                {newOrder
-                  ? `${newOrder?.stadium_collage?.amountPeople} vs ${newOrder?.stadium_collage?.amountPeople}`
-                  : state?.data?.type}
-              </Text>
-            </View>
-            <View style={styles.warpperTeam}>
-              <Text type={headline5} style={styles.txtTitleTeam}>
-                Đội khách
-              </Text>
-              {state.data?.teamIdGuest ? (
-                <ItemTeamMember
-                  image={state.data?.teamGuest?.teamAvatarGuest}
-                  size={scale(80)}
-                  name={state.data?.teamGuest?.teamNameGuest}
-                  status={0}
-                  onPressImage={navigateToScreen(TEAM_DETAIL_SCREEN, {
-                    teamID: state.data?.teamIdHost,
-                  })}
-                  me={false}
-                  style={styles.mr0}
-                  position={0}
-                />
-              ) : (
-                <View style={styles.warppeNoData}>
-                  <Icon name="question" size={scale(80)} color={colors.gray} />
-                  <Text
-                    type={headline5}
-                    numberOfLines={2}
-                    style={[styles.txtNameTeam, {color: colors.gray}]}>
-                    Chưa có đối thủ
-                  </Text>
-                </View>
-              )}
-            </View>
-          </View>
+
           <View style={[styles.wrapperSection, {marginTop: scale(5)}]}>
             <Text type={headline5} style={styles.txtTitleDes}>
               Lời nhắn từ đội chủ nhà
@@ -582,33 +617,7 @@ const GameDetailScreen = ({route, showLoading, hideLoading, profile}) => {
               />
             </View>
           </View>
-          {!state?.data?.teamIdGuest && (
-            <View style={styles.wrapperListTeamInvite}>
-              <View style={styles.warppeTitleList}>
-                <Text type={headline5} style={styles.flex1}>
-                  Danh sách đội bóng đang chờ xác nhận tham gia trận đấu
-                </Text>
-                <View style={styles.warppeCountList}>
-                  <Text type={headline5} style={{marginRight: scale(5)}}>
-                    {state?.data?.teamInvite?.length || 0}
-                  </Text>
-                  <MaterialCommunityIcons
-                    size={scale(20)}
-                    color={colors.green}
-                    name="account-group"
-                  />
-                </View>
-              </View>
-              <FlatList
-                data={state?.data?.teamInvite}
-                showsHorizontalScrollIndicator={false}
-                horizontal
-                contentContainerStyle={styles.listTeam}
-                keyExtractor={keyExtractor}
-                renderItem={renderItemMember}
-              />
-            </View>
-          )}
+
           {state.team && (
             <View style={styles.warppeTeam}>
               <TouchableOpacity onPress={changeTeam} style={styles.iconRemove}>
@@ -625,8 +634,8 @@ const GameDetailScreen = ({route, showLoading, hideLoading, profile}) => {
           {state.editable && renderButtonEdit()}
           {state.isLeader && (
             <Text type={body3} style={styles.txtNote}>
-              * Bạn chỉ có thể chỉnh sửa / hủy trận đấu khi chưa có team tham
-              gia
+              * Bạn chỉ có thể chỉnh sửa / hủy trận đấu khi chưa có đội bóng
+              tham gia
             </Text>
           )}
           <ModalPickerTeams
@@ -655,6 +664,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: scale(10),
     backgroundColor: colors.white,
     paddingTop: scale(10),
+    marginTop: scale(5),
+  },
+  warppeTitleInfo: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: scale(10),
   },
   wrapperListTeamInvite: {
     marginTop: scale(5),
@@ -717,7 +732,7 @@ const styles = StyleSheet.create({
   },
   txtNote: {
     paddingHorizontal: scale(10),
-    marginTop: scale(20),
+    marginTop: scale(10),
     color: colors.gray,
     textAlign: 'center',
   },

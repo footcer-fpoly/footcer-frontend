@@ -251,7 +251,11 @@ const SignInScreen = ({navigation, showLoading, hideLoading, login}) => {
                   </Text>
                 </TouchableOpacity>
                 <View style={styles.action}>
-                  <Feather name="phone" color={'#7f8c8d'} size={22} />
+                  <MaterialCommunityIcons
+                    name="lock-outline"
+                    color={'#7f8c8d'}
+                    size={22}
+                  />
                   <TextInput
                     placeholder="Nhập mật khẩu"
                     placeholderTextColor="#95a5a6"

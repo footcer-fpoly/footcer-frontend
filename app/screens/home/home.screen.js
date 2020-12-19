@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Image, ScrollView, StyleSheet, View} from 'react-native';
+import {Button, Image, ScrollView, StyleSheet, View} from 'react-native';
 import Swiper from 'react-native-swiper';
 import {connect} from 'react-redux';
 import ToolBar from '../../components/common/Toolbar';

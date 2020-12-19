@@ -54,10 +54,6 @@ export function* getListGameSaga() {
 export function* getListNotiSaga() {
   try {
     const res = yield getNotiService();
-    console.log(
-      'LOG -> file: auth.saga.js -> line 55 -> function*getListNotiSaga -> res',
-      res,
-    );
     if (res && res.code === StatusCode.SUCCESS) {
       yield put(getListNotiSuccess(res.data));
     }

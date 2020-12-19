@@ -1,5 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {
+  Alert,
   FlatList,
   RefreshControl,
   ScrollView,
@@ -11,7 +12,10 @@ import ImagePicker from 'react-native-image-crop-picker';
 import {Host} from 'react-native-portalize';
 import {connect} from 'react-redux';
 import * as Yup from 'yup';
-import {acceptInviteGameService} from '../../api/game.api';
+import {
+  acceptInviteGameService,
+  refuseInviteGameService,
+} from '../../api/game.api';
 import {StatusCode} from '../../api/status-code';
 import {
   acceptInviteTeamService,
@@ -40,6 +44,7 @@ import ImagePlaceholder from '../../components/placeholder/ImagePlaceholder';
 import ItemTeamMember from '../../components/team/ItemTeamMember';
 import ModalAddMember from '../../components/team/ModalAddMember';
 import ModalShowInfoMember from '../../components/team/ModalShowInfoMember';
+import AlertHelper from '../../helpers/alert.helper';
 import {ListLevel, ListProvince} from '../../helpers/data-local.helper';
 import {scale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
@@ -50,7 +55,13 @@ import {getListTeam} from '../../redux/actions/teams.action';
 import colors from '../../theme/colors';
 import spacing from '../../theme/spacing';
 
-const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
+const TeamDetailScreen = ({
+  route,
+  showLoading,
+  hideLoading,
+  profile,
+  listGameUser,
+}) => {
   const {teamID} = route.params;
   const flag = route?.params?.flag;
   console.log('LOG -> TeamDetailScreen -> flag', flag);
@@ -72,6 +83,7 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
     isRefreshing: false,
     errorYup: null,
     hasInvite: false,
+    leaderId: '',
   });
   const [editable, setEditable] = useState(false);
   const [visibleModalDele, setVisibleModalDele] = useState(false);
@@ -115,6 +127,7 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
           errorYup: null,
           isRefreshing: false,
           hasInvite,
+          leaderId: res?.data?.leaderId,
         });
       }
     } catch (error) {
@@ -144,7 +157,28 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
   };
 
   const toggleModalDelete = () => {
-    setVisibleModalDele(!visibleModalDele);
+    const hasGame = listGameUser?.find(
+      (game) => game?.teamIdHost === data?.teamId,
+    );
+    if (hasGame) {
+      AlertHelper.alert(
+        'warn',
+        'Xóa đội bóng',
+        'Bạn không thể xóa đội bóng khi đội bóng đang tham gia trận đấu',
+        {},
+        5000,
+      );
+    } else if (data?.member?.length >= 1) {
+      AlertHelper.alert(
+        'warn',
+        'Xóa đội bóng',
+        'Bạn cần phải xóa thành tất cả thành viên ra khỏi đội bóng trước khi xóa đội',
+        {},
+        5000,
+      );
+    } else {
+      setVisibleModalDele(!visibleModalDele);
+    }
   };
 
   const showModalAddMember = () => {
@@ -456,7 +490,7 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
       const res = await acceptInviteGameService({
         gameId: dataGame?.gameId,
         teamId: data?.teamId,
-        userNotiyId: dataGame?.teamHost?.leaderIdHost,
+        userNotifyId: dataGame?.leaderIdHost,
         name: data?.name,
       });
       if (res && res.code === StatusCode.SUCCESS) {
@@ -479,12 +513,13 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
   const refuseTeamInviteGame = async () => {
     try {
       showLoading();
-      const res = await acceptInviteGameService({
+      const res = await refuseInviteGameService({
         gameId: dataGame?.gameId,
         teamId: data?.teamId,
-        userNotiyId: dataGame?.teamHost?.leaderIdHost,
+        userNotifyId: dataGame?.leaderIdHost,
         name: data?.name,
       });
+      console.log('LOG ->  refuseTeamInviteGame -> res', res);
       if (res && res.code === StatusCode.SUCCESS) {
         rootNavigator.back();
         ToastHelper.showToast('Từ chối đối thủ thành công', colors.greenDark);
@@ -503,7 +538,7 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
   };
 
   const renderButtonOutTeam = () => {
-    if (!data.isLeader && data.hasInvite && flag !== 1) {
+    if (!data.isLeader && data.hasInvite && !flag) {
       return (
         <View style={styles.section}>
           <PrimaryButton
@@ -538,7 +573,7 @@ const TeamDetailScreen = ({route, showLoading, hideLoading, profile}) => {
         </>
       );
     }
-    if (flag === 2 && !data.isLeader) {
+    if (flag === 2) {
       return (
         <>
           <Text type={headline5} style={styles.txtConfirm}>
@@ -791,6 +826,7 @@ const mapDispatchToProps = {showLoading, hideLoading};
 function mapStateToProps(state) {
   return {
     profile: state.authState.profile,
+    listGameUser: state.authState.listGame,
   };
 }
 export default connect(mapStateToProps, mapDispatchToProps)(TeamDetailScreen);
