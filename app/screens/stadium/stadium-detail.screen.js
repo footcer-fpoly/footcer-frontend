@@ -194,6 +194,7 @@ export const StadiumDetailScreen = ({route, listOrder, getListOrder}) => {
             {data?.stadiumName}
           </Text>
           <RowIcon iconName="location-on" text={data?.address} />
+          <RowIcon iconName="account-circle" text={data?.user?.displayName} />
           <RowIcon iconName="dashboard" text={data?.category} />
           {data?.description && (
             <RowIcon iconName="description" text={data?.description} />

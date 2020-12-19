@@ -214,6 +214,21 @@ const StadiumScreen = ({isPermissionLocation, showLoading, hideLoading}) => {
             />
           </View>
         )}
+        {!search.show && (
+          <ButtonMyLocation
+            onPress={() => {
+              _map.current.animateToRegion(
+                {
+                  latitude: state.region.latitude,
+                  longitude: state.region.longitude,
+                  latitudeDelta: ZOOM,
+                  longitudeDelta: ZOOM,
+                },
+                1000,
+              );
+            }}
+          />
+        )}
       </>
     );
   };
@@ -235,6 +250,7 @@ const StadiumScreen = ({isPermissionLocation, showLoading, hideLoading}) => {
   return (
     <View style={styles.container}>
       {renderToolBar()}
+
       <MapView
         ref={_map}
         provider={PROVIDER_GOOGLE}
@@ -287,21 +303,6 @@ const StadiumScreen = ({isPermissionLocation, showLoading, hideLoading}) => {
           />
         </TouchableOpacity>
         <View style={styles.warpperTitle}>
-          {!search.show && (
-            <ButtonMyLocation
-              onPress={() => {
-                _map.current.animateToRegion(
-                  {
-                    latitude: state.region.latitude,
-                    longitude: state.region.longitude,
-                    latitudeDelta: ZOOM,
-                    longitudeDelta: ZOOM,
-                  },
-                  1000,
-                );
-              }}
-            />
-          )}
           <Text type={headline4} style={styles.titleFooter}>
             Danh sách cụm sân
           </Text>

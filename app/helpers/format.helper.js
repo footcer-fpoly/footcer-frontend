@@ -57,7 +57,9 @@ export const renderNextDays = (nextDays) => {
 };
 
 export const formatDateTime = (date) => {
-  return dayjs(date).locale(locale_vi).format('dddd, DD/MM/YYYY');
+  return capitalizeFirstLetter(
+    dayjs(date).locale(locale_vi).format('dddd, DD/MM/YYYY'),
+  );
 };
 
 export const formatToDate = (date) => {
@@ -102,3 +104,10 @@ export const convertPlayTime = (start, end) => {
   }
   return null;
 };
+
+export function capitalizeFirstLetter(string) {
+  if (string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+  return string;
+}

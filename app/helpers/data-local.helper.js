@@ -129,6 +129,13 @@ export const listStatusOrder = [
   {key: 'REJECT', name: 'Đã hủy'},
 ];
 
+export const listreasonCancelOrder = [
+  'Đặt sai khung giờ',
+  'Đặt sai ngày',
+  'Đặt nhầm sân',
+  'Có việc đột xuất ',
+];
+
 export const keyNoti = {
   ADD_MEMBER: 'ADD_MEMBER',
   DELETE_MEMBER: 'DELETE_MEMBER',

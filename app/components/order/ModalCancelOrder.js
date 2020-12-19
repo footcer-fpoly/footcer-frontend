@@ -1,28 +1,32 @@
 import React, {useState, forwardRef, useImperativeHandle} from 'react';
-import {View, TextInput, StyleSheet} from 'react-native';
+import {View, TextInput, StyleSheet, TouchableOpacity} from 'react-native';
 import Modal from 'react-native-modal';
 import {scale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
 import colors from '../../theme/colors';
 import spacing from '../../theme/spacing';
 import PrimaryButton from '../common/PrimaryButton';
-import {headline4, Text} from '../common/Text';
+import {body3, headline4, Text} from '../common/Text';
 import TitleTextInputField from '../common/TitleTextInputField';
 import {cancelOrderService} from '../../api/order.api';
 import {StatusCode} from '../../api/status-code';
 import {HOME_SCREEN} from '../../navigations/route-name';
 import rootNavigator from '../../navigations/root.navigator';
 import {ToastHelper} from '../../helpers/ToastHelper';
+import {listreasonCancelOrder} from '../../helpers/data-local.helper';
 
 const ModalCancelOrder = forwardRef(({orderId, idOwner, nameOwner}, ref) => {
   console.log('orderId: ', orderId);
   const [visible, setVisible] = useState(false);
-  const [reason, setReason] = useState('');
+  const [state, setState] = useState({
+    reason: '',
+    curentSeclect: '',
+  });
 
   const cancelOrder = async () => {
     const res = await cancelOrderService({
       orderId,
-      reason,
+      reason: state.reason,
       userId: idOwner,
       name: nameOwner,
     });
@@ -31,6 +35,38 @@ const ModalCancelOrder = forwardRef(({orderId, idOwner, nameOwner}, ref) => {
       hide();
       ToastHelper.showToast('Hủy lịch đặt sân thành công');
     }
+  };
+  const selectReson = (item, index) => () => {
+    setState({
+      reason: item,
+      curentSeclect: index,
+    });
+  };
+
+  const renderReson = () => {
+    return listreasonCancelOrder.map((item, index) => {
+      return (
+        <TouchableOpacity
+          onPress={selectReson(item, index)}
+          style={[
+            styles.reason,
+            {
+              backgroundColor:
+                state.curentSeclect === index
+                  ? colors.grayDark + 'B3'
+                  : colors.grayLight,
+            },
+          ]}>
+          <Text
+            type={body3}
+            style={{
+              color: state.curentSeclect === index ? colors.white : colors.gray,
+            }}>
+            {item}
+          </Text>
+        </TouchableOpacity>
+      );
+    });
   };
 
   useImperativeHandle(ref, () => ({
@@ -55,11 +91,15 @@ const ModalCancelOrder = forwardRef(({orderId, idOwner, nameOwner}, ref) => {
           Hủy đặt sân
         </Text>
         <View style={styles.body}>
+          <View style={styles.warpperListReson}>{renderReson()}</View>
           <TitleTextInputField
             style={styles.inputField}
+            value={state.reason}
             lable="Lý do"
             sizeIcon={scale(22)}
-            onChangeText={(text) => setReason(text)}
+            onChangeText={(text) =>
+              setState({reason: text, curentSeclect: null})
+            }
             otherTextInputProps={{
               multiline: true,
               placeholder: 'Thêm lý do hủy',
@@ -98,6 +138,14 @@ const styles = StyleSheet.create({
     borderRadius: scale(5),
     paddingBottom: scale(10),
     overflow: 'hidden',
+  },
+  warpperListReson: {flexDirection: 'row', flexWrap: 'wrap'},
+  reason: {
+    marginRight: scale(10),
+    marginBottom: scale(10),
+    paddingHorizontal: scale(15),
+    paddingVertical: scale(2),
+    borderRadius: scale(40),
   },
   txtTitle: {
     textTransform: 'uppercase',

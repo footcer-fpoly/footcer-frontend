@@ -1,5 +1,6 @@
 import React from 'react';
 import {Linking, Platform, StyleSheet, View} from 'react-native';
+import {callPhone} from '../../helpers/call-phone.helper';
 import {scale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
 import rootNavigator from '../../navigations/root.navigator';
@@ -51,6 +52,7 @@ export default function BlockNameStadium({hasOrder, data}) {
         backgroundColor={colors.orange}
         iconName="cellphone-sound"
         title="Liên hệ"
+        onPress={callPhone(data?.user?.phone)}
       />
     </View>
   );

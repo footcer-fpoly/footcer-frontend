@@ -19,9 +19,9 @@ const styles = StyleSheet.create({
     width: scale(40),
     height: scale(40),
     borderRadius: scale(5),
-    zIndex: 1,
     position: 'absolute',
-    top: scale(-90),
-    right: 10,
+    top: scale(80),
+    left: 10,
+    zIndex: 1,
   },
 });

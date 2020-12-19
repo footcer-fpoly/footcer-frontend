@@ -61,7 +61,11 @@ const ListOrderScreen = ({listOrder, getListOrder}) => {
 
   return (
     <View style={styles.container}>
-      <ToolBar title="Danh sách lịch đặt sân" left={true} />
+      <ToolBar
+        backgroundColor={colors.main}
+        title="Danh sách lịch đặt sân"
+        left={true}
+      />
       <ScrollableTabView
         onChangeTab={onChangeTab}
         tabBarUnderlineStyle={{backgroundColor: colors.green}}

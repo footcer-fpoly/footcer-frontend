@@ -199,6 +199,7 @@ const AccountScreen = ({profile, listTeam, listOrder, logout}) => {
               iconType={IconType.MaterialCommunityIcons}
               iconName="logout"
               text="Đăng xuất"
+              color={colors.orange}
               onPress={toggleModal}
             />
           </View>

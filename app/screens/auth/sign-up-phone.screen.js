@@ -15,6 +15,7 @@ import {
 import * as Animatable from 'react-native-animatable';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
+import Entypo from 'react-native-vector-icons/Entypo';
 import {connect} from 'react-redux';
 import {signUpPhoneService} from '../../api/auth.api';
 import {backgroundImage, userImage} from '../../assets/Images';
@@ -205,7 +206,7 @@ const SignUpPhoneScreen = ({
                 Mật khẩu
               </Text>
               <View style={styles.actionSignUp}>
-                <Feather name="key" color={'#05375a'} size={20} />
+                <AntDesign name="lock1" color={'#05375a'} size={20} />
                 <TextInput
                   placeholder="Nhập mật khẩu"
                   placeholderTextColor="#666666"
@@ -219,9 +220,9 @@ const SignUpPhoneScreen = ({
                 />
                 <TouchableOpacity onPress={() => toggleSecurePass()}>
                   {secureTextEntry.password ? (
-                    <Feather name="eye-off" color="grey" size={20} />
+                    <Entypo name="eye-with-line" color="grey" size={20} />
                   ) : (
-                    <Feather name="eye" color="grey" size={20} />
+                    <Entypo name="eye" color="grey" size={20} />
                   )}
                 </TouchableOpacity>
               </View>
@@ -234,7 +235,7 @@ const SignUpPhoneScreen = ({
                 Xác nhận mật khẩu
               </Text>
               <View style={styles.actionSignUp}>
-                <Feather name="key" color={'#05375a'} size={20} />
+                <AntDesign name="lock1" color={'#05375a'} size={20} />
                 <TextInput
                   placeholder="nhập lại mật khẩu"
                   placeholderTextColor="#666666"
@@ -248,9 +249,9 @@ const SignUpPhoneScreen = ({
                 />
                 <TouchableOpacity onPress={() => toggleSecureRePass()}>
                   {secureTextEntry.rePassword ? (
-                    <Feather name="eye-off" color="grey" size={20} />
+                    <Entypo name="eye-with-line" color="grey" size={20} />
                   ) : (
-                    <Feather name="eye" color="grey" size={20} />
+                    <Entypo name="eye" color="grey" size={20} />
                   )}
                 </TouchableOpacity>
               </View>

@@ -10,11 +10,11 @@ export default function ProfileTabView() {
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
     {key: 'profile', title: 'Thông tin'},
-    {key: 'teams', title: 'Đội bóng'},
+    // {key: 'teams', title: 'Đội bóng'},
   ]);
   const renderScene = SceneMap({
     profile: TabProfile,
-    teams: TabTeams,
+    // teams: TabTeams,
   });
   const renderTabBar = (props) => (
     <TabBar

@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import {scale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
+import colors from '../../theme/colors';
 import IconMaterialOrSvg, {IconType} from '../common/IconMaterialOrSvg';
 import {body3, headline5, headline6, Text} from '../common/Text';
 
@@ -11,6 +12,7 @@ export default function RowButton({
   nameSvg,
   text,
   onPress,
+  color,
 }) {
   return (
     <View onPress={onPress} style={styles.container}>
@@ -20,10 +22,10 @@ export default function RowButton({
         size={scale(25)}
         imageStyle={styles.imageSouceStyle}
         nameSvg={nameSvg}
-        style={styles.icon}
+        style={styles.icon(color)}
       />
       <TouchableOpacity style={styles.warpperBtn} onPress={onPress}>
-        <Text type={headline6} style={styles.txt}>
+        <Text type={headline6} style={styles.txt(color)}>
           {text}
         </Text>
         <IconMaterialOrSvg
@@ -45,7 +47,11 @@ const styles = StyleSheet.create({
     ...Styles.rowBetween,
     marginLeft: scale(10),
   },
-  txt: {
+  txt: (color) => ({
+    color,
     flex: 1,
-  },
+  }),
+  icon: (color) => ({
+    color,
+  }),
 });
