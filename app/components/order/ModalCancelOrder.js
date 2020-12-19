@@ -14,13 +14,18 @@ import {HOME_SCREEN} from '../../navigations/route-name';
 import rootNavigator from '../../navigations/root.navigator';
 import {ToastHelper} from '../../helpers/ToastHelper';
 
-const ModalCancelOrder = forwardRef(({orderId}, ref) => {
+const ModalCancelOrder = forwardRef(({orderId, idOwner, nameOwner}, ref) => {
   console.log('orderId: ', orderId);
   const [visible, setVisible] = useState(false);
   const [reason, setReason] = useState('');
 
   const cancelOrder = async () => {
-    const res = await cancelOrderService(orderId, reason);
+    const res = await cancelOrderService({
+      orderId,
+      reason,
+      userId: idOwner,
+      name: nameOwner,
+    });
     if (res && res.code === StatusCode.SUCCESS) {
       rootNavigator.navigate(HOME_SCREEN);
       hide();

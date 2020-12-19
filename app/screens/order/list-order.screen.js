@@ -1,5 +1,11 @@
 import React, {useState} from 'react';
-import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {
+  FlatList,
+  RefreshControl,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import ScrollableTabView, {
   ScrollableTabBar,
 } from 'react-native-scrollable-tab-view';
@@ -13,16 +19,27 @@ import {listStatusOrder} from '../../helpers/data-local.helper';
 import {scale} from '../../helpers/size.helper';
 import rootNavigator from '../../navigations/root.navigator';
 import colors from '../../theme/colors';
+import {getListOrder} from '../../redux/actions/auth.action';
+import {useFocusEffect} from '@react-navigation/native';
 
 let initialListOrder = [];
-const ListOrderScreen = ({listOrder}) => {
+const ListOrderScreen = ({listOrder, getListOrder}) => {
   initialListOrder = [...listOrder];
   const [data, setdata] = useState({
     list: listOrder,
     onReady: false,
+    isRefreshing: false,
   });
-  const handleOnPress = () => {
-    rootNavigator.back();
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getListOrder();
+    }, []),
+  );
+
+  const onRefresh = () => {
+    setdata({...data, isRefreshing: false});
+    getListOrder();
   };
 
   const onChangeTab = ({i}) => {
@@ -36,10 +53,12 @@ const ListOrderScreen = ({listOrder}) => {
       setdata({...data, list: newList, onReady: true});
     }
   };
+
   const keyExtractor = (item, index) => index.toString();
   const renderItem = ({item}) => {
     return <CardStatusOrder item={item} />;
   };
+
   return (
     <View style={styles.container}>
       <ToolBar title="Danh sách lịch đặt sân" left={true} />
@@ -56,6 +75,12 @@ const ListOrderScreen = ({listOrder}) => {
             style={styles.warpperBody}
             tabLabel={item.name}>
             <FlatList
+              refreshControl={
+                <RefreshControl
+                  refreshing={data.isRefreshing}
+                  onRefresh={onRefresh}
+                />
+              }
               data={data.list}
               showsVerticalScrollIndicator={false}
               contentContainerStyle={styles.list}
@@ -84,10 +109,14 @@ const styles = StyleSheet.create({
   },
 });
 
+const mapDispatchToProps = {
+  getListOrder,
+};
+
 function mapStateToProps(state) {
   return {
     listOrder: state.authState.listOrder,
   };
 }
 
-export default connect(mapStateToProps, null)(ListOrderScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(ListOrderScreen);

@@ -60,6 +60,7 @@ const ListGameScreen = ({getListGame, listGameUser, getListOrder}) => {
           ),
           onReady: true,
           isRefreshing: false,
+          visbaleModal: false,
         });
       } else {
         setListGame({
@@ -96,6 +97,7 @@ const ListGameScreen = ({getListGame, listGameUser, getListOrder}) => {
       visbaleModal: false,
     });
   };
+
   const keyExtractor = (item, index) => index.toString();
   const renderItem = ({item, index}) => {
     return <CardGame item={item} />;

@@ -28,6 +28,12 @@ export const getListOrderService = () => {
 export const getOrderDetailService = (orderId) => {
   return RequestHelper.get(GET_ORDER_DETAIL(orderId));
 };
-export const cancelOrderService = (orderId, reason) => {
-  return RequestHelper.put(CANCEL_ORDER, {orderId, status: 'REJECT', reason});
+export const cancelOrderService = ({orderId, reason, userId, name}) => {
+  return RequestHelper.put(CANCEL_ORDER, {
+    orderId,
+    status: 'REJECT',
+    reason,
+    userId,
+    name,
+  });
 };
