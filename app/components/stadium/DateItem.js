@@ -17,7 +17,7 @@ export default function DateItem({item, onPress}) {
 const styles = StyleSheet.create({
   container: (choose) => {
     return {
-      backgroundColor: choose ? colors.green : colors.grayOpacity,
+      backgroundColor: choose ? colors.green : colors.grayLight,
       marginRight: scale(10),
       borderRadius: scale(3),
       paddingVertical: scale(5),

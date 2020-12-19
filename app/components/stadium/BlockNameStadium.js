@@ -1,21 +1,57 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import {Linking, Platform, StyleSheet, View} from 'react-native';
 import {scale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
+import rootNavigator from '../../navigations/root.navigator';
+import {REVIEW_STADIUM_SCREEN} from '../../navigations/route-name';
 import colors from '../../theme/colors';
-import {body3, headline4, Text} from '../common/Text';
+import ButtonGradient from './ButtonGradient';
 
-export default function BlockNameStadium({item}) {
+export default function BlockNameStadium({hasOrder, data}) {
+  const navigateToReview = () => {
+    rootNavigator.navigate(REVIEW_STADIUM_SCREEN, {item: data});
+  };
+  const onPressDirection = (
+    latitude = 0,
+    longitude = 0,
+    label = 'Footcer',
+  ) => async () => {
+    const url = Platform.select({
+      android: 'geo:' + latitude + ',' + longitude + '?q=' + label,
+    });
+    const isLinkingSupport = await Linking.canOpenURL(url);
+    if (isLinkingSupport) {
+      Linking.openURL(url);
+    } else {
+      const urlGoogleMap = `https://www.google.com/maps/dir/Current+Location/${latitude},${longitude}`;
+      Linking.openURL(urlGoogleMap);
+    }
+  };
   return (
     <View style={styles.container}>
-      <Text type={headline4} style={styles.txtName}>
-        {item?.stadiumName}
-      </Text>
-      <Icon name="place" color="#FF0000" size={scale(25)} />
-      <Text type={body3} style={styles.txtAddress}>
-        {item?.address}
-      </Text>
+      {hasOrder && (
+        <ButtonGradient
+          backgroundColor={colors.yellowDark}
+          iconName="star-circle"
+          title="Đánh giá sân"
+          onPress={navigateToReview}
+        />
+      )}
+      <ButtonGradient
+        backgroundColor={colors.blueDark}
+        iconName="map-search-outline"
+        title="Chỉ đường"
+        onPress={onPressDirection(
+          data?.latitude,
+          data?.longitude,
+          data?.address,
+        )}
+      />
+      <ButtonGradient
+        backgroundColor={colors.orange}
+        iconName="cellphone-sound"
+        title="Liên hệ"
+      />
     </View>
   );
 }
@@ -26,7 +62,6 @@ const styles = StyleSheet.create({
     borderRadius: scale(8),
     paddingHorizontal: scale(24),
     marginTop: scale(-50),
-    marginBottom: scale(20),
     marginHorizontal: scale(20),
     alignItems: 'center',
     shadowColor: colors.black,
@@ -37,24 +72,8 @@ const styles = StyleSheet.create({
     shadowRadius: scale(4),
     elevation: 2,
     zIndex: 1,
-    paddingVertical: scale(10),
-  },
-  txtName: {
-    marginBottom: scale(10),
-    color: colors.orange,
-  },
-  btn: {
-    ...Styles.columnCenter,
-    width: 120,
-    backgroundColor: colors.blue,
-    paddingVertical: scale(5),
-    borderRadius: scale(5),
-    marginTop: scale(10),
-  },
-  txtBtn: {
-    color: colors.white,
-  },
-  txtAddress: {
-    textAlign: 'center',
+    paddingVertical: scale(20),
+    flexDirection: 'row',
+    justifyContent: 'space-around',
   },
 });

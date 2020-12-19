@@ -19,7 +19,6 @@ import {scale, verticalScale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
 import {ToastHelper} from '../../helpers/ToastHelper';
 import rootNavigator from '../../navigations/root.navigator';
-import {STADIUM_SCREEN} from '../../navigations/route-name';
 import {hideLoading, showLoading} from '../../redux/actions/loading.action';
 import colors from '../../theme/colors';
 
@@ -47,29 +46,13 @@ const ReviewStadiumScreen = ({route, showLoading, hideLoading}) => {
     }
   };
 
-  const handleOnPress = () => {
-    rootNavigator.back();
-  };
-  const renderToolBar = () => {
-    return (
-      <ToolBar
-        style={styles.toolBar}
-        left={
-          <TouchableOpacity style={styles.btnBack} onPress={handleOnPress}>
-            <Icon name="chevron-left" size={scale(25)} color={colors.white} />
-          </TouchableOpacity>
-        }
-        center={
-          <Text type={headline5} style={styles.titleContent}>
-            Đánh giá sân bóng
-          </Text>
-        }
-      />
-    );
-  };
   return (
     <View style={styles.container}>
-      {renderToolBar()}
+      <ToolBar
+        backgroundColor={colors.main}
+        left={true}
+        title="Đánh giá sân bóng"
+      />
       <ScrollView contentContainerStyle={styles.reviewContainer}>
         <Avatar image={item.image} size={scale(150)} />
         <Text type={headline4} style={styles.txtName}>
@@ -135,6 +118,7 @@ const styles = StyleSheet.create({
   txtName: {
     color: colors.orange,
     marginTop: scale(10),
+    textAlign: 'center',
   },
   warpperLocation: {
     ...Styles.columnCenter,

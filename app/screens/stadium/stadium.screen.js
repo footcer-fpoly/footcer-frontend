@@ -34,26 +34,34 @@ import colors from '../../theme/colors';
 import spacing from '../../theme/spacing';
 import {showLoading, hideLoading} from '../../redux/actions/loading.action';
 import TextError from '../../components/common/TextError';
+import {color} from 'react-native-reanimated';
 
 const {width} = Dimensions.get('window');
 const CARD_WIDTH = width * 0.8;
 const SPACING_FOR_CARD_INSET = width * 0.1 - 10;
+
+const ZOOM = 0.2;
+const ZOOM_IN = 0.1;
+
 const StadiumScreen = ({isPermissionLocation, showLoading, hideLoading}) => {
   const [state, setState] = useState({
     listStadium: [],
     region: {
       latitude: 0,
       longitude: 0,
-      latitudeDelta: 0.01,
-      longitudeDelta: 0.01,
+      latitudeDelta: ZOOM,
+      longitudeDelta: ZOOM,
     },
     onReady: false,
+    onReadySearch: true,
   });
   const [search, setSearch] = useState({
     show: false,
     iconName: 'search',
     text: '',
   });
+
+  const [isShowList, setisShowList] = useState(true);
   const [showMove, setShowMove] = useState(true);
   const toggleSearch = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -64,6 +72,11 @@ const StadiumScreen = ({isPermissionLocation, showLoading, hideLoading}) => {
     });
 
     getData();
+  };
+
+  const toogleShowList = () => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setisShowList(!isShowList);
   };
 
   useEffect(() => {
@@ -121,8 +134,8 @@ const StadiumScreen = ({isPermissionLocation, showLoading, hideLoading}) => {
             {
               latitude,
               longitude,
-              latitudeDelta: state.region.latitudeDelta,
-              longitudeDelta: state.region.longitudeDelta,
+              latitudeDelta: ZOOM_IN,
+              longitudeDelta: ZOOM_IN,
             },
             1000,
           );
@@ -147,9 +160,12 @@ const StadiumScreen = ({isPermissionLocation, showLoading, hideLoading}) => {
   });
   const onMarkerPress = (mapEventData) => {
     const markerID = mapEventData._targetInst.return.key;
-
     let x = markerID * CARD_WIDTH + markerID * 20;
     _scrollView.current.scrollTo({x: x, y: 0, animated: true});
+    if (!isShowList) {
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+      setisShowList(true);
+    }
   };
   const _map = useRef();
   const _scrollView = useRef();
@@ -161,14 +177,13 @@ const StadiumScreen = ({isPermissionLocation, showLoading, hideLoading}) => {
   const searchStadium = async () => {
     try {
       if (search.text.length) {
-        showLoading();
+        setState({...state, onReadySearch: false});
         const res = await searchStadiumNameService(search.text);
         if (res && res.code === StatusCode.SUCCESS) {
-          setState({...state, listStadium: res.data});
+          setState({...state, listStadium: res.data, onReadySearch: true});
           setShowMove(false);
         } else {
         }
-        hideLoading();
       }
     } catch (error) {}
   };
@@ -178,12 +193,13 @@ const StadiumScreen = ({isPermissionLocation, showLoading, hideLoading}) => {
         <ToolBar
           title="Đặt sân bóng"
           left={true}
+          backgroundColor={colors.main}
           right={
             <TouchableOpacity onPress={toggleSearch}>
               <MaterialIcons
                 name={search.iconName}
                 size={scale(25)}
-                color={colors.black}
+                color={colors.white}
               />
             </TouchableOpacity>
           }
@@ -193,6 +209,8 @@ const StadiumScreen = ({isPermissionLocation, showLoading, hideLoading}) => {
             <SearchInput
               onChangeText={(value) => setSearch({...search, text: value})}
               onPress={searchStadium}
+              onReady={state.onReadySearch}
+              onBlur={searchStadium}
             />
           </View>
         )}
@@ -217,21 +235,6 @@ const StadiumScreen = ({isPermissionLocation, showLoading, hideLoading}) => {
   return (
     <View style={styles.container}>
       {renderToolBar()}
-      {!search.show && (
-        <ButtonMyLocation
-          onPress={() => {
-            _map.current.animateToRegion(
-              {
-                latitude: state.region.latitude,
-                longitude: state.region.longitude,
-                latitudeDelta: state.region.latitudeDelta,
-                longitudeDelta: state.region.longitudeDelta,
-              },
-              1000,
-            );
-          }}
-        />
-      )}
       <MapView
         ref={_map}
         provider={PROVIDER_GOOGLE}
@@ -273,8 +276,32 @@ const StadiumScreen = ({isPermissionLocation, showLoading, hideLoading}) => {
           />
         </Marker>
       </MapView>
-      <View style={styles.footer}>
+      <View style={styles.footer(isShowList)}>
+        <TouchableOpacity
+          onPress={toogleShowList}
+          style={{...Styles.columnCenter, height: scale(40)}}>
+          <Icon
+            name={isShowList ? 'chevron-down' : 'chevron-up'}
+            size={scale(25)}
+            color={colors.gray}
+          />
+        </TouchableOpacity>
         <View style={styles.warpperTitle}>
+          {!search.show && (
+            <ButtonMyLocation
+              onPress={() => {
+                _map.current.animateToRegion(
+                  {
+                    latitude: state.region.latitude,
+                    longitude: state.region.longitude,
+                    latitudeDelta: ZOOM,
+                    longitudeDelta: ZOOM,
+                  },
+                  1000,
+                );
+              }}
+            />
+          )}
           <Text type={headline4} style={styles.titleFooter}>
             Danh sách cụm sân
           </Text>
@@ -282,7 +309,7 @@ const StadiumScreen = ({isPermissionLocation, showLoading, hideLoading}) => {
             <Text type={headline5} style={styles.txtCountListStadium}>
               {state.listStadium?.length}
             </Text>
-            <Icon size={scale(20)} color={colors.green} name="stadium" />
+            <Icon size={scale(20)} color={colors.gray} name="stadium" />
           </View>
         </View>
         <Animated.ScrollView
@@ -333,25 +360,28 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  footer: {
+  footer: (show) => ({
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-    paddingVertical: 10,
-    backgroundColor: colors.white,
+    backgroundColor: colors.viewBackground,
     borderTopRightRadius: scale(20),
     borderTopLeftRadius: scale(20),
-  },
+    paddingBottom: scale(20),
+    height: show ? undefined : scale(40),
+  }),
   titleFooter: {
-    marginBottom: scale(10),
+    marginBottom: scale(5),
+    marginLeft: scale(10),
   },
   warpperTitle: {
     ...Styles.rowBetween,
     paddingHorizontal: scale(10),
+    marginBottom: scale(5),
   },
   txtCountListStadium: {
-    color: colors.green,
+    color: colors.gray,
     marginRight: spacing.tiny,
   },
 });

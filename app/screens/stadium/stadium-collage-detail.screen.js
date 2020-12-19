@@ -1,7 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {ScrollView, StyleSheet, View} from 'react-native';
 import Carousel from 'react-native-snap-carousel';
-import Icon from 'react-native-vector-icons/Octicons';
 import {getStadiumCollageDetailService} from '../../api/stadium.api';
 import {StatusCode} from '../../api/status-code';
 import DescriptionStatus from '../../components/common/DescriptionStatus';
@@ -9,7 +8,7 @@ import ListLoadingComponent from '../../components/common/ListLoadingComponent';
 import NoDataComponent from '../../components/common/NoDataComponent';
 import PrimaryButton from '../../components/common/PrimaryButton';
 import RowInfo from '../../components/common/RowInfo';
-import {headline5, headline6, Text} from '../../components/common/Text';
+import {headline6, Text} from '../../components/common/Text';
 import TextError from '../../components/common/TextError';
 import ToolBar from '../../components/common/Toolbar';
 import DateItem from '../../components/stadium/DateItem';
@@ -25,7 +24,6 @@ import {
 import {scale} from '../../helpers/size.helper';
 import {ToastHelper} from '../../helpers/ToastHelper';
 import useNextDays from '../../hooks/useNextDays';
-import rootNavigator from '../../navigations/root.navigator';
 import colors from '../../theme/colors';
 import dimens from '../../theme/dimens';
 import spacing from '../../theme/spacing';
@@ -64,7 +62,7 @@ export default function StadiumCollageDetailScreen({route}) {
 
   const toggleModalCreateOrder = () => {
     if (!order.timeOrder) {
-      scrollRef.current.scrollToEnd();
+      // scrollRef.current.scrollToEnd();
       setState({...state, error: true});
     } else {
       setVisibleModal(!visibleModal);
@@ -199,7 +197,7 @@ export default function StadiumCollageDetailScreen({route}) {
           </Text>
           <View style={styles.wrapperDesStatus}>
             <DescriptionStatus color={colors.white} lable="Còn trống" />
-            <DescriptionStatus color={colors.grayOpacity} lable="Đã được đặt" />
+            <DescriptionStatus color={colors.grayLight} lable="Đã được đặt" />
             <DescriptionStatus color={colors.green} lable="Đang chọn" />
           </View>
           {state.error && <TextError text={'Vui lòng chọn giờ'} />}
@@ -213,7 +211,7 @@ export default function StadiumCollageDetailScreen({route}) {
               nestedScrollEnabled={true}
               showsHorizontalScrollIndicator={false}
               horizontal
-              style={styles.paddingHor}>
+              contentContainerStyle={styles.paddingHor}>
               {subList.map((item, index) => (
                 <View key={index.toString()} style={{marginRight: scale(5)}}>
                   {render(item)}
@@ -236,8 +234,9 @@ export default function StadiumCollageDetailScreen({route}) {
     return (
       <>
         {renderToolBar()}
-        <Text />
-        <ListLoadingComponent onReady={state.onReady} />
+        <View style={{paddingHorizontal: scale(10)}}>
+          <ListLoadingComponent onReady={state.onReady} />
+        </View>
       </>
     );
   }
@@ -248,7 +247,9 @@ export default function StadiumCollageDetailScreen({route}) {
         ref={scrollRef}
         contentContainerStyle={styles.contentContainer}
         style={styles.flex1}>
-        <View style={styles.section}>
+        {renderSectionDate()}
+        {renderSectionTime()}
+        <View style={[styles.section, styles.mrTop]}>
           <Text type={headline6} style={styles.txtTitle}>
             Thông tin sân:
           </Text>
@@ -276,11 +277,13 @@ export default function StadiumCollageDetailScreen({route}) {
             <RowInfo lable="Địa chỉ: " value={address} />
           </View>
         </View>
-        {renderSectionDate()}
-        {renderSectionTime()}
       </ScrollView>
       <View style={styles.wrapperBtnOrder}>
-        <PrimaryButton onPress={toggleModalCreateOrder} title="Đặt sân" />
+        <PrimaryButton
+          style={{backgroundColor: colors.orange}}
+          onPress={toggleModalCreateOrder}
+          title="Đặt sân"
+        />
       </View>
       <ModalCreateOrder
         dismiss={toggleModalCreateOrder}
@@ -314,16 +317,11 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   wrapperBtnOrder: {
-    backgroundColor: colors.white,
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    left: 0,
+    backgroundColor: colors.viewBackground,
     paddingHorizontal: scale(10),
-    paddingTop: scale(10),
-    paddingBottom: scale(5),
     borderTopRightRadius: scale(10),
     borderTopLeftRadius: scale(10),
+    paddingVertical: scale(10),
   },
   wrapperDesStatus: {
     flexDirection: 'row',

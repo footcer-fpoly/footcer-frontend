@@ -8,7 +8,7 @@ import {scale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
 import colors from '../../theme/colors';
 import spacing from '../../theme/spacing';
-import {body3, headline5, headline6, Text} from '../common/Text';
+import {body3, headline6, Text} from '../common/Text';
 
 export default function TimeItem({item, key, onPress}) {
   const colorItemTime = (hasOrder) => {
@@ -21,7 +21,7 @@ export default function TimeItem({item, key, onPress}) {
         };
       case true:
         return {
-          backgroundColor: colors.grayOpacity,
+          backgroundColor: colors.grayLight,
           colorTime: colors.gray,
           colorPrice: colors.gray,
         };
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
     ...Styles.borderView(colors.grayLight, 2, 5),
     ...Styles.columnCenter,
     backgroundColor: backgroundColor,
-    width: 200,
+    width: scale(150),
     marginTop: scale(5),
     paddingVertical: scale(10),
   }),

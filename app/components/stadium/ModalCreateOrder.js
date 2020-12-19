@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {StyleSheet, View, ActivityIndicator} from 'react-native';
+import {ActivityIndicator, StyleSheet, View} from 'react-native';
 import Modal from 'react-native-modal';
 import {addOrderService} from '../../api/order.api';
 import {StatusCode} from '../../api/status-code';
@@ -21,21 +21,32 @@ export default function ModalCreateOrder({dismiss, visible, data}) {
   const [description, setdescription] = useState('');
   const [loading, setLoading] = useState(false);
   const confirmOrder = async () => {
-    setLoading(true);
-    const res = await addOrderService({
-      time: data.dateOrder,
-      price: data.price,
-      description,
-      stadiumDetailsId: data.stadiumDetailsId,
-      stadiumUserId: data.stadiumUserId,
-    });
-    if (res && res.code === StatusCode.SUCCESS) {
+    try {
+      setLoading(true);
+      const res = await addOrderService({
+        time: data.dateOrder,
+        price: data.price,
+        description,
+        stadiumDetailsId: data.stadiumDetailsId,
+        stadiumUserId: data.stadiumUserId,
+      });
+      if (res && res.code === StatusCode.SUCCESS) {
+        dismiss();
+        ToastHelper.showToast('Bạn đã đặt lịch thành công', colors.greenDark);
+        rootNavigator.replace(ORDER_DETAIL_SCREEN, {
+          orderId: res?.data?.orderId,
+        });
+      } else {
+        dismiss();
+        ToastHelper.showToast('Lỗi');
+      }
+    } catch (error) {
+      console.log(
+        'LOG -> file: ModalCreateOrder.js -> line 44 -> confirmOrder -> error',
+        error,
+      );
       dismiss();
-      ToastHelper.showToast('Bạn đã đặt lịch thành công', colors.main);
-      rootNavigator.replace(ORDER_DETAIL_SCREEN, {orderId: res?.data?.orderId});
-    } else {
-      dismiss();
-      ToastHelper.showToast('Lỗi rồi fr');
+      ToastHelper.showToast('Lỗi');
     }
   };
 
@@ -58,6 +69,9 @@ export default function ModalCreateOrder({dismiss, visible, data}) {
             iconType={IconType.MaterialCommunityIcons}
             iconName="stadium"
             editable={false}
+            otherTextInputProps={{
+              multiline: true,
+            }}
           />
           <RowProflie
             label="Sân con: "
@@ -120,7 +134,7 @@ export default function ModalCreateOrder({dismiss, visible, data}) {
   );
 }
 const styles = StyleSheet.create({
-  btn: {flex: 1},
+  btn: {flex: 1, paddingHorizontal: scale(10)},
   mrRight: {marginRight: spacing.tiny, backgroundColor: colors.gray},
   mrLeft: {marginLeft: spacing.tiny},
   warpperButton: {

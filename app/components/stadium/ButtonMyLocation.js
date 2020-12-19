@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     borderRadius: scale(5),
     zIndex: 1,
     position: 'absolute',
-    bottom: 320,
+    top: scale(-90),
     right: 10,
   },
 });
