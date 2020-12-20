@@ -1,4 +1,5 @@
-import React, {useEffect, useRef, useState} from 'react';
+import {useFocusEffect} from '@react-navigation/native';
+import React, {useRef, useState} from 'react';
 import {
   FlatList,
   LayoutAnimation,
@@ -11,7 +12,10 @@ import {
 } from 'react-native';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import {Host} from 'react-native-portalize';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Icon from 'react-native-vector-icons/Octicons';
+import {connect} from 'react-redux';
 import {
   deleteGameService,
   getGameDetailService,
@@ -19,40 +23,27 @@ import {
   updateGameService,
 } from '../../api/game.api';
 import {StatusCode} from '../../api/status-code';
+import imageDelete from '../../assets/svg/img_delete.svg';
+import RowProflie from '../../components/account/RowProflie';
+import ConfirmDialog from '../../components/common/dialog/ConfirmDialog';
+import {IconType} from '../../components/common/IconMaterialOrSvg';
 import ListLoadingComponent from '../../components/common/ListLoadingComponent';
 import PrimaryButton from '../../components/common/PrimaryButton';
-import {
-  body2,
-  body3,
-  headline5,
-  headline6,
-  Text,
-} from '../../components/common/Text';
+import {body3, headline5, headline6, Text} from '../../components/common/Text';
 import ToolBar from '../../components/common/Toolbar';
+import ModalPickerOrder from '../../components/game/ModalPickerOrder';
 import ModalPickerTeams from '../../components/game/ModalPickerTeams';
+import CardMyTeam from '../../components/team/CardMyTeam';
 import ItemTeamMember from '../../components/team/ItemTeamMember';
+import {convertPlayTime, formatToDate} from '../../helpers/format.helper';
 import {scale} from '../../helpers/size.helper';
+import Styles from '../../helpers/styles.helper';
+import {ToastHelper} from '../../helpers/ToastHelper';
 import rootNavigator from '../../navigations/root.navigator';
 import {HOME_SCREEN, TEAM_DETAIL_SCREEN} from '../../navigations/route-name';
+import {hideLoading, showLoading} from '../../redux/actions/loading.action';
 import colors from '../../theme/colors';
-import CardMyTeam from '../../components/team/CardMyTeam';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {connect} from 'react-redux';
-import {showLoading, hideLoading} from '../../redux/actions/loading.action';
-import {ToastHelper} from '../../helpers/ToastHelper';
-import Styles from '../../helpers/styles.helper';
 import spacing from '../../theme/spacing';
-import {
-  converSecondsToTime,
-  convertPlayTime,
-  formatToDate,
-} from '../../helpers/format.helper';
-import RowProflie from '../../components/account/RowProflie';
-import {IconType} from '../../components/common/IconMaterialOrSvg';
-import RowInfo from '../../components/common/RowInfo';
-import ButtonOutline from '../../components/common/ButtonOutline';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import ModalPickerOrder from '../../components/game/ModalPickerOrder';
 
 const GameDetailScreen = ({route, showLoading, hideLoading, profile}) => {
   const {gameId} = route.params;
@@ -70,10 +61,16 @@ const GameDetailScreen = ({route, showLoading, hideLoading, profile}) => {
 
   const [newOrder, setNewOrder] = useState(null);
   const [newTeam, setNewTeam] = useState(null);
+  const [visibleModalDele, setVisibleModalDele] = useState(false);
 
-  useEffect(() => {
-    getData();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      getData();
+    }, []),
+  );
+  const toggleModalDele = () => {
+    setVisibleModalDele(!visibleModalDele);
+  };
 
   const getData = async () => {
     try {
@@ -301,7 +298,7 @@ const GameDetailScreen = ({route, showLoading, hideLoading, profile}) => {
             <PrimaryButton
               style={[styles.flex49, {backgroundColor: colors.red}]}
               title="Hủy trận đấu"
-              onPress={deleteGame}
+              onPress={toggleModalDele}
             />
             <PrimaryButton
               onPress={toggleEdit}
@@ -453,11 +450,15 @@ const GameDetailScreen = ({route, showLoading, hideLoading, profile}) => {
                 />
               ) : (
                 <View style={styles.warppeNoData}>
-                  <Icon name="question" size={scale(80)} color={colors.gray} />
+                  <Icon
+                    name="question"
+                    size={scale(80)}
+                    color={colors.grayOpacity}
+                  />
                   <Text
                     type={headline5}
                     numberOfLines={2}
-                    style={[styles.txtNameTeam, {color: colors.gray}]}>
+                    style={[styles.txtNameTeam, {color: colors.grayOpacity}]}>
                     Chưa có đối thủ
                   </Text>
                 </View>
@@ -489,6 +490,18 @@ const GameDetailScreen = ({route, showLoading, hideLoading, profile}) => {
                 keyExtractor={keyExtractor}
                 renderItem={renderItemMember}
               />
+            </View>
+          )}
+          {state.team && (
+            <View style={styles.warppeTeam}>
+              <TouchableOpacity onPress={changeTeam} style={styles.iconRemove}>
+                <MaterialCommunityIcons
+                  name="close-circle"
+                  size={30}
+                  color={colors.red}
+                />
+              </TouchableOpacity>
+              <CardMyTeam item={state.team} />
             </View>
           )}
           <View style={styles.wrapperSection}>
@@ -619,20 +632,6 @@ const GameDetailScreen = ({route, showLoading, hideLoading, profile}) => {
             </View>
           </View>
 
-          {state.team && (
-            <View style={styles.warppeTeam}>
-              <TouchableOpacity onPress={changeTeam} style={styles.iconRemove}>
-                <MaterialCommunityIcons
-                  name="close-circle"
-                  size={30}
-                  color={colors.red}
-                />
-              </TouchableOpacity>
-              <CardMyTeam item={state.team} />
-            </View>
-          )}
-          {!state?.data?.teamIdGuest && renderButtonFooter()}
-          {state.editable && renderButtonEdit()}
           {state.isLeader && (
             <Text type={body3} style={styles.txtNote}>
               * Bạn chỉ có thể chỉnh sửa / hủy trận đấu khi chưa có đội bóng
@@ -647,7 +646,23 @@ const GameDetailScreen = ({route, showLoading, hideLoading, profile}) => {
             ref={modalizeOrderRef}
             onSelectItem={onSelectItemOrder}
           />
+          <ConfirmDialog
+            visible={visibleModalDele}
+            imageSVG={imageDelete}
+            sizeImage={scale(150)}
+            confirmText="Xác nhận"
+            cancelText="Hủy"
+            colorsCancel={colors.grayDark}
+            colorsConfirm={colors.red}
+            title="Hủy trận đấu"
+            subTitle="Bạn có chắc muốn hủy trận đấu"
+            onCancelClick={toggleModalDele}
+            onConfirmClick={deleteGame}
+            colorTitle={colors.red}
+          />
         </ScrollView>
+        {!state?.data?.teamIdGuest && renderButtonFooter()}
+        {state.editable && renderButtonEdit()}
       </View>
     </Host>
   );
@@ -719,6 +734,10 @@ const styles = StyleSheet.create({
   },
   warppeTeam: {
     alignItems: 'flex-end',
+    paddingHorizontal: scale(10),
+    backgroundColor: colors.white,
+    marginVertical: scale(5),
+    paddingVertical: scale(10),
   },
   iconRemove: {
     paddingHorizontal: scale(10),

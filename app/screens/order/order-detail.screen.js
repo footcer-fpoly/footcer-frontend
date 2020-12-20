@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   View,
   Image,
+  RefreshControl,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Octicons';
 import {getOrderDetailService} from '../../api/order.api';
@@ -17,6 +18,7 @@ import {
   body2,
   body3,
   headline2,
+  headline3,
   headline4,
   headline5,
   Text,
@@ -38,20 +40,29 @@ import {formatToDate, convertPlayTime} from '../../helpers/format.helper';
 import TitleTextInputField from '../../components/common/TitleTextInputField';
 import {callPhone} from '../../helpers/call-phone.helper';
 import {direction} from '../../helpers/direction.helper';
+import {ToastHelper} from '../../helpers/ToastHelper';
+import {connect} from 'react-redux';
 
-export default function orderDetail({route}) {
+const orderDetail = ({route, listGame}) => {
   const {orderId} = route.params;
   const modalAddRef = useRef();
 
   const [state, setState] = useState({
     onReady: false,
     data: {},
+    isRefreshing: false,
   });
   const statusOrder = useStatusOrder(state?.data?.order_status?.status);
 
   useEffect(() => {
     getData();
   }, []);
+
+  const onRefresh = () => {
+    setState({...state, isRefreshing: true});
+    getData();
+  };
+
   const getData = async () => {
     const res = await getOrderDetailService(orderId);
     console.log(res);
@@ -59,11 +70,22 @@ export default function orderDetail({route}) {
       setState({
         onReady: true,
         data: res.data,
+        isRefreshing: false,
       });
     }
   };
   const showModal = () => {
-    modalAddRef.current.show();
+    const hasGame = listGame?.find(
+      (item) => item.orderId === state?.data?.orderId,
+    );
+    if (hasGame) {
+      ToastHelper.showToast(
+        'Lịch đặt sân bóng đã được tạo trận đấu. Vui lòng hủy trận đấu để có thể hủy lịch đặt sân',
+        colors.yellowDark,
+      );
+    } else {
+      modalAddRef.current.show();
+    }
   };
   const navigateToScreen = () => {
     rootNavigator.navigate(HOME_SCREEN);
@@ -89,6 +111,7 @@ export default function orderDetail({route}) {
       );
     }
   };
+
   const renderBtnLeft = () => {
     console.log('LOG -> status', state?.data?.order_status?.status);
     switch (state?.data?.order_status?.status) {
@@ -158,6 +181,12 @@ export default function orderDetail({route}) {
         }
       />
       <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={state.isRefreshing}
+            onRefresh={onRefresh}
+          />
+        }
         style={styles.scrollContainer}
         contentContainerStyle={styles.contentContainerScroll}>
         <View>
@@ -180,8 +209,8 @@ export default function orderDetail({route}) {
             paddingBottom: scale(20),
           }}>
           <View style={styles.wrapperTime}>
-            <Text type={headline2}>{formatDateTime(state?.data?.time)}</Text>
-            <Text type={headline2} style={styles.txtTime(statusOrder.bgColor)}>
+            <Text type={headline3}>{formatDateTime(state?.data?.time)}</Text>
+            <Text type={headline3} style={styles.txtTime(statusOrder.bgColor)}>
               {convertPlayTime(
                 state?.data?.stadium_details?.startTimeDetail,
                 state?.data?.stadium_details?.endTimeDetail,
@@ -284,7 +313,7 @@ export default function orderDetail({route}) {
       />
     </View>
   );
-}
+};
 const styles = StyleSheet.create({
   flex1: {flex: 1, backgroundColor: colors.viewBackground},
   scrollContainer: {
@@ -342,6 +371,8 @@ const styles = StyleSheet.create({
   wrapperTime: {
     justifyContent: 'space-between',
     marginBottom: scale(20),
+    flexDirection: 'row',
+    flexWrap: 'wrap',
   },
   txtReason: {
     paddingHorizontal: scale(10),
@@ -356,3 +387,11 @@ const styles = StyleSheet.create({
     marginTop: scale(5),
   }),
 });
+
+function mapStateToProps(state) {
+  return {
+    listGame: state.authState.listGame,
+  };
+}
+
+export default connect(mapStateToProps, null)(orderDetail);

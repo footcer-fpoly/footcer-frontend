@@ -30,18 +30,16 @@ import CardStadium from '../../components/stadium/CardStadium';
 import PermissionFail from '../../components/stadium/PermissionFail';
 import {scale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
+import {hideLoading, showLoading} from '../../redux/actions/loading.action';
 import colors from '../../theme/colors';
 import spacing from '../../theme/spacing';
-import {showLoading, hideLoading} from '../../redux/actions/loading.action';
-import TextError from '../../components/common/TextError';
-import {color} from 'react-native-reanimated';
 
 const {width} = Dimensions.get('window');
 const CARD_WIDTH = width * 0.8;
 const SPACING_FOR_CARD_INSET = width * 0.1 - 10;
 
-const ZOOM = 0.2;
-const ZOOM_IN = 0.1;
+const ZOOM = 0.1;
+const ZOOM_IN = 0.01;
 
 const StadiumScreen = ({isPermissionLocation, showLoading, hideLoading}) => {
   const [state, setState] = useState({

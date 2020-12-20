@@ -36,14 +36,18 @@ import {scale} from '../../helpers/size.helper';
 import {getDomain} from '../../helpers/storage.helper';
 import Styles from '../../helpers/styles.helper';
 import rootNavigator from '../../navigations/root.navigator';
-import {ORDER_DETAIL_SCREEN} from '../../navigations/route-name';
-import {getListOrder} from '../../redux/actions/auth.action';
+import {
+  NOTIFICATION_SCREEN,
+  ORDER_DETAIL_SCREEN,
+} from '../../navigations/route-name';
+import {getListOrder, getListGame} from '../../redux/actions/auth.action';
 import {getListTeam} from '../../redux/actions/teams.action';
 import colors from '../../theme/colors';
 import {fcmService} from '../../utils/FCMService';
 import {notificationManager} from '../../utils/NotificationManager';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const HomeScreen = ({getListOrder, getListTeam, listOrder}) => {
+const HomeScreen = ({getListOrder, getListTeam, getListGame, listOrder}) => {
   useFocusEffect(
     React.useCallback(() => {
       fetchData();
@@ -84,6 +88,8 @@ const HomeScreen = ({getListOrder, getListTeam, listOrder}) => {
     console.log('[App] onOpenNotification: ', notify);
     const bodyNoti = JSON.parse(notify.body);
     AlertHelper.alert('success', bodyNoti.title, bodyNoti.content, {}, 10000);
+    console.log('========', bodyNoti);
+    fetchData();
   }
 
   const onRegister = async (token) => {
@@ -111,11 +117,23 @@ const HomeScreen = ({getListOrder, getListTeam, listOrder}) => {
   };
 
   const fetchData = async () => {
-    await Promise.all([getListOrder(), getListTeam()]);
+    await Promise.all([getListOrder(), getListTeam(), getListGame()]);
   };
   return (
     <View style={styles.container}>
-      <ToolBar backgroundColor={colors.main} title="Trang chủ" />
+      <ToolBar
+        backgroundColor={colors.main}
+        title="Trang chủ"
+        right={
+          <TouchableOpacity onPress={navigateToScreen(NOTIFICATION_SCREEN)}>
+            <MaterialCommunityIcons
+              name="bell-outline"
+              size={scale(25)}
+              color={colors.white}
+            />
+          </TouchableOpacity>
+        }
+      />
       <ScrollView style={styles.flex1}>
         <View style={styles.warpperSwiper}>
           <Swiper
@@ -341,6 +359,7 @@ const styles = StyleSheet.create({
 const mapDispatchToProps = {
   getListOrder,
   getListTeam,
+  getListGame,
 };
 function mapStateToProps(state) {
   return {

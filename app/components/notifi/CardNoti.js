@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {keyNoti} from '../../helpers/data-local.helper';
 import {convertDateTime} from '../../helpers/format.helper';
 import {scale} from '../../helpers/size.helper';
+import userHandleNoti from '../../hooks/userHandleNoti';
 import rootNavigator from '../../navigations/root.navigator';
 import {
   GAME_DETAIL_SCREEN,
@@ -16,80 +17,17 @@ import colors from '../../theme/colors';
 import {body2, body3, Text} from '../common/Text';
 
 export default function CardNoti({item}) {
-  const conditionItem = () => {
-    switch (item?.key) {
-      case keyNoti.ACCEPT_INVITE:
-        return {
-          iconName: 'account-group-outline',
-          color: colors.main,
-          navigate: TEAM_DETAIL_SCREEN,
-          params: {teamID: item?.generalId, flag: 1},
-        };
-      case keyNoti.ADD_MEMBER:
-        return {
-          iconName: 'account-group-outline',
-          color: colors.main,
-          navigate: TEAM_DETAIL_SCREEN,
-          params: {teamID: item?.generalId},
-        };
-      case keyNoti.CANCEL_MEMBER:
-      case keyNoti.DELETE_MEMBER:
-        return {
-          iconName: 'account-group-outline',
-          color: colors.red,
-          navigate: NOTIFICATION_SCREEN,
-          params: {},
-        };
-      case keyNoti.REJECT:
-        return {
-          iconName: 'book-open',
-          color: colors.red,
-          navigate: ORDER_DETAIL_SCREEN,
-          params: {orderId: item?.generalId},
-        };
-      case keyNoti.ACCEPT:
-      case keyNoti.FINISH:
-        return {
-          iconName: 'book-open',
-          color: colors.main,
-          navigate: ORDER_DETAIL_SCREEN,
-          params: {orderId: item?.generalId},
-        };
-      case keyNoti.JOIN_GAME:
-        return {
-          iconName: 'sword-cross',
-          color: colors.main,
-          navigate: GAME_DETAIL_SCREEN,
-          params: {gameID: item?.generalId},
-        };
-      case keyNoti.ACCEPT_GAME:
-        return {
-          iconName: 'sword-cross',
-          color: colors.main,
-          navigate: NOTIFICATION_SCREEN,
-          params: {},
-        };
-      case keyNoti.REFUSEJOIN:
-        return {
-          iconName: 'sword-cross',
-          color: colors.red,
-          navigate: NOTIFICATION_SCREEN,
-          params: {},
-        };
-      default:
-        return;
-    }
-  };
+  const handleNoti = userHandleNoti(item);
 
   const navigateToScreen = () => {
-    rootNavigator.navigate(conditionItem()?.navigate, conditionItem()?.params);
+    rootNavigator.navigate(handleNoti?.navigate, handleNoti?.params);
   };
 
   return (
     <TouchableOpacity onPress={navigateToScreen} style={styles.container}>
       <Icon
-        name={conditionItem()?.iconName}
-        color={conditionItem()?.color}
+        name={handleNoti?.iconName}
+        color={handleNoti?.color}
         size={scale(40)}
       />
       <View style={styles.content}>

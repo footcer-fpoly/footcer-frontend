@@ -13,7 +13,7 @@ import {GAME_DETAIL_SCREEN} from '../../navigations/route-name';
 import colors from '../../theme/colors';
 import Avatar from '../common/Avatar';
 import PrimaryButton from '../common/PrimaryButton';
-import {body3, headline5, headline6, Text} from '../common/Text';
+import {body2, body3, headline5, headline6, Text} from '../common/Text';
 
 export default function YourMatch({item}) {
   const navigateToDetail = () => {
@@ -68,7 +68,7 @@ export default function YourMatch({item}) {
         ) : (
           <View style={styles.warpperTeam}>
             <Text
-              type={headline6}
+              type={body2}
               style={
                 styles.txtConfirm
               }>{`DS đội chờ xác nhận tham gia tham gia (${item?.countInvite})`}</Text>

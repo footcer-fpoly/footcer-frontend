@@ -28,6 +28,7 @@ import {
   updateInfoTeamService,
 } from '../../api/team.api';
 import imageDelete from '../../assets/svg/img_delete.svg';
+import imageOut from '../../assets/svg/img_out.svg';
 import RowProflie from '../../components/account/RowProflie';
 import Avatar from '../../components/common/Avatar';
 import BackgroudImage from '../../components/common/BackgroudImage';
@@ -92,6 +93,11 @@ const TeamDetailScreen = ({
     data: null,
     index: 0,
   });
+  const [visibleModalOut, setVisibleModalOut] = useState(false);
+  const [visibleConfirm, setVisibleConfirm] = useState(true);
+  const toggleModalOut = () => {
+    setVisibleModalOut(!visibleModalOut);
+  };
   useEffect(() => {
     getData();
   }, []);
@@ -168,7 +174,7 @@ const TeamDetailScreen = ({
         {},
         5000,
       );
-    } else if (data?.member?.length >= 1) {
+    } else if (data?.member?.length > 1) {
       AlertHelper.alert(
         'warn',
         'Xóa đội bóng',
@@ -217,8 +223,10 @@ const TeamDetailScreen = ({
       if (res && res.code === StatusCode.SUCCESS) {
         ToastHelper.showToast(
           `Bạn đã là thành viên của đội bóng ${data?.name}`,
+          colors.greenDark,
         );
-        rootNavigator.back();
+        setVisibleConfirm(false);
+        getData();
       } else {
         ToastHelper.showToast('Lỗi', colors.red);
       }
@@ -396,7 +404,10 @@ const TeamDetailScreen = ({
         if (res && res.code === StatusCode.SUCCESS) {
           getListTeam();
           rootNavigator.back();
-          ToastHelper.showToast('Cập nhật thông tin đội bóng thành công');
+          ToastHelper.showToast(
+            'Cập nhật thông tin đội bóng thành công',
+            colors.greenDark,
+          );
         } else {
           alert('Cập nhât đội bống thất bại');
         }
@@ -416,7 +427,7 @@ const TeamDetailScreen = ({
       console.log('deleteTeamService -->res: ', res);
       if (res && res.code === StatusCode.SUCCESS) {
         rootNavigator.back();
-        ToastHelper.showToast('Xóa đội bóng thành công');
+        ToastHelper.showToast('Xóa đội bóng thành công', colors.yellowDark);
       } else {
         alert('Xóa đội thất bại');
       }
@@ -491,7 +502,7 @@ const TeamDetailScreen = ({
       const res = await acceptInviteGameService({
         gameId: dataGame?.gameId,
         teamId: data?.teamId,
-        userNotifyId: dataGame?.leaderIdHost,
+        userNotifyId: dataGame?.teamIdHost,
         nameHost: dataGame?.teamHost?.teamNameHost,
         nameInvite: data?.name,
         dateGame: formatToDate(dataGame?.date),
@@ -499,6 +510,22 @@ const TeamDetailScreen = ({
       if (res && res.code === StatusCode.SUCCESS) {
         rootNavigator.back();
         ToastHelper.showToast('Xác nhận đối thủ thành công', colors.greenDark);
+        const newListInvite = dataGame?.teamInvite?.filter(
+          (team) => team?.teamIdTemp !== data?.teamId,
+        );
+        if (newListInvite?.length) {
+          newListInvite.forEach(
+            async (element) =>
+              await refuseInviteGameService({
+                gameId: dataGame?.gameId,
+                teamId: element?.teamIdTemp,
+                userNotifyId: element?.leaderIdTemp,
+                nameHost: dataGame?.teamHost?.teamNameHost,
+                nameInvite: element?.teamNameTemp,
+                dateGame: formatToDate(dataGame?.date),
+              }),
+          );
+        }
       } else {
         ToastHelper.showToast('Lỗi', colors.red);
       }
@@ -519,7 +546,7 @@ const TeamDetailScreen = ({
       const res = await refuseInviteGameService({
         gameId: dataGame?.gameId,
         teamId: data?.teamId,
-        userNotifyId: dataGame?.leaderIdHost,
+        userNotifyId: data?.leaderId,
         nameHost: dataGame?.teamHost?.teamNameHost,
         nameInvite: data?.name,
         dateGame: formatToDate(dataGame?.date),
@@ -549,7 +576,7 @@ const TeamDetailScreen = ({
           <PrimaryButton
             title="Rời đội bóng"
             style={{backgroundColor: colors.red}}
-            onPress={outTeam}
+            onPress={toggleModalOut}
           />
         </View>
       );
@@ -557,7 +584,7 @@ const TeamDetailScreen = ({
   };
 
   const renderButtonConfirm = () => {
-    if (flag === 1) {
+    if (flag === 1 && visibleConfirm) {
       return (
         <>
           <Text type={headline5} style={styles.txtConfirm}>
@@ -582,7 +609,7 @@ const TeamDetailScreen = ({
       return (
         <>
           <Text type={headline5} style={styles.txtConfirm}>
-            {`Xác nhận team ${data.name} trở thành đối thủ cho trận đấu của bạn`}
+            {`Xác nhận đội bóng ${data.name} trở thành đối thủ cho trận đấu của bạn`}
           </Text>
           <View style={styles.warpperButtonEdit}>
             <PrimaryButton
@@ -767,6 +794,20 @@ const TeamDetailScreen = ({
           subTitle={data?.name}
           onCancelClick={toggleModalDelete}
           onConfirmClick={deleteTeam}
+          colorTitle={colors.red}
+        />
+        <ConfirmDialog
+          visible={visibleModalOut}
+          imageSVG={imageOut}
+          sizeImage={scale(150)}
+          confirmText="Xác nhận"
+          cancelText="Hủy"
+          colorsCancel={colors.grayDark}
+          colorsConfirm={colors.red}
+          title="Rời đội bóng"
+          subTitle="Bạn có chắc muốn rời khỏi đội bóng?"
+          onCancelClick={toggleModalOut}
+          onConfirmClick={outTeam}
           colorTitle={colors.red}
         />
         <ModalAddMember

@@ -31,7 +31,10 @@ import BlockNameStadium from '../../components/stadium/BlockNameStadium';
 import CardReview from '../../components/stadium/CardReview';
 import CardStadiumCollage from '../../components/stadium/CardStadiumCollage';
 import ItemServeice from '../../components/stadium/ItemServeice';
-import {listStatusOrder} from '../../helpers/data-local.helper';
+import {
+  listImageBanner,
+  listStatusOrder,
+} from '../../helpers/data-local.helper';
 import {getStatusBarHeight} from '../../helpers/device.helper';
 import {scale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
@@ -39,7 +42,9 @@ import rootNavigator from '../../navigations/root.navigator';
 import {STADIUM_COLLAGE_DETAIL_SCREEN} from '../../navigations/route-name';
 import {getListOrder} from '../../redux/actions/auth.action';
 import colors from '../../theme/colors';
+import {yardImage} from '../../assets/Images';
 
+import ModalImageViewer from '../../components/common/ModalImageViewer';
 const HEADER_MAX_HEIGHT = 200;
 const HEADER_MIN_HEIGHT = 60;
 const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
@@ -63,6 +68,10 @@ export const StadiumDetailScreen = ({route, listOrder, getListOrder}) => {
     id: null,
     name: '',
     error: null,
+  });
+  const [modalViewImg, setModalViewImg] = useState({
+    visible: false,
+    images: [],
   });
   const toogleShowReivew = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -89,6 +98,13 @@ export const StadiumDetailScreen = ({route, listOrder, getListOrder}) => {
       fetchData();
     }, []),
   );
+
+  const toggleModal = () => {
+    setModalViewImg({
+      ...modalViewImg,
+      visible: !modalViewImg.visible,
+    });
+  };
 
   const chooseCollage = (item, index) => () => {
     setStadiumCollage({
@@ -159,6 +175,12 @@ export const StadiumDetailScreen = ({route, listOrder, getListOrder}) => {
     rootNavigator.back();
   };
 
+  const images = data?.stadium_images?.map((image) => {
+    return {
+      url: image.url,
+    };
+  });
+
   const renderToolbar = () => {
     return (
       <Animated.View style={styles.toolbarContainer(fadeIn0To1, toolBarFadeIn)}>
@@ -201,14 +223,33 @@ export const StadiumDetailScreen = ({route, listOrder, getListOrder}) => {
             },
           ]}>
           <Swiper
-            activeDotColor={colors.secondary}
+            activeDotColor={colors.yellow}
             dotColor={colors.white}
+            autoplay={true}
             paginationStyle={styles.paginationStyle}>
-            <Image
-              style={styles.sliderImage}
-              source={{uri: data.image}}
-              resizeMode="cover"
-            />
+            {data?.stadium_images?.length ? (
+              data?.stadium_images?.map((image) => (
+                <TouchableOpacity
+                  onPress={toggleModal}
+                  style={styles.flex1}
+                  key={image.id}>
+                  <Image
+                    key={image}
+                    style={styles.slideImage}
+                    source={{
+                      uri: image.url,
+                    }}
+                    resizeMode="cover"
+                  />
+                </TouchableOpacity>
+              ))
+            ) : (
+              <Image
+                style={styles.full100}
+                source={yardImage}
+                resizeMode="cover"
+              />
+            )}
           </Swiper>
         </Animated.View>
         <View style={styles.body}>
@@ -302,7 +343,7 @@ export const StadiumDetailScreen = ({route, listOrder, getListOrder}) => {
       </Animated.ScrollView>
       <View style={styles.footer}>
         <Text type={headline5} style={styles.titleFooter}>
-          ĐẶT SÂN
+          Chọn sân con để tiếp tục đặt sân
         </Text>
         <View style={styles.warrperBtn}>
           <TouchableOpacity onPress={goBack}>
@@ -317,6 +358,11 @@ export const StadiumDetailScreen = ({route, listOrder, getListOrder}) => {
           </TouchableOpacity>
         </View>
       </View>
+      <ModalImageViewer
+        onDismiss={toggleModal}
+        visible={modalViewImg.visible}
+        images={images}
+      />
     </View>
   );
 };
@@ -327,9 +373,12 @@ const styles = StyleSheet.create({
   sliderHeight: {
     height: scale(250),
   },
-  sliderImage: {
+  slideImage: {
     width: '100%',
     height: '100%',
+  },
+  paginationStyle: {
+    bottom: scale(55),
   },
   toolbarContainer: (borderBottomWidth, backgroundColor) => ({
     position: 'absolute',

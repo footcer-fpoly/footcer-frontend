@@ -43,7 +43,7 @@ export default function CardPromotion() {
           <Text
             type={body3}
             style={{color: colors.greenDark, marginRight: scale(5)}}>
-            Dặt sân
+            Đặt sân
           </Text>
           <Icon name="arrow-right" size={scale(15)} color={colors.greenDark} />
         </TouchableOpacity>

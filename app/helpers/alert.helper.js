@@ -34,24 +34,8 @@ export default class AlertHelper {
     }
   }
 
-  // static onTapAlert = (data) => {
-  //   switch (data.payload?.type) {
-  //     case 'UPDATE_APP':
-  //       Linking.openURL(data.payload?.storeUrl);
-  //       break;
-  //     case 'NOTIFICATION':
-  //       store.dispatch(handleNavigate());
-  //       break;
-  //     default:
-  //       return;
-  //   }
-  // };
-
   static onTapAlert = (data) => {
-    if (!AlertHelper.getDropDown().lertData?.type === 'warn') {
-      rootNavigator.navigate(NOTIFICATION_SCREEN);
-    }
-    return;
+    return rootNavigator.navigate(NOTIFICATION_SCREEN);
   };
 
   static renderImage = (props, message) => {

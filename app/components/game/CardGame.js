@@ -31,7 +31,11 @@ export default function CardGame({item}) {
       </Text>
       <View style={styles.wrapperContent}>
         <View style={styles.wrapperTeam}>
-          <Avatar image={item?.teamHost?.teamAvatarHost} size={scale(70)} />
+          <Avatar
+            disabledImage={true}
+            image={item?.teamHost?.teamAvatarHost}
+            size={scale(70)}
+          />
           <Text type={headline6} style={styles.txtNameTeam} numberOfLines={1}>
             {item?.teamHost?.teamNameHost}
           </Text>
@@ -51,7 +55,11 @@ export default function CardGame({item}) {
         </View>
         <View style={styles.wrapperTeam}>
           {item?.teamGuest?.teamAvatarGuest ? (
-            <Avatar image={item?.teamHost?.teamAvatarGuest} size={scale(70)} />
+            <Avatar
+              disabledImage={true}
+              image={item?.teamHost?.teamAvatarGuest}
+              size={scale(70)}
+            />
           ) : (
             <TouchableOpacity
               onPress={navigateToScreen(GAME_DETAIL_SCREEN, {

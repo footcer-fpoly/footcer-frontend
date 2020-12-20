@@ -8,7 +8,11 @@ import {StatusCode} from '../../api/status-code';
 import {updateInfoUserService} from '../../api/user.api';
 import {body2, Text} from '../../components/common/Text';
 import {ListLevel, ListPosition} from '../../helpers/data-local.helper';
-import {formatBirthday, formatDateTime} from '../../helpers/format.helper';
+import {
+  convertToYear,
+  formatBirthday,
+  formatDateTime,
+} from '../../helpers/format.helper';
 import {scale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
 import {ToastHelper} from '../../helpers/ToastHelper';
@@ -95,14 +99,26 @@ const TabProfile = ({
   };
 
   const handleConfirm = (date) => {
-    setData({
-      ...data,
-      birthday: formatBirthday(date),
-    });
-    toogleDatePicker();
+    if (Number(convertToYear(date)) < Number(convertToYear(new Date()))) {
+      setData({
+        ...data,
+        birthday: formatBirthday(date),
+      });
+      toogleDatePicker();
+    } else {
+      toogleDatePicker();
+      setData({
+        ...data,
+        errorYup: {
+          ...data.errorYup,
+          birthday: 'Vui lòng chọn đúng năm sinh của bạn',
+        },
+      });
+    }
   };
   const toogleDatePicker = () => {
     setVisibleDatePicker(!visibleDatePicker);
+    clearError();
   };
   const clearError = () => {
     if (data.errorYup) {
@@ -205,6 +221,7 @@ const TabProfile = ({
               iconName="calendar-month-outline"
               onPress={toogleDatePicker}
               editable={editable}
+              textError={data.errorYup?.birthday}
             />
             <RowProflie
               label="Vị trí"

@@ -81,6 +81,10 @@ export const formatToHours = (date) => {
   return dayjs(date).locale(locale_vi).format('HH:mm');
 };
 
+export const convertToYear = (date) => {
+  return dayjs(date).locale(locale_vi).format('YYYY');
+};
+
 export const convertMilisecondsToMinutes = (miliseconds) => {
   return Number(miliseconds) / 60000;
 };

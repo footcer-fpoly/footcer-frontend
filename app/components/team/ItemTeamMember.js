@@ -86,6 +86,7 @@ const styles = StyleSheet.create({
     marginTop: spacing.small,
     maxWidth: scale(100),
     textAlign: 'center',
+    height: scale(40),
   },
   txtStatus: (color = colors.black) => ({
     marginTop: spacing.tiny,
