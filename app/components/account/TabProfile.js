@@ -279,6 +279,7 @@ const TabProfile = ({
           navigation={navigation}
           data={data}
           dismiss={() => setIsModalVisible(false)}
+          changePass={true}
         />
       </ScrollView>
     </Host>

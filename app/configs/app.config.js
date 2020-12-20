@@ -1,4 +1,4 @@
 export const AppConfig = {
   webClientId:
-    '574215655379-e3rdbh6ccmrkgchqfigqkk3s14npmo0f.apps.googleusercontent.com',
+    '645190559310-s13ldj2hbedg43osk82lie8tn7g5435k.apps.googleusercontent.com',
 };

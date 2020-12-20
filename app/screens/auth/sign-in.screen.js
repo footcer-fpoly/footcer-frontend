@@ -50,10 +50,14 @@ const SignInScreen = ({navigation, showLoading, hideLoading, login}) => {
   const [phoneSuccess, setPhoneSuccess] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [flag, setFlag] = useState(null);
+  const [isModalVisibleChangePass, setIsModalVisibleChangePass] = useState();
 
   useEffect(() => {
     getDomainStorage();
   }, []);
+  const toogleModalChangePass = () => {
+    setIsModalVisibleChangePass(!isModalVisibleChangePass);
+  };
   const openAboutUs = () => {
     Linking.openURL(domain);
   };
@@ -143,7 +147,7 @@ const SignInScreen = ({navigation, showLoading, hideLoading, login}) => {
   };
   const updatePassword = () => {
     setFlag(2);
-    setIsModalVisible(true);
+    setIsModalVisibleChangePass(true);
   };
 
   const loginPhone = async (phone, password) => {
@@ -195,6 +199,15 @@ const SignInScreen = ({navigation, showLoading, hideLoading, login}) => {
           navigation={navigation}
           data={data}
           dismiss={() => setIsModalVisible(false)}
+        />
+        <DialogConfirmSendOPT
+          phone={data.phone}
+          flag={flag}
+          visible={isModalVisibleChangePass}
+          navigation={navigation}
+          data={data}
+          dismiss={toogleModalChangePass}
+          changePass={true}
         />
 
         <Animatable.View animation="zoomIn" style={styles.header}>

@@ -59,6 +59,7 @@ const OTPScreen = ({route, navigation, showLoading, hideLoading, register}) => {
     visible: false,
     text: '',
   });
+  const [sendSuccess, setSendSuccess] = useState(false);
 
   const focusInput = (changePin, pin, next, prev) => {
     changePin;
@@ -76,11 +77,13 @@ const OTPScreen = ({route, navigation, showLoading, hideLoading, register}) => {
     const phone84 = '+84' + phone;
     try {
       showLoading();
+      setSendSuccess(false);
       firebase
         .auth()
         .signInWithPhoneNumber(phone84)
         .then((confirmResult) => {
           setConfirmResult(confirmResult);
+          setSendSuccess(true);
           countDownTime = setInterval(() => {
             setTimer(--timer);
             if (timer === 0) {
@@ -192,9 +195,13 @@ const OTPScreen = ({route, navigation, showLoading, hideLoading, register}) => {
               <Text type={headline2} style={{color: 'white', marginBottom: 20}}>
                 Xác thực OTP
               </Text>
-              <Text type={body1} style={{color: 'white', textAlign: 'center'}}>
-                Một mã xác thực đã được gữi đến số {'\n'} {phone}
-              </Text>
+              {sendSuccess && (
+                <Text
+                  type={body1}
+                  style={{color: 'white', textAlign: 'center'}}>
+                  Một mã xác thực đã được gữi đến số {'\n'} {phone}
+                </Text>
+              )}
             </View>
             <View style={styles.footer}>
               <View style={styles.warpperInputOTP}>

@@ -17,6 +17,7 @@ const DialogConfirmSendOPT = ({
   dismiss,
   data,
   title,
+  changePass,
 }) => {
   const _gotoOTPScreen = (phone, flag, dismiss, data) => () => {
     dismiss();
@@ -29,13 +30,15 @@ const DialogConfirmSendOPT = ({
       isVisible={visible}>
       <View style={styles.container}>
         <Text type={headline3} style={styles.txtTitle}>
-          Xác thực số điện thoại
+          {changePass ? 'Xác thực số điện thoại' : 'Đăng kí tài khoản'}
         </Text>
         <Text type={headline3} style={styles.txtPhone}>
           {phone}
         </Text>
         <Text type={body2}>
-          Chúng tôi sẻ gửi một mã xác thực đến {phone}. Bạn có muốn tiếp tục?
+          {changePass
+            ? `Chúng tôi sẻ gửi một mã xác thực đến ${phone}. Bạn có muốn tiếp tục?`
+            : `Số điện thoại chưa được đặng kí tài khoản. Chúng tôi sẻ gửi một mã xác thực đến ${phone}. Bạn có muốn tiếp tục? `}
         </Text>
         <View style={styles.footer}>
           <PrimaryButton
