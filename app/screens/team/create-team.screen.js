@@ -191,6 +191,7 @@ const CreateTeamScreen = ({profile, showLoading, hideLoading, getListTeam}) => {
           background: dataTeam.background,
           members: members.toString(),
           data: dataTeam,
+          nameUser: profile?.displayName,
         });
         console.log('createTeamService --> res: ', res);
         if (res && res.code === StatusCode.SUCCESS) {

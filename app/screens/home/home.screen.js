@@ -61,13 +61,13 @@ const HomeScreen = ({getListOrder, getListTeam, listOrder}) => {
       soundName: 'default',
       playSound: true,
     };
-    notificationManager.showNotification(
-      0,
-      notify.title,
-      notify.body,
-      notify,
-      options,
-    );
+    // notificationManager.showNotification(
+    //   0,
+    //   notify.title,
+    //   notify.body,
+    //   notify,
+    //   options,
+    // );
   }
 
   function onOpenNotification(notify) {

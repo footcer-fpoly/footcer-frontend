@@ -30,7 +30,10 @@ const initialState = {
   error: null,
 };
 const ModalAddMember = forwardRef(
-  ({onPresSendInvitation, listMember, teamId, nameTeam, create}, ref) => {
+  (
+    {onPresSendInvitation, listMember, teamId, nameTeam, create, nameLeader},
+    ref,
+  ) => {
     const [state, setState] = useState(initialState);
 
     const onChangeText = (value) => {
@@ -57,6 +60,7 @@ const ModalAddMember = forwardRef(
               userId: state?.data?.userId,
               teamId,
               nameTeam,
+              nameUser: nameLeader,
             });
             console.log('addMemberTeamService -->res: ', res);
             if (res && res.code === StatusCode.SUCCESS) {

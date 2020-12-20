@@ -73,6 +73,7 @@ export const joinGameService = ({
   userNotifyId,
   nameHost,
   nameInvite,
+  dateGame,
 }) => {
   return RequestHelper.post(JOIN_GAME, {
     gameId,
@@ -80,6 +81,7 @@ export const joinGameService = ({
     userNotifyId,
     nameHost,
     nameInvite,
+    dateGame,
   });
 };
 
@@ -89,6 +91,7 @@ export const acceptInviteGameService = ({
   userNotifyId,
   nameHost,
   nameInvite,
+  dateGame,
 }) => {
   return RequestHelper.post(ACCEPT_INVITE_GAME, {
     gameId,
@@ -96,6 +99,7 @@ export const acceptInviteGameService = ({
     userNotifyId,
     nameHost,
     nameInvite,
+    dateGame,
   });
 };
 
@@ -103,12 +107,16 @@ export const refuseInviteGameService = ({
   gameId,
   teamId,
   userNotifyId,
-  name,
+  nameHost,
+  nameInvite,
+  dateGame,
 }) => {
   return RequestHelper.post(REFUSE_INVITE_GAME, {
     gameId,
     teamId,
     userNotifyId,
-    name,
+    nameHost,
+    nameInvite,
+    dateGame,
   });
 };

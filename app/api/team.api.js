@@ -14,7 +14,13 @@ import {
   UPDATE_TEAM,
 } from './api-url';
 
-export const createTeamService = ({avatar, background, members, data}) => {
+export const createTeamService = ({
+  avatar,
+  background,
+  members,
+  data,
+  nameUser,
+}) => {
   const formData = new FormData();
   const imageAvatar = avatar ? convertImageToFormData(avatar, true) : null;
   const imageBackground = background
@@ -29,6 +35,7 @@ export const createTeamService = ({avatar, background, members, data}) => {
     members.trim().length && formData.append('memberList', members);
   }
   formData.append('level', data?.level);
+  formData.append('nameUser', nameUser);
   formData.append('folder', 'team');
   return RequestHelper.post(CREATE_TEAM, formData);
 };
@@ -84,11 +91,12 @@ export const deleteTeamService = (idTeam) => {
   return RequestHelper.delete(DELETE_TEAM(idTeam));
 };
 
-export const deleteMemberService = ({userId, teamId, nameTeam}) => {
+export const deleteMemberService = ({userId, teamId, nameTeam, nameUser}) => {
   return RequestHelper.delete(DELETE_MEMBER_TEAM, {
     userId,
     teamId,
-    name: nameTeam,
+    nameUser,
+    nameTeam,
   });
 };
 
@@ -122,6 +130,11 @@ export const updateInfoTeamService = (data) => {
   return RequestHelper.put(UPDATE_TEAM, formData);
 };
 
-export const addMemberTeamService = ({userId, teamId, nameTeam}) => {
-  return RequestHelper.post(ADD_MEMBER_TEAM, {userId, teamId, nameTeam});
+export const addMemberTeamService = ({userId, teamId, nameTeam, nameUser}) => {
+  return RequestHelper.post(ADD_MEMBER_TEAM, {
+    userId,
+    teamId,
+    nameTeam,
+    nameUser,
+  });
 };

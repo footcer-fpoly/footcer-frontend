@@ -1,6 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {
-  Alert,
   FlatList,
   RefreshControl,
   ScrollView,
@@ -23,10 +22,10 @@ import {
   deleteMemberService,
   deleteTeamService,
   getTeamDetailService,
+  outTeamTeamService,
   updateAvatarTeamService,
   updateBackgroundTeamService,
   updateInfoTeamService,
-  outTeamTeamService,
 } from '../../api/team.api';
 import imageDelete from '../../assets/svg/img_delete.svg';
 import RowProflie from '../../components/account/RowProflie';
@@ -46,6 +45,7 @@ import ModalAddMember from '../../components/team/ModalAddMember';
 import ModalShowInfoMember from '../../components/team/ModalShowInfoMember';
 import AlertHelper from '../../helpers/alert.helper';
 import {ListLevel, ListProvince} from '../../helpers/data-local.helper';
+import {formatToDate} from '../../helpers/format.helper';
 import {scale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
 import {ToastHelper} from '../../helpers/ToastHelper';
@@ -432,6 +432,7 @@ const TeamDetailScreen = ({
         userId,
         teamId: data.teamId,
         nameTeam: data.name,
+        nameUser: profile?.displayName,
       });
       if (res && res.code === StatusCode.SUCCESS) {
         const newListMembers = data?.member.filter(
@@ -491,7 +492,9 @@ const TeamDetailScreen = ({
         gameId: dataGame?.gameId,
         teamId: data?.teamId,
         userNotifyId: dataGame?.leaderIdHost,
-        name: data?.name,
+        nameHost: dataGame?.teamHost?.teamNameHost,
+        nameInvite: data?.name,
+        dateGame: formatToDate(dataGame?.date),
       });
       if (res && res.code === StatusCode.SUCCESS) {
         rootNavigator.back();
@@ -517,7 +520,9 @@ const TeamDetailScreen = ({
         gameId: dataGame?.gameId,
         teamId: data?.teamId,
         userNotifyId: dataGame?.leaderIdHost,
-        name: data?.name,
+        nameHost: dataGame?.teamHost?.teamNameHost,
+        nameInvite: data?.name,
+        dateGame: formatToDate(dataGame?.date),
       });
       console.log('LOG ->  refuseTeamInviteGame -> res', res);
       if (res && res.code === StatusCode.SUCCESS) {
@@ -770,6 +775,7 @@ const TeamDetailScreen = ({
           listMember={data?.member}
           teamId={data?.teamId}
           nameTeam={data?.name}
+          nameLeader={profile?.displayName}
         />
         <ModalShowInfoMember
           dismiss={hideModalInfoMember}

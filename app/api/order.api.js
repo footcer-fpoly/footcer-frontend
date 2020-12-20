@@ -12,6 +12,8 @@ export const addOrderService = ({
   description,
   stadiumDetailsId,
   stadiumUserId,
+  stadiumName,
+  stadiumTime,
 }) => {
   return RequestHelper.post(ADD_ORDER, {
     time,
@@ -19,6 +21,8 @@ export const addOrderService = ({
     description,
     stadiumDetailsId,
     stadiumUserId,
+    stadiumName,
+    stadiumTime,
   });
 };
 
@@ -28,12 +32,17 @@ export const getListOrderService = () => {
 export const getOrderDetailService = (orderId) => {
   return RequestHelper.get(GET_ORDER_DETAIL(orderId));
 };
-export const cancelOrderService = ({orderId, reason, userId, name}) => {
+export const cancelOrderService = ({
+  orderId,
+  reason,
+  userNotifyId,
+  stadiumName,
+}) => {
   return RequestHelper.put(CANCEL_ORDER, {
     orderId,
     status: 'REJECT',
     reason,
-    userId,
-    name,
+    userNotifyId,
+    stadiumName,
   });
 };

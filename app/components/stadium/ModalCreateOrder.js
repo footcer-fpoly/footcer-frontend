@@ -29,6 +29,8 @@ export default function ModalCreateOrder({dismiss, visible, data}) {
         description,
         stadiumDetailsId: data.stadiumDetailsId,
         stadiumUserId: data.stadiumUserId,
+        stadiumName: data.nameCollage,
+        stadiumTime: data.timeOrder,
       });
       if (res && res.code === StatusCode.SUCCESS) {
         dismiss();

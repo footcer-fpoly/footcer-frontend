@@ -113,6 +113,7 @@ const GameDetailScreen = ({route, showLoading, hideLoading, profile}) => {
         userNotifyId: state?.data?.leaderIdHost,
         nameHost: state?.data?.teamHost?.teamNameHost,
         nameInvite: state?.team?.name,
+        dateGame: formatToDate(state?.data?.date),
       });
       if (res && res.code === StatusCode.SUCCESS) {
         rootNavigator.back();

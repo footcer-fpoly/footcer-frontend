@@ -275,7 +275,11 @@ export default function orderDetail({route}) {
           </TouchableOpacity>
         </View>
       </View>
-      <ModalCancelOrder ref={modalAddRef} orderId={state.data.orderId} />
+      <ModalCancelOrder
+        ref={modalAddRef}
+        orderId={state.data.orderId}
+        nameCollage={state?.data?.stadium_collage?.stadiumCollageName}
+      />
     </View>
   );
 }
