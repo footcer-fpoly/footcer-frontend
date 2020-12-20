@@ -43,6 +43,7 @@ const HEADER_MIN_HEIGHT = 60;
 const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
 export const StadiumDetailScreen = ({route, listOrder, getListOrder}) => {
   const {stadiumId} = route.params;
+  console.log('LOG ->  stadiumId', stadiumId);
   const listOrderComplete = listOrder.filter((item) => {
     return item?.order_status?.status === listStatusOrder[3].key;
   });

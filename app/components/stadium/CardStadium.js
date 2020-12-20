@@ -9,6 +9,7 @@ import {
   Linking,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import {direction} from '../../helpers/direction.helper';
 import {scale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
 import rootNavigation from '../../navigations/root.navigator';
@@ -20,22 +21,6 @@ import {body3, headline5, headline6, Text} from '../common/Text';
 const {width} = Dimensions.get('window');
 const CARD_WIDTH = width * 0.8;
 export default function CardStadium({item, showMove}) {
-  const onPressDirection = (
-    latitude = 0,
-    longitude = 0,
-    label = 'Footcer',
-  ) => async () => {
-    const url = Platform.select({
-      android: 'geo:' + latitude + ',' + longitude + '?q=' + label,
-    });
-    const isLinkingSupport = await Linking.canOpenURL(url);
-    if (isLinkingSupport) {
-      Linking.openURL(url);
-    } else {
-      const urlGoogleMap = `https://www.google.com/maps/dir/Current+Location/${latitude},${longitude}`;
-      Linking.openURL(urlGoogleMap);
-    }
-  };
   const rowItem = (iconName, text, style, subText) => {
     return (
       <View style={[styles.flexRow, style]}>
@@ -83,11 +68,7 @@ export default function CardStadium({item, showMove}) {
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={onPressDirection(
-            item.latitude,
-            item.longitude,
-            item.address,
-          )}
+          onPress={direction(item.latitude, item.longitude, item.address)}
           style={styles.btnDirec}>
           <Text type={headline6} style={{color: colors.white}}>
             Chỉ đường

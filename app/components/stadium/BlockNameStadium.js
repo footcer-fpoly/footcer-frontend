@@ -1,6 +1,7 @@
 import React from 'react';
-import {Linking, Platform, StyleSheet, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {callPhone} from '../../helpers/call-phone.helper';
+import {direction} from '../../helpers/direction.helper';
 import {scale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
 import rootNavigator from '../../navigations/root.navigator';
@@ -12,22 +13,7 @@ export default function BlockNameStadium({hasOrder, data}) {
   const navigateToReview = () => {
     rootNavigator.navigate(REVIEW_STADIUM_SCREEN, {item: data});
   };
-  const onPressDirection = (
-    latitude = 0,
-    longitude = 0,
-    label = 'Footcer',
-  ) => async () => {
-    const url = Platform.select({
-      android: 'geo:' + latitude + ',' + longitude + '?q=' + label,
-    });
-    const isLinkingSupport = await Linking.canOpenURL(url);
-    if (isLinkingSupport) {
-      Linking.openURL(url);
-    } else {
-      const urlGoogleMap = `https://www.google.com/maps/dir/Current+Location/${latitude},${longitude}`;
-      Linking.openURL(urlGoogleMap);
-    }
-  };
+
   return (
     <View style={styles.container}>
       {hasOrder && (
@@ -42,11 +28,7 @@ export default function BlockNameStadium({hasOrder, data}) {
         backgroundColor={colors.blueDark}
         iconName="map-search-outline"
         title="Chỉ đường"
-        onPress={onPressDirection(
-          data?.latitude,
-          data?.longitude,
-          data?.address,
-        )}
+        onPress={direction(data?.latitude, data?.longitude, data?.address)}
       />
       <ButtonGradient
         backgroundColor={colors.orange}

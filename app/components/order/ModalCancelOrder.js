@@ -14,6 +14,7 @@ import {HOME_SCREEN} from '../../navigations/route-name';
 import rootNavigator from '../../navigations/root.navigator';
 import {ToastHelper} from '../../helpers/ToastHelper';
 import {listreasonCancelOrder} from '../../helpers/data-local.helper';
+import TextError from '../common/TextError';
 
 const ModalCancelOrder = forwardRef(({orderId, idOwner, nameOwner}, ref) => {
   console.log('orderId: ', orderId);
@@ -21,25 +22,36 @@ const ModalCancelOrder = forwardRef(({orderId, idOwner, nameOwner}, ref) => {
   const [state, setState] = useState({
     reason: '',
     curentSeclect: '',
+    err: false,
   });
 
   const cancelOrder = async () => {
-    const res = await cancelOrderService({
-      orderId,
-      reason: state.reason,
-      userId: idOwner,
-      name: nameOwner,
-    });
-    if (res && res.code === StatusCode.SUCCESS) {
-      rootNavigator.navigate(HOME_SCREEN);
-      hide();
-      ToastHelper.showToast('Hủy lịch đặt sân thành công');
-    }
+    try {
+      if (state.reason) {
+        const res = await cancelOrderService({
+          orderId,
+          reason: state.reason,
+          userId: idOwner,
+          name: nameOwner,
+        });
+        if (res && res.code === StatusCode.SUCCESS) {
+          rootNavigator.navigate(HOME_SCREEN);
+          hide();
+          ToastHelper.showToast('Hủy lịch đặt sân thành công');
+        }
+      } else {
+        setState({
+          ...state,
+          err: true,
+        });
+      }
+    } catch (error) {}
   };
   const selectReson = (item, index) => () => {
     setState({
       reason: item,
       curentSeclect: index,
+      err: false,
     });
   };
 
@@ -98,7 +110,7 @@ const ModalCancelOrder = forwardRef(({orderId, idOwner, nameOwner}, ref) => {
             lable="Lý do"
             sizeIcon={scale(22)}
             onChangeText={(text) =>
-              setState({reason: text, curentSeclect: null})
+              setState({reason: text, curentSeclect: null, err: false})
             }
             otherTextInputProps={{
               multiline: true,
@@ -106,6 +118,9 @@ const ModalCancelOrder = forwardRef(({orderId, idOwner, nameOwner}, ref) => {
             }}
           />
         </View>
+        {state.err && (
+          <TextError text="Hãy chọn lý do bạn muốn hủy lịch đặt sân" />
+        )}
         <View style={styles.warpperButton}>
           <PrimaryButton
             style={[styles.btn, styles.mrRight]}

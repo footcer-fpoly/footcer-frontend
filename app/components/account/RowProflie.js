@@ -58,6 +58,15 @@ export default function RowProflie({
               />
             )}
           </TouchableOpacity>
+        ) : !editable ? (
+          <Text
+            style={[
+              styles.input,
+              editable ? {color: colors.black} : {color: colors.grayDark},
+              stylesTxt,
+            ]}>
+            {value}
+          </Text>
         ) : (
           <TextInput
             onChangeText={onChangeText}
@@ -90,6 +99,7 @@ const styles = StyleSheet.create({
     borderBottomColor: color,
     ...Styles.rowCenter,
     height: scale(40),
+    marginBottom: scale(5),
   }),
   label: {
     marginLeft: spacing.large,
