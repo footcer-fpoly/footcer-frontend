@@ -7,6 +7,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
+  Share,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Swiper from 'react-native-swiper';
@@ -17,13 +18,22 @@ import imgYard from '../../assets/images/img_yard2.jpg';
 import RowProflie from '../../components/account/RowProflie';
 import {IconType} from '../../components/common/IconMaterialOrSvg';
 import PrimaryButton from '../../components/common/PrimaryButton';
-import {body3, headline4, headline5, Text} from '../../components/common/Text';
+import {
+  body3,
+  headline3,
+  headline4,
+  headline5,
+  Text,
+} from '../../components/common/Text';
 import ToolBar from '../../components/common/Toolbar';
+import CardPromotion from '../../components/home/CardPromotion';
 import AlertHelper from '../../helpers/alert.helper';
+import {callPhone} from '../../helpers/call-phone.helper';
 import {listImageBanner} from '../../helpers/data-local.helper';
 import {direction} from '../../helpers/direction.helper';
 import {convertPlayTime, formatDateTime} from '../../helpers/format.helper';
 import {scale} from '../../helpers/size.helper';
+import {getDomain} from '../../helpers/storage.helper';
 import Styles from '../../helpers/styles.helper';
 import rootNavigator from '../../navigations/root.navigator';
 import {ORDER_DETAIL_SCREEN} from '../../navigations/route-name';
@@ -91,6 +101,14 @@ const HomeScreen = ({getListOrder, getListTeam, listOrder}) => {
   const navigateToScreen = (name, params) => () => {
     rootNavigator.navigate(name, params);
   };
+  const onPressShare = async () => {
+    try {
+      const domain = await getDomain();
+      await Share.share({
+        message: domain,
+      });
+    } catch (error) {}
+  };
 
   const fetchData = async () => {
     await Promise.all([getListOrder(), getListTeam()]);
@@ -117,7 +135,7 @@ const HomeScreen = ({getListOrder, getListTeam, listOrder}) => {
         </View>
         {order && (
           <View style={styles.blockOrder}>
-            <Text type={headline4} style={styles.txtTitleOrder}>
+            <Text type={headline3} style={styles.txtTitleOrder}>
               Lịch đặt sân sắp tới của bạn
             </Text>
             <RowProflie
@@ -127,7 +145,7 @@ const HomeScreen = ({getListOrder, getListTeam, listOrder}) => {
               iconName="location-on"
               editable={false}
               otherTextInputProps={{
-                multiline: true,
+                numberOfLines: 2,
               }}
             />
             <RowProflie
@@ -188,6 +206,10 @@ const HomeScreen = ({getListOrder, getListTeam, listOrder}) => {
             </View>
           </View>
         )}
+        <View style={{paddingHorizontal: scale(10), marginBottom: scale(10)}}>
+          <Text type={headline5}>KHUYẾN MÃI DÀNH CHO BẠN</Text>
+          <CardPromotion />
+        </View>
         <ImageBackground
           source={imgYard}
           style={{
@@ -209,6 +231,7 @@ const HomeScreen = ({getListOrder, getListTeam, listOrder}) => {
               Liên hệ với chúng tôi để tư vấn hỗ trợ trở thành chủ sân bóng!
             </Text>
             <PrimaryButton
+              onPress={callPhone('0903585173')}
               title="LIÊN HỆ"
               style={{width: scale(150), backgroundColor: colors.greenDark}}
             />
@@ -224,7 +247,8 @@ const HomeScreen = ({getListOrder, getListTeam, listOrder}) => {
               tất cả mọi người!
             </Text>
             <PrimaryButton
-              title="MÒI BẠN BÈ"
+              onPress={onPressShare}
+              title="MỜI BẠN BÈ"
               style={{width: scale(150), backgroundColor: colors.greenDark}}
             />
           </LinearGradient>
@@ -263,11 +287,11 @@ const styles = StyleSheet.create({
       height: 0,
     },
     shadowRadius: scale(4),
-    elevation: 2,
+    elevation: 5,
   },
   txtTitleOrder: {
     textAlign: 'center',
-    color: colors.orange,
+    color: colors.greenDark,
     marginBottom: scale(15),
   },
   blockOwner: {
@@ -294,10 +318,10 @@ const styles = StyleSheet.create({
   },
   btnDetail: {
     ...Styles.columnCenter,
-    backgroundColor: colors.greenLight,
+    backgroundColor: colors.orange,
     paddingHorizontal: scale(15),
     paddingVertical: scale(10),
-    borderRadius: scale(5),
+    borderRadius: scale(50),
     marginRight: scale(10),
     flex: 1,
   },
@@ -305,7 +329,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.blueDark,
     paddingHorizontal: scale(25),
     paddingVertical: scale(10),
-    borderRadius: scale(5),
+    borderRadius: scale(50),
   },
 });
 

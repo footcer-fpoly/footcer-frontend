@@ -32,5 +32,6 @@ const colors = {
   greenGradient: ['#32ff7e', '#26de81', '#20bf6b'],
   greenWhiteGradient: ['#ffffffD3', '#ffffffD3', '#2ecc71F3'],
   blackWhiteGradient: ['#00000070', '#00000060', '#ffffff00'],
+  greenGrayGradient: ['#778ca3B3', '#bdc3c7', '#009432'],
 };
 export default colors;

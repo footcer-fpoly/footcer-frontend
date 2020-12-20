@@ -60,6 +60,7 @@ export default function RowProflie({
           </TouchableOpacity>
         ) : !editable ? (
           <Text
+            {...otherTextInputProps}
             style={[
               styles.input,
               editable ? {color: colors.black} : {color: colors.grayDark},

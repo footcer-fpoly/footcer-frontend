@@ -150,9 +150,10 @@ export default function orderDetail({route}) {
       <ToolBar
         title="Chi tiết đặt sân"
         left={true}
+        backgroundColor={colors.main}
         right={
           <TouchableOpacity onPress={navigateToScreen}>
-            <Icon name="home" size={scale(25)} color={colors.black} />
+            <Icon name="home" size={scale(25)} color={colors.white} />
           </TouchableOpacity>
         }
       />
@@ -279,6 +280,7 @@ export default function orderDetail({route}) {
         ref={modalAddRef}
         orderId={state.data.orderId}
         nameCollage={state?.data?.stadium_collage?.stadiumCollageName}
+        idOwner={state.data?.userStadium?.userId}
       />
     </View>
   );
