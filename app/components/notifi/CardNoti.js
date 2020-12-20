@@ -1,7 +1,11 @@
-import React, {Component} from 'react';
-import {View, StyleSheet} from 'react-native';
+import React from 'react';
+import {StyleSheet, View} from 'react-native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {keyNoti} from '../../helpers/data-local.helper';
+import {convertDateTime} from '../../helpers/format.helper';
 import {scale} from '../../helpers/size.helper';
+import rootNavigator from '../../navigations/root.navigator';
 import {
   GAME_DETAIL_SCREEN,
   NOTIFICATION_SCREEN,
@@ -9,12 +13,7 @@ import {
   TEAM_DETAIL_SCREEN,
 } from '../../navigations/route-name';
 import colors from '../../theme/colors';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {convertDateTime} from '../../helpers/format.helper';
 import {body2, body3, Text} from '../common/Text';
-import {color} from 'react-native-reanimated';
-import {TouchableOpacity} from 'react-native-gesture-handler';
-import rootNavigator from '../../navigations/root.navigator';
 
 export default function CardNoti({item}) {
   const conditionItem = () => {

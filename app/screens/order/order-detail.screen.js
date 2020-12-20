@@ -70,7 +70,7 @@ export default function orderDetail({route}) {
   };
   const navigateToStadium = () => {
     rootNavigator.navigate(STADIUM_DETAIL_SCREEN, {
-      stadiumId: state?.data?.stadium?.stadiumId,
+      stadiumId: state?.data?.stadium_collage?.stadiumId,
     });
   };
   const renderReson = () => {
@@ -105,7 +105,7 @@ export default function orderDetail({route}) {
       case 'ACCEPT':
         return (
           <TouchableOpacity
-            onPress={callPhone()}
+            onPress={callPhone(state?.data?.userStadium?.phone)}
             style={styles.btnLeft(colors.yellowDark)}>
             <Text type={headline5} style={{color: colors.white}}>
               LIÊN HỆ

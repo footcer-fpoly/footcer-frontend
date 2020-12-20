@@ -58,6 +58,7 @@ export default function ModalCreateOrder({dismiss, visible, data}) {
       onBackdropPress={dismiss}
       statusBarTranslucent={true}
       useNativeDriver={true}
+      avoidKeyboard={true}
       isVisible={visible}>
       <View style={styles.container}>
         <Text type={headline4} style={styles.txtTitle}>
@@ -65,6 +66,16 @@ export default function ModalCreateOrder({dismiss, visible, data}) {
         </Text>
 
         <View style={styles.body}>
+          <TitleTextInputField
+            style={styles.inputField}
+            lable="Ghi chú thêm"
+            sizeIcon={scale(22)}
+            onChangeText={(text) => setdescription(text)}
+            otherTextInputProps={{
+              multiline: true,
+              placeholder: 'Thêm ghi chú cho chủ sân',
+            }}
+          />
           <RowProflie
             label="Cụm sân: "
             value={data.nameSadium}
@@ -102,16 +113,6 @@ export default function ModalCreateOrder({dismiss, visible, data}) {
             iconType={IconType.MaterialIcons}
             iconName="attach-money"
             editable={false}
-          />
-          <TitleTextInputField
-            style={styles.inputField}
-            lable="Ghi chú thêm"
-            sizeIcon={scale(22)}
-            onChangeText={(text) => setdescription(text)}
-            otherTextInputProps={{
-              multiline: true,
-              placeholder: 'Thêm ghi chú cho chủ sân',
-            }}
           />
         </View>
         <View style={styles.warpperButton}>
@@ -162,6 +163,6 @@ const styles = StyleSheet.create({
     marginTop: scale(20),
   },
   inputField: {
-    marginTop: scale(15),
+    marginBottom: scale(15),
   },
 });

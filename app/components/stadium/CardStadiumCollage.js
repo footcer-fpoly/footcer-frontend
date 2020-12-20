@@ -3,52 +3,34 @@ import {StyleSheet, TouchableOpacity} from 'react-native';
 import {convertMilisecondsToMinutes} from '../../helpers/format.helper';
 import {scale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
-import rootNavigator from '../../navigations/root.navigator';
-import {STADIUM_COLLAGE_DETAIL_SCREEN} from '../../navigations/route-name';
 import colors from '../../theme/colors';
 import {body3, headline5, Text} from '../common/Text';
 
-export default function CardStadiumCollage({
-  item,
-  stadiumName,
-  address,
-  category,
-  stadiumUserId,
-}) {
-  const getNavigateCollageDetail = () => {
-    rootNavigator.navigate(STADIUM_COLLAGE_DETAIL_SCREEN, {
-      stadiumCollageId: item.stadiumCollageId,
-      stadiumName,
-      address,
-      category,
-      stadiumUserId,
-      nameCollage: item.stadiumCollageName,
-    });
-  };
+export default function CardStadiumCollage({item, choose, onPress}) {
   return (
-    <TouchableOpacity
-      onPress={getNavigateCollageDetail}
-      style={styles.container}>
-      <Text type={headline5} style={styles.txtName}>
+    <TouchableOpacity onPress={onPress} style={styles.container(choose)}>
+      <Text type={headline5} style={styles.txtName(choose)}>
         {item.stadiumCollageName}
       </Text>
-      <Text type={body3}>Sân {item.amountPeople} người</Text>
-      <Text type={body3}>
+      <Text type={body3} style={{color: choose ? colors.white : colors.black}}>
+        Sân {item.amountPeople} người
+      </Text>
+      <Text type={body3} style={{color: choose ? colors.white : colors.black}}>
         {convertMilisecondsToMinutes(item.playTime)} Phút
       </Text>
     </TouchableOpacity>
   );
 }
 const styles = StyleSheet.create({
-  container: {
+  container: (choose) => ({
     ...Styles.borderView(colors.white, 1, 5),
     ...Styles.columnCenter,
     padding: scale(10),
     marginRight: scale(10),
-    backgroundColor: colors.white,
+    backgroundColor: choose ? colors.greenDark : colors.white,
     minWidth: scale(150),
-  },
-  txtName: {
-    color: colors.greenDark,
-  },
+  }),
+  txtName: (choose) => ({
+    color: choose ? colors.white : colors.greenDark,
+  }),
 });

@@ -206,7 +206,12 @@ const HomeScreen = ({getListOrder, getListTeam, listOrder}) => {
             </View>
           </View>
         )}
-        <View style={{paddingHorizontal: scale(10), marginBottom: scale(10)}}>
+        <View
+          style={{
+            paddingHorizontal: scale(10),
+            marginBottom: scale(10),
+            marginTop: scale(10),
+          }}>
           <Text type={headline5}>KHUYẾN MÃI DÀNH CHO BẠN</Text>
           <CardPromotion />
         </View>

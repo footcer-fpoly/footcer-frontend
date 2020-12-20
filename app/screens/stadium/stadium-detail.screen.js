@@ -1,5 +1,5 @@
 import {useFocusEffect} from '@react-navigation/native';
-import React, {useState} from 'react';
+import React, {useState, useRef} from 'react';
 import {
   Animated,
   FlatList,
@@ -24,6 +24,7 @@ import {
   headline6,
   Text,
 } from '../../components/common/Text';
+import TextError from '../../components/common/TextError';
 import ContentPlaceholder from '../../components/placeholder/ContentPlaceholder';
 import ImagePlaceholder from '../../components/placeholder/ImagePlaceholder';
 import BlockNameStadium from '../../components/stadium/BlockNameStadium';
@@ -35,6 +36,7 @@ import {getStatusBarHeight} from '../../helpers/device.helper';
 import {scale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
 import rootNavigator from '../../navigations/root.navigator';
+import {STADIUM_COLLAGE_DETAIL_SCREEN} from '../../navigations/route-name';
 import {getListOrder} from '../../redux/actions/auth.action';
 import colors from '../../theme/colors';
 
@@ -43,6 +45,7 @@ const HEADER_MIN_HEIGHT = 60;
 const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
 export const StadiumDetailScreen = ({route, listOrder, getListOrder}) => {
   const {stadiumId} = route.params;
+  const scrollRef = useRef();
   console.log('LOG ->  stadiumId', stadiumId);
   const listOrderComplete = listOrder.filter((item) => {
     return item?.order_status?.status === listStatusOrder[3].key;
@@ -55,7 +58,12 @@ export const StadiumDetailScreen = ({route, listOrder, getListOrder}) => {
     show: true,
     icon: 'minus',
   });
-  const [showOrder, setShowOrder] = useState(false);
+  const [stadiumCollage, setStadiumCollage] = useState({
+    currentSeclect: null,
+    id: null,
+    name: '',
+    error: null,
+  });
   const toogleShowReivew = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setReview({
@@ -82,18 +90,49 @@ export const StadiumDetailScreen = ({route, listOrder, getListOrder}) => {
     }, []),
   );
 
+  const chooseCollage = (item, index) => () => {
+    setStadiumCollage({
+      ...stadiumCollage,
+      id: item?.stadiumCollageId,
+      name: item?.stadiumCollageName,
+      currentSeclect: index,
+      error: null,
+    });
+  };
+
+  const navigateToOrder = () => {
+    if (!stadiumCollage.id) {
+      scrollRef?.current?.scrollTo({y: 0});
+      setStadiumCollage({
+        ...stadiumCollage,
+        error: true,
+      });
+    } else {
+      rootNavigator.navigate(STADIUM_COLLAGE_DETAIL_SCREEN, {
+        stadiumCollageId: stadiumCollage.id,
+        stadiumName: data?.stadiumName,
+        address: data?.address,
+        category: data?.category,
+        stadiumUserId: data?.user?.userId,
+        nameCollage: stadiumCollage.name,
+      });
+    }
+  };
+
+  const goBack = () => {
+    rootNavigator.back();
+  };
+
   const fetchData = async () => {
     await Promise.all([getStadiumDetail(), getListOrder()]);
   };
   const keyExtractor = (item, index) => index.toString();
-  const renderStadiumCollage = ({item}) => {
+  const renderStadiumCollage = ({item, index}) => {
     return (
       <CardStadiumCollage
         item={item}
-        stadiumName={data?.stadiumName}
-        address={data?.address}
-        category={data?.category}
-        stadiumUserId={data?.user?.userId}
+        onPress={chooseCollage(item, index)}
+        choose={stadiumCollage.currentSeclect === index}
       />
     );
   };
@@ -147,6 +186,7 @@ export const StadiumDetailScreen = ({route, listOrder, getListOrder}) => {
     <View style={styles.flex1}>
       {renderToolbar()}
       <Animated.ScrollView
+        ref={scrollRef}
         nestedScrollEnabled={true}
         contentContainerStyle={styles.contentContainer}
         onScroll={Animated.event(
@@ -190,6 +230,27 @@ export const StadiumDetailScreen = ({route, listOrder, getListOrder}) => {
             {data.rateCount || 0}/5
           </Text>
         </View>
+        <Text
+          type={headline5}
+          style={{
+            marginLeft: scale(20),
+            marginTop: scale(15),
+            marginBottom: scale(5),
+          }}>{`DANH SÁCH SÂN CON (${data.stadium_collage?.length})`}</Text>
+        {stadiumCollage.error && (
+          <TextError
+            style={{marginLeft: scale(40)}}
+            text="Vui lòng chọn sân con để tiếp tục đặt sân"
+          />
+        )}
+        <FlatList
+          data={data.stadium_collage}
+          showsHorizontalScrollIndicator={false}
+          horizontal
+          contentContainerStyle={styles.listStadiumCollage}
+          keyExtractor={keyExtractor}
+          renderItem={renderStadiumCollage}
+        />
         <View style={styles.blockInfo}>
           <Text type={headline4} style={styles.txtNameStadium}>
             {data?.stadiumName}
@@ -241,16 +302,20 @@ export const StadiumDetailScreen = ({route, listOrder, getListOrder}) => {
       </Animated.ScrollView>
       <View style={styles.footer}>
         <Text type={headline5} style={styles.titleFooter}>
-          Vui lòng chọn sân con để đặt sân bóng
+          ĐẶT SÂN
         </Text>
-        <FlatList
-          data={data.stadium_collage}
-          showsHorizontalScrollIndicator={false}
-          horizontal
-          contentContainerStyle={styles.listStadiumCollage}
-          keyExtractor={keyExtractor}
-          renderItem={renderStadiumCollage}
-        />
+        <View style={styles.warrperBtn}>
+          <TouchableOpacity onPress={goBack}>
+            <Text type={headline5} style={styles.txtBack}>
+              Trở về
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={navigateToOrder} style={styles.btnNext}>
+            <Text type={headline5} style={{color: colors.white}}>
+              TIẾP TỤC
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -327,7 +392,7 @@ const styles = StyleSheet.create({
     color: colors.greenDark,
   },
   contentContainer: {
-    paddingBottom: scale(50),
+    paddingBottom: scale(100),
     backgroundColor: colors.viewBackground,
   },
   blockReview: {
@@ -357,21 +422,37 @@ const styles = StyleSheet.create({
     borderRadius: scale(10),
   },
   footer: {
-    borderTopRightRadius: scale(5),
-    borderTopLeftRadius: scale(5),
-    backgroundColor: colors.greenDark + 'B3',
-    paddingVertical: scale(10),
+    backgroundColor: colors.white,
+    paddingTop: scale(10),
+    borderTopWidth: scale(1),
+    borderColor: colors.grayOpacity,
   },
   titleFooter: {
     textAlign: 'center',
-    color: colors.white,
+    color: colors.greenDark,
     borderBottomWidth: scale(2),
     borderBottomColor: colors.grayOpacity,
     paddingBottom: scale(5),
-    marginBottom: scale(10),
   },
   listStadiumCollage: {
+    paddingHorizontal: scale(20),
+  },
+  txtBack: {
+    fontStyle: 'italic',
+    textDecorationLine: 'underline',
+  },
+  btnNext: {
+    ...Styles.columnCenter,
+    width: scale(150),
+    backgroundColor: colors.orange,
+    paddingVertical: scale(10),
+    borderRadius: scale(5),
+  },
+  warrperBtn: {
+    ...Styles.rowBetween,
     paddingHorizontal: scale(10),
+    backgroundColor: colors.greenDark + 'B3',
+    paddingVertical: scale(10),
   },
 });
 

@@ -1,25 +1,24 @@
-import React, {useState, forwardRef, useImperativeHandle} from 'react';
+import React, {forwardRef, useImperativeHandle, useState} from 'react';
 import {
-  View,
   ActivityIndicator,
   StyleSheet,
   TouchableOpacity,
+  View,
 } from 'react-native';
 import Modal from 'react-native-modal';
+import {cancelOrderService} from '../../api/order.api';
+import {StatusCode} from '../../api/status-code';
+import {listreasonCancelOrder} from '../../helpers/data-local.helper';
 import {scale} from '../../helpers/size.helper';
 import Styles from '../../helpers/styles.helper';
+import {ToastHelper} from '../../helpers/ToastHelper';
+import rootNavigator from '../../navigations/root.navigator';
 import colors from '../../theme/colors';
 import spacing from '../../theme/spacing';
 import PrimaryButton from '../common/PrimaryButton';
 import {body3, headline4, Text} from '../common/Text';
-import TitleTextInputField from '../common/TitleTextInputField';
-import {cancelOrderService} from '../../api/order.api';
-import {StatusCode} from '../../api/status-code';
-import {HOME_SCREEN} from '../../navigations/route-name';
-import rootNavigator from '../../navigations/root.navigator';
-import {ToastHelper} from '../../helpers/ToastHelper';
-import {listreasonCancelOrder} from '../../helpers/data-local.helper';
 import TextError from '../common/TextError';
+import TitleTextInputField from '../common/TitleTextInputField';
 
 const ModalCancelOrder = forwardRef(({orderId, idOwner, nameCollage}, ref) => {
   console.log('orderId: ', orderId);
@@ -42,7 +41,7 @@ const ModalCancelOrder = forwardRef(({orderId, idOwner, nameCollage}, ref) => {
           stadiumName: nameCollage,
         });
         if (res && res.code === StatusCode.SUCCESS) {
-          rootNavigator.navigate(HOME_SCREEN);
+          rootNavigator.back();
           hide();
           ToastHelper.showToast(
             'Hủy lịch đặt sân thành công',

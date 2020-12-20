@@ -73,7 +73,11 @@ export const TeamScreen = ({getListTeam, listTeam}) => {
   };
   return (
     <View style={styles.container}>
-      <ToolBar left={true} title="Quản lý đội bóng" />
+      <ToolBar
+        backgroundColor={colors.main}
+        left={true}
+        title="Quản lý đội bóng"
+      />
       <ScrollableTabView
         ref={scrollableRef}
         tabBarUnderlineStyle={{backgroundColor: colors.green}}

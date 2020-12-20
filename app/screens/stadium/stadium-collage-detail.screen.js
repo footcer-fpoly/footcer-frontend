@@ -271,7 +271,7 @@ export default function StadiumCollageDetailScreen({route}) {
               )} -${converSecondsToTime(state.data.endTime)}`}
             />
             <RowInfo
-              lable="Thời gian trận đấu: "
+              lable="Thời mỗi gian trận đấu: "
               value={`${convertMilisecondsToMinutes(state.data.playTime)} phút`}
             />
             <RowInfo lable="Địa chỉ: " value={address} />
@@ -317,11 +317,11 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   wrapperBtnOrder: {
-    backgroundColor: colors.viewBackground,
+    backgroundColor: colors.white,
     paddingHorizontal: scale(10),
-    borderTopRightRadius: scale(10),
-    borderTopLeftRadius: scale(10),
     paddingVertical: scale(10),
+    borderTopWidth: scale(1),
+    borderColor: colors.grayOpacity,
   },
   wrapperDesStatus: {
     flexDirection: 'row',
