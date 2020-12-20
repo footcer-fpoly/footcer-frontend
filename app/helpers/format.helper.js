@@ -111,3 +111,10 @@ export function capitalizeFirstLetter(string) {
   }
   return string;
 }
+
+export function convertToEmptyString(string) {
+  if (!string) {
+    return '';
+  }
+  return string;
+}

@@ -32,10 +32,10 @@ const ListGameScreen = ({getListGame, listGameUser, getListOrder}) => {
   const [listGame, setListGame] = useState({
     data: [],
     onReady: false,
-    date: '',
-    visbaleModal: false,
     isRefreshing: false,
   });
+  const [visbaleModal, setVisbaleModal] = useState(false);
+  const [date, setDate] = useState('');
   useFocusEffect(
     React.useCallback(() => {
       fechData();
@@ -60,7 +60,6 @@ const ListGameScreen = ({getListGame, listGameUser, getListOrder}) => {
           ),
           onReady: true,
           isRefreshing: false,
-          visbaleModal: false,
         });
       } else {
         setListGame({
@@ -82,20 +81,20 @@ const ListGameScreen = ({getListGame, listGameUser, getListOrder}) => {
       onReady: false,
     });
     getData('all');
+    setDate('');
   };
   const toogleDatePicker = () => {
-    setListGame({
-      ...listGame,
-      visbaleModal: !listGame.visbaleModal,
-    });
+    setVisbaleModal(!visbaleModal);
   };
   const handleConfirmDatePicker = (date) => {
     getData(formatToDate(date));
+    setDate(formatToDate(date));
     setListGame({
       ...listGame,
-      date: formatToDate(date),
-      visbaleModal: false,
+      onReady: false,
+      setListGame: [],
     });
+    toogleDatePicker();
   };
 
   const keyExtractor = (item, index) => index.toString();
@@ -109,7 +108,7 @@ const ListGameScreen = ({getListGame, listGameUser, getListOrder}) => {
     <View style={styles.container}>
       <ToolBar left={true} title="Trận đấu" backgroundColor={colors.main} />
       <DateTimePickerModal
-        isVisible={listGame.visbaleModal}
+        isVisible={visbaleModal}
         mode="date"
         onConfirm={handleConfirmDatePicker}
         onCancel={toogleDatePicker}
@@ -135,7 +134,7 @@ const ListGameScreen = ({getListGame, listGameUser, getListOrder}) => {
                   color={colors.greenDark}
                 />
               </TouchableOpacity>
-              <Text> {listGame.date}</Text>
+              <Text>{date}</Text>
             </View>
           </View>
           <FlatList
@@ -208,7 +207,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     paddingHorizontal: scale(10),
     paddingVertical: scale(15),
-    marginBottom: scale(10),
     borderBottomWidth: scale(0.5),
     borderBottomColor: colors.gray,
   },
@@ -227,6 +225,7 @@ const styles = StyleSheet.create({
   },
   list: {
     paddingBottom: scale(70),
+    paddingTop: scale(10),
   },
 });
 

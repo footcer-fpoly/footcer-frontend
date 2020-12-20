@@ -21,7 +21,13 @@ import {
 import {StatusCode} from '../../api/status-code';
 import ListLoadingComponent from '../../components/common/ListLoadingComponent';
 import PrimaryButton from '../../components/common/PrimaryButton';
-import {body2, body3, headline5, Text} from '../../components/common/Text';
+import {
+  body2,
+  body3,
+  headline5,
+  headline6,
+  Text,
+} from '../../components/common/Text';
 import ToolBar from '../../components/common/Toolbar';
 import ModalPickerTeams from '../../components/game/ModalPickerTeams';
 import ItemTeamMember from '../../components/team/ItemTeamMember';
@@ -364,7 +370,9 @@ const GameDetailScreen = ({route, showLoading, hideLoading, profile}) => {
       <>
         {renderToolBar()}
         <Text />
-        <ListLoadingComponent onReady={state.onReady} />
+        <View style={{paddingHorizontal: scale(10)}}>
+          <ListLoadingComponent onReady={state.onReady} />
+        </View>
       </>
     );
   }
@@ -568,35 +576,27 @@ const GameDetailScreen = ({route, showLoading, hideLoading, profile}) => {
               iconName="timelapse"
               editable={false}
             />
-            <ButtonOutline
-              style={{
-                backgroundColor: colors.white,
-                marginVertical: scale(10),
-              }}
-              title="Chỉ đường"
-              colorOutline={colors.blue}
-              titleColor={colors.blue}
-              onPress={
-                newOrder
-                  ? onPressDirection(
-                      newOrder?.stadium?.latitude,
-                      newOrder?.stadium?.longitude,
-                      newOrder?.stadium?.address,
-                    )
-                  : onPressDirection(
-                      state?.data?.stadium?.latitude,
-                      state?.data?.stadium?.longitude,
-                      state?.data?.stadium?.address,
-                    )
-              }
-              left={
-                <MaterialCommunityIcons
-                  size={scale(20)}
-                  color={colors.blue}
-                  name="map-search-outline"
-                />
-              }
-            />
+            <View style={styles.warppeDire}>
+              <TouchableOpacity
+                onPress={
+                  newOrder
+                    ? onPressDirection(
+                        newOrder?.stadium?.latitude,
+                        newOrder?.stadium?.longitude,
+                        newOrder?.stadium?.address,
+                      )
+                    : onPressDirection(
+                        state?.data?.stadium?.latitude,
+                        state?.data?.stadium?.longitude,
+                        state?.data?.stadium?.address,
+                      )
+                }
+                style={styles.btnDirec}>
+                <Text type={headline6} style={{color: colors.white}}>
+                  Chỉ đường
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
 
           <View style={[styles.wrapperSection, {marginTop: scale(5)}]}>
@@ -742,6 +742,15 @@ const styles = StyleSheet.create({
     maxWidth: scale(100),
     textAlign: 'center',
   },
+  btnDirec: {
+    backgroundColor: colors.blueDark,
+    paddingHorizontal: scale(25),
+    paddingVertical: scale(5),
+    borderRadius: scale(50),
+    marginTop: scale(5),
+    marginBottom: scale(10),
+  },
+  warppeDire: {...Styles.flexRow, justifyContent: 'flex-end'},
 });
 
 const mapDispatchToProps = {showLoading, hideLoading};

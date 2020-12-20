@@ -71,9 +71,7 @@ export default function YourMatch({item}) {
               type={headline6}
               style={
                 styles.txtConfirm
-              }>{`DS đội chờ xác nhận tham gia tham gia (${
-              item?.teamInvite?.lenght || 0
-            })`}</Text>
+              }>{`DS đội chờ xác nhận tham gia tham gia (${item?.countInvite})`}</Text>
           </View>
         )}
       </View>
